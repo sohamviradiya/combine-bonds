@@ -1,16 +1,17 @@
-type stockInterface = {
+
+
+export type ValuePoint = {
+	date: Date;
+	market_valuation: Number;
+	volume_in_market: Number;
+};
+
+type StockInterface = {
 	name: String;
 	gross_volume: Number;
-	timeline: [
-		{
-			date: Date;
-			market_valuation: Number;
-			volume_in_market: Number;
-		}
-	];
+	timeline: [ValuePoint];
 	createdAt: Date;
 	company: String;
 };
 
-
-export default stockInterface;
+export default StockInterface;

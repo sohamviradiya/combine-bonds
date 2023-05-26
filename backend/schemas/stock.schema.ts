@@ -1,3 +1,4 @@
+import { ValuePoint } from "backend/interfaces/stock.interface";
 import mongoose, { Schema } from "mongoose";
 
 const stockSchema = new Schema({
@@ -40,12 +41,34 @@ const stockSchema = new Schema({
 });
 
 stockSchema.virtual("price").get(function (this: any) {
-	const last_point: {
-		date: Date;
-		market_valuation: Number;
-		volume_in_market: Number;
-	} = this.timeline[this.timeline.length - 1];
+	const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
 	return Number(last_point.market_valuation) / this.gross_volume;
 });
+
+stockSchema.virtual("slope").get(function (this: any) {
+	const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
+	const second_last_point: ValuePoint = this.timeline[this.timeline.length - 2];
+	return (
+		(Number(last_point.market_valuation) -
+			Number(second_last_point.market_valuation)) /
+		Number(second_last_point.market_valuation)
+	);
+});
+
+stockSchema.virtual("double_slope").get(function (this: any) {
+	const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
+	const second_last_point: ValuePoint = this.timeline[this.timeline.length - 2];
+	const third_last_point: ValuePoint = this.timeline[this.timeline.length - 3];
+	const last_slope =
+		(Number(last_point.market_valuation) -
+			Number(second_last_point.market_valuation)) /
+		Number(second_last_point.market_valuation);
+	const second_last_slope =
+		(Number(second_last_point.market_valuation) -
+			Number(third_last_point.market_valuation)) /
+		Number(third_last_point.market_valuation);
+	return (last_slope - second_last_slope) / second_last_slope;
+});
+
 
 export default mongoose.model("Stock", stockSchema);
