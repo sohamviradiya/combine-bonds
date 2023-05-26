@@ -18,4 +18,4 @@ export default async function connectDb() {
 		return error;
 	}
 	return "connected";
-}
+};
