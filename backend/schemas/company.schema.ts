@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const companySchema = new Schema({
+const CompanySchema = new Schema({
 	name: {
 		type: Schema.Types.String,
 		required: true,
@@ -80,4 +80,5 @@ const companySchema = new Schema({
 	},
 });
 
-export default mongoose.model("Company", companySchema);
+const CompanyModel = mongoose.model("Company", CompanySchema);
+export default CompanyModel;

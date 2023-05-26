@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const botSchema = new Schema({
+const BotSchema = new Schema({
 	class: {
 		type: Schema.Types.String,
 		required: true,
@@ -115,4 +115,5 @@ const botSchema = new Schema({
 	},
 });
 
-export default mongoose.model("Bot", botSchema);
+const StockModel = mongoose.model("Bot", BotSchema);
+export default StockModel;

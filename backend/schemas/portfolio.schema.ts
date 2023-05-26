@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const portfolioSchema = new Schema({
+const PortfolioSchema = new Schema({
 	user: {
 		type: {
 			name: {
@@ -77,4 +77,5 @@ const portfolioSchema = new Schema({
 	},
 });
 
-export default mongoose.model("Portfolio", portfolioSchema);
+const PortfolioModel = mongoose.model("Portfolio", PortfolioSchema);
+export default PortfolioModel;

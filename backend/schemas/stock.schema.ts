@@ -1,7 +1,7 @@
 import { ValuePoint } from "backend/interfaces/stock.interface";
 import mongoose, { Schema } from "mongoose";
 
-const stockSchema = new Schema({
+const StockSchema = new Schema({
 	name: {
 		type: Schema.Types.String,
 		required: true,
@@ -40,12 +40,12 @@ const stockSchema = new Schema({
 	},
 });
 
-stockSchema.virtual("price").get(function (this: any) {
+StockSchema.virtual("price").get(function (this: any) {
 	const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
 	return Number(last_point.market_valuation) / this.gross_volume;
 });
 
-stockSchema.virtual("slope").get(function (this: any) {
+StockSchema.virtual("slope").get(function (this: any) {
 	const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
 	const second_last_point: ValuePoint = this.timeline[this.timeline.length - 2];
 	return (
@@ -55,7 +55,7 @@ stockSchema.virtual("slope").get(function (this: any) {
 	);
 });
 
-stockSchema.virtual("double_slope").get(function (this: any) {
+StockSchema.virtual("double_slope").get(function (this: any) {
 	const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
 	const second_last_point: ValuePoint = this.timeline[this.timeline.length - 2];
 	const third_last_point: ValuePoint = this.timeline[this.timeline.length - 3];
@@ -70,5 +70,5 @@ stockSchema.virtual("double_slope").get(function (this: any) {
 	return (last_slope - second_last_slope) / second_last_slope;
 });
 
-
-export default mongoose.model("Stock", stockSchema);
+const StockModel = mongoose.model("Stock", StockSchema);
+export default StockModel;
