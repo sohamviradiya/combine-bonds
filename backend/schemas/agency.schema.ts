@@ -35,5 +35,5 @@ const AgencySchema = new Schema({
 	},
 });
 
-const AgencyModel = mongoose.model("Agency", AgencySchema);
-export default AgencyModel;
+export default mongoose.models["Agency"] ??
+	mongoose.model("Agency", AgencySchema);
