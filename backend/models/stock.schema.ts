@@ -28,6 +28,11 @@ const stockSchema = new Schema({
 			},
 		],
 	},
+	class: {
+		type: Schema.Types.String,
+		required: true,
+		enum: ["Voting", "Non-Voting", "Bond", "Debenture"],
+	},
 	createdAt: {
 		type: Schema.Types.Date,
 		required: false,

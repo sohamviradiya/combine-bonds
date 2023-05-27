@@ -53,16 +53,9 @@ const CompanySchema = new Schema({
 	stocks: {
 		type: [
 			{
-				class: {
-					type: Schema.Types.String,
-					required: true,
-					enum: ["Voting", "Non-Voting", "Bond", "Debenture"],
-				},
-				info: {
-					type: Schema.Types.ObjectId,
-					ref: "Stock",
-					required: true,
-				},
+				type: Schema.Types.ObjectId,
+				ref: "Stock",
+				required: true,
 			},
 		],
 	},

@@ -25,30 +25,24 @@ export enum COMPANY_FORMS {
 	"Other",
 }
 
-export enum COMPANY_STOCK_CLASSES {
-	"Voting",
-	"Non-Voting",
-	"Bond",
-	"Debenture",
-}
-
 type companyInterface = {
 	name: String;
 	field: COMPANY_FIELDS;
 	form: COMPANY_FORMS;
-	established: Date;
-	description: String;
+	established?: Date;
+	description?: String;
 	assets: Number;
-	stocks: [
-		{
-			class: COMPANY_STOCK_CLASSES;
-			info: String;
-		}
-	];
+	stocks: [String];
 	headquarters?: String;
 	employees?: Number;
 	website?: String;
 	market_capitalization: Number;
 };
+
+export type companyInterfaceWithId = companyInterface & {
+	_id: String;
+};
+
+export type createCompanyDto = Omit<companyInterface, "stocks">;
 
 export default companyInterface;
