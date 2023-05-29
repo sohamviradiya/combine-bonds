@@ -1,5 +1,8 @@
 import mongoose, { Schema } from "mongoose";
-
+import {
+	COMPANY_FIELDS,
+	COMPANY_FORMS,
+} from "backend/interfaces/company.interface";
 const CompanySchema = new Schema({
 	name: {
 		type: Schema.Types.String,
@@ -8,35 +11,12 @@ const CompanySchema = new Schema({
 	field: {
 		type: Schema.Types.String,
 		required: true,
-		enum: [
-			"Agriculture",
-			"Mining",
-			"Construction",
-			"Manufacturing",
-			"Transportation",
-			"Communication",
-			"Entertainment",
-			"Utilities",
-			"Finance",
-			"Real Estate",
-			"Insurance",
-			"Wholesale",
-			"Retail",
-			"Public Administration",
-		],
+		enum: Object.values(COMPANY_FIELDS),
 	},
 	form: {
 		type: Schema.Types.String,
 		required: true,
-		enum: [
-			"Sole Proprietorship",
-			"Partnership",
-			"Corporation",
-			"Cooperative",
-			"Franchise",
-			"Joint Venture",
-			"Other",
-		],
+		enum: Object.values(COMPANY_FORMS),
 	},
 	established: {
 		type: Schema.Types.Date,
@@ -65,7 +45,7 @@ const CompanySchema = new Schema({
 	},
 	employees: {
 		type: Schema.Types.Number,
-		required: true,
+		required: false,
 	},
 	market_capitalization: {
 		type: Schema.Types.Number,
