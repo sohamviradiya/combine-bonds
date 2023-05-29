@@ -1,7 +1,6 @@
-import { UnionType } from "typescript";
 
 export type ValuePoint = {
-	date: Date;
+	date: Number;
 	market_valuation: number;
 	volume_in_market: number;
 };

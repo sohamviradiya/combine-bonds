@@ -16,14 +16,14 @@ type PortfolioInterface = {
 			class: TRANSACTION_CLASS;
 			stock?: String;
 			amount: Number;
-			date: Date;
+			date: Number;
 		}
 	];
 	currentBalance: Number;
 	netWorth: [
 		{
 			value: Number;
-			date: Date;
+			date: Number;
 		}
 	];
 	investments: [

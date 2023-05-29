@@ -26,7 +26,7 @@ const StockService = (() => {
 			class: stock_class,
 			company: company._id,
 			initial_value: {
-				date: new Date(),
+				date: 0,
 				market_valuation: Math.floor(Math.random() * 1000000000),
 				volume_in_market: Math.floor(Math.random() * 1000000),
 			},
@@ -50,7 +50,7 @@ const StockService = (() => {
 		const data = await StockModel.find().exec();
 		return data;
 	};
-	const getStock = async (_id: string): StockInterfaceWithID => {
+	const getStock = async (_id: string): Promise<StockInterfaceWithID> => {
 		return await StockModel.findById(_id).exec();
 	};
 	

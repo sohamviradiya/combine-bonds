@@ -14,7 +14,7 @@ const stockSchema = new Schema({
 		type: [
 			{
 				date: {
-					type: Schema.Types.Date,
+					type: Schema.Types.Number,
 					required: true,
 				},
 				market_valuation: {
@@ -36,7 +36,6 @@ const stockSchema = new Schema({
 	createdAt: {
 		type: Schema.Types.Date,
 		required: false,
-		default: Date.now,
 	},
 	company: {
 		type: Schema.Types.ObjectId,

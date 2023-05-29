@@ -38,7 +38,7 @@ const PortfolioSchema = new Schema({
 					required: true,
 				},
 				date: {
-					type: Schema.Types.Date,
+					type: Schema.Types.Number,
 					required: true,
 				},
 			},
@@ -56,7 +56,7 @@ const PortfolioSchema = new Schema({
 					required: false,
 				},
 				date: {
-					type: Schema.Types.Date,
+					type: Schema.Types.Number,
 					required: false,
 				},
 			},
