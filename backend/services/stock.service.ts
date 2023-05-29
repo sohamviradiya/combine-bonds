@@ -1,29 +1,67 @@
 import StockModel from "backend/models/stock.schema";
-import StockInterface, { ValuePoint } from "backend/interfaces/stock.interface";
-
+import {
+	ValuePoint,
+	createStockDto,
+	STOCK_CLASSES,
+	StockInterface,
+} from "backend/interfaces/stock.interface";
+import CompanyModel from "backend/models/company.schema";
+import { faker } from "@faker-js/faker";
 const StockService = (() => {
-	const addStock = async (stock: StockInterface) => {
-		const newStock = new StockModel(stock);
-		const newStockDoc = await newStock.save().exec();
+	const generateRandomStock = async (
+		company_id: string,
+		stock_class: keyof typeof STOCK_CLASSES
+	): Promise<createStockDto> => {
+		const company: {
+			name: string;
+			_id: string;
+		} = await CompanyModel.findById(company_id).exec();
+		return {
+			name:
+				"$" +
+				String(company.name).toUpperCase().slice(0, 4) +
+				" " +
+				stock_class,
+			class: stock_class,
+			company: company._id,
+			initial_value: {
+				date: new Date(),
+				market_valuation: Math.floor(Math.random() * 1000000000),
+				volume_in_market: Math.floor(Math.random() * 1000000),
+			},
+		} as createStockDto;
+	};
+
+	const addStock = async (stock: createStockDto) => {
+		const newStock = {
+			...stock,
+			timeline: [stock.initial_value],
+			gross_volume: 1000000,
+			createdAt: new Date(),
+		} as StockInterface;
+		const newStockDoc = await new StockModel({ ...newStock }).save();
+		await CompanyModel.findByIdAndUpdate(stock.company, {
+			$push: { stocks: newStockDoc._id },
+		}).exec();
 		return newStockDoc;
 	};
 	const getStocks = async () => {
 		const data = await StockModel.find().exec();
-		console.log(data);
 		return data;
 	};
 	const getStock = async (_id: string) => {
-		const stock = await StockModel.findById(_id).exec();
-		return stock;
+		return await StockModel.findById(_id).exec();
 	};
 	const addPoint = async (_id: string, valuePoint: ValuePoint) => {
 		const stock = await StockModel.findById(_id).exec();
-		stock?.timeline.push(valuePoint);
-		stock?.timeline.pop();
+		if (!stock) return null;
+		stock.timeline.unshift(valuePoint);
+		stock.timeline.pop();
 		const updatedStock = await stock?.save();
 		return updatedStock;
 	};
 	return {
+		generateRandomStock,
 		addStock,
 		getStocks,
 		getStock,

@@ -1,4 +1,4 @@
-import { ValuePoint } from "backend/interfaces/stock.interface";
+import { STOCK_CLASSES, ValuePoint } from "backend/interfaces/stock.interface";
 import mongoose, { Schema } from "mongoose";
 
 const stockSchema = new Schema({
@@ -31,7 +31,7 @@ const stockSchema = new Schema({
 	class: {
 		type: Schema.Types.String,
 		required: true,
-		enum: ["Voting", "Non-Voting", "Bond", "Debenture"],
+		enum: Object.values(STOCK_CLASSES),
 	},
 	createdAt: {
 		type: Schema.Types.Date,
@@ -46,11 +46,13 @@ const stockSchema = new Schema({
 });
 
 stockSchema.virtual("price").get(function (this: any) {
+	if (this.timeline.length < 1) return 0;
 	const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
 	return Number(last_point.market_valuation) / this.gross_volume;
 });
 
 stockSchema.virtual("slope").get(function (this: any) {
+	if (this.timeline.length < 2) return 0;
 	const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
 	const second_last_point: ValuePoint = this.timeline[this.timeline.length - 2];
 	return (
@@ -61,6 +63,7 @@ stockSchema.virtual("slope").get(function (this: any) {
 });
 
 stockSchema.virtual("double_slope").get(function (this: any) {
+	if (this.timeline.length < 3) return 0;
 	const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
 	const second_last_point: ValuePoint = this.timeline[this.timeline.length - 2];
 	const third_last_point: ValuePoint = this.timeline[this.timeline.length - 3];

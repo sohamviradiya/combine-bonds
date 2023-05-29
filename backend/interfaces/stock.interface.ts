@@ -1,23 +1,34 @@
+import { UnionType } from "typescript";
+
 export type ValuePoint = {
 	date: Date;
-	market_valuation: Number;
-	volume_in_market: Number;
+	market_valuation: number;
+	volume_in_market: number;
 };
 
 export enum STOCK_CLASSES {
-	"Voting", // high volume dependence
-	"Non-Voting", // high market sentiment dependence
-	"Bond", // low random fluctuation, high market sentiment dependence
-	"Debenture", // high random fluctuation, high market sentiment dependence, high volume dependence
-};
+	"Voting" = 0, // high volume dependence
+	"Non-Voting" = 1, // high market sentiment dependence
+	"Bond" = 2, // low random fluctuation, high market sentiment dependence
+	"Debenture" = 3, // high random fluctuation, high market sentiment dependence, high volume dependence
+}
 
-type StockInterface = {
-	name: String;
-	gross_volume: Number;
-	class: STOCK_CLASSES;
+export type StockInterface = {
+	name: string;
+	gross_volume: number;
+	class: keyof typeof STOCK_CLASSES;
 	timeline: [ValuePoint];
 	createdAt: Date;
-	company: String;
+	company: string;
 };
 
-export default StockInterface;
+export type StockInterfaceWithID = StockInterface & {
+	_id: string;
+};
+
+export type createStockDto = Omit<
+	StockInterface,
+	"timeline" | "gross_volume" | "createdAt"
+> & {
+	initial_value: ValuePoint;
+};
