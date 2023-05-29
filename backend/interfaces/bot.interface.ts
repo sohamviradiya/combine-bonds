@@ -5,7 +5,7 @@ export enum BOT_CLASS {
 	"Day-trading", // high bundle expansion, low bundle filling, low trade period
 };
 
-type botInterface = {
+type BotInterface = {
      class: BOT_CLASS;
      trade_period: Number; // in slots (1 slot = 15 minute)
      portfolio: String;
@@ -48,4 +48,4 @@ type botInterface = {
      }
 };
 
-export default botInterface;
+export default BotInterface;

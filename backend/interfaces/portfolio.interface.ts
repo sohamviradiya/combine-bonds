@@ -6,7 +6,7 @@ enum TRANSACTION_CLASS {
 	"STOCK DIVIDEND",
 }
 
-type portfolioInterface = {
+type PortfolioInterface = {
 	user?: {
 		name: String;
 		bio?: String;
@@ -34,4 +34,4 @@ type portfolioInterface = {
 	];
 };
 
-export default portfolioInterface;
+export default PortfolioInterface;

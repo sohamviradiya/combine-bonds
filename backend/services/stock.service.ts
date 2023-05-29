@@ -4,6 +4,7 @@ import {
 	createStockDto,
 	STOCK_CLASSES,
 	StockInterface,
+	StockInterfaceWithID,
 } from "backend/interfaces/stock.interface";
 import CompanyModel from "backend/models/company.schema";
 import { faker } from "@faker-js/faker";
@@ -49,9 +50,10 @@ const StockService = (() => {
 		const data = await StockModel.find().exec();
 		return data;
 	};
-	const getStock = async (_id: string) => {
+	const getStock = async (_id: string): StockInterfaceWithID => {
 		return await StockModel.findById(_id).exec();
 	};
+	
 	const addPoint = async (_id: string, valuePoint: ValuePoint) => {
 		const stock = await StockModel.findById(_id).exec();
 		if (!stock) return null;

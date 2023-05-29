@@ -5,9 +5,8 @@ export enum AGENCY_CLASS {
 	"Aggressive", // high volume dependence, high market sentiment dependence
 }
 
-type agencyInterface = {
-	name: String;
-	class: AGENCY_CLASS;
+type AgencyInterface = {
+	class: keyof typeof AGENCY_CLASS;
 	stock: String;
 	market_valuation_parameter: {
 		steady_increase: Number;
@@ -15,7 +14,10 @@ type agencyInterface = {
 		market_sentiment_dependence_parameter: Number;
 		market_volume_dependence_parameter: Number;
 	};
-	
 };
 
-export default agencyInterface;
+export type AgencyInterfaceWithId = AgencyInterface & {
+	_id: String;
+};
+
+export default AgencyInterface;
