@@ -25,7 +25,6 @@ const CompanyService = (() => {
 			market_capitalization: 0,
 		});
 		const newCompanyDoc = await newCompany.save();
-		console.log(newCompanyDoc);
 		return newCompanyDoc;
 	};
 	const getCompanies = async () => {
