@@ -28,3 +28,18 @@ const gen_stocks = async (
 		})
 	);
 };
+
+export async function gen_stock(company_id: string) {
+	const stocks = [];
+	stocks.push(	
+		(await StockService.addStock(
+			await StockService.generateRandomStock(company_id, "Bond")
+		)) as StockInterfaceWithID
+	);
+	stocks.push(
+		(await StockService.addStock(
+			await StockService.generateRandomStock(company_id, "Voting")
+		)) as StockInterfaceWithID
+	);
+	return stocks;
+}
