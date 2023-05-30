@@ -42,7 +42,7 @@ const stockSchema = new Schema({
 		ref: "Company",
 		required: true,
 	},
-});
+}, { toJSON: { virtuals: true } });
 
 stockSchema.virtual("price").get(function (this: any) {
 	if (this.timeline.length < 1) return 0;

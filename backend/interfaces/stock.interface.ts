@@ -1,4 +1,3 @@
-
 export type ValuePoint = {
 	date: Number;
 	market_valuation: number;
@@ -23,6 +22,9 @@ export type StockInterface = {
 
 export type StockInterfaceWithID = StockInterface & {
 	_id: string;
+	slope: number;
+	price: number;
+	double_slope: number;
 };
 
 export type createStockDto = Omit<
