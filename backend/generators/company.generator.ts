@@ -1,4 +1,7 @@
 import CompanyService from "backend/services/company.service";
 
-export default async () =>
-	await CompanyService.addCompany(CompanyService.generateRandomCompany());
+const CompanyGenerator = async () => {
+	return await CompanyService.addCompany(CompanyService.generateRandomCompany());
+};
+
+export default CompanyGenerator;

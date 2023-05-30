@@ -1,7 +1,8 @@
 import AgencyService from "backend/services/agency.service";
 import StockModel from "backend/models/stock.schema";
-export async function generate_all() {
-	const stock_ids = await StockModel.find({}).select("_id").exec();
+
+const AgencyGenerator = async () => {
+	const stock_ids = await StockModel.find({}, { _id: 1 }).exec();
 	console.log(stock_ids);
 	return await Promise.all(
 		stock_ids.map(
@@ -11,4 +12,6 @@ export async function generate_all() {
 				)
 		)
 	);
-}
+};
+
+export default AgencyGenerator;
