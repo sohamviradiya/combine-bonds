@@ -32,7 +32,20 @@ const StockService = (() => {
 			},
 		} as createStockDto;
 	};
-
+	const generateCompanyStock = async (
+		company_ids: string[],
+		stock_class: keyof typeof STOCK_CLASSES
+	) => {
+		return await Promise.all(
+			company_ids.map(async (company_id): Promise<StockInterfaceWithID> => {
+				const stock = await StockService.generateRandomStock(
+					company_id,
+					stock_class
+				);
+				return (await StockService.addStock(stock)) as StockInterfaceWithID;
+			})
+		);
+	};
 	const addStock = async (stock: createStockDto) => {
 		const newStock = {
 			...stock,
@@ -48,12 +61,12 @@ const StockService = (() => {
 	};
 	const getStocks = async () => {
 		const data = await StockModel.find().exec();
+		console.log(data);
 		return data;
 	};
 	const getStock = async (_id: string): Promise<StockInterfaceWithID> => {
 		return await StockModel.findById(_id).exec();
 	};
-	
 	const addPoint = async (_id: string, valuePoint: ValuePoint) => {
 		const stock = await StockModel.findById(_id).exec();
 		if (!stock) return null;
@@ -63,6 +76,7 @@ const StockService = (() => {
 		return updatedStock;
 	};
 	return {
+		generateCompanyStock,
 		generateRandomStock,
 		addStock,
 		getStocks,
