@@ -52,9 +52,17 @@ const AgencyService = (() => {
 		});
 		return await newAgency.save();
 	};
+	const getAgencies = async () => {
+		return await AgencyModel.find({}).exec();
+	};
+	const getAgency = async (agency_id: string) => {
+		return await AgencyModel.findById(agency_id).exec();
+	};
 	return {
 		generateAgency,
 		addAgency,
+		getAgencies,
+		getAgency,
 	};
 })();
 

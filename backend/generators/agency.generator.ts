@@ -3,7 +3,6 @@ import StockModel from "backend/models/stock.schema";
 
 const AgencyGenerator = async () => {
 	const stock_ids = await StockModel.find({}, { _id: 1 }).exec();
-	console.log(stock_ids);
 	return await Promise.all(
 		stock_ids.map(
 			async (stock) =>
