@@ -7,7 +7,7 @@ import {
 	StockInterfaceWithID,
 } from "backend/interfaces/stock.interface";
 import CompanyModel from "backend/models/company.schema";
-import { faker } from "@faker-js/faker";
+
 const StockService = (() => {
 	const generateRandomStock = async (
 		company_id: string,
@@ -28,7 +28,7 @@ const StockService = (() => {
 			initial_value: {
 				date: 0,
 				market_valuation: Math.floor(Math.random() * 1000000000),
-				volume_in_market: Math.floor(Math.random() * 1000000),
+				volume_in_market: Math.floor(Math.random() * 10000000),
 			},
 		} as createStockDto;
 	};
@@ -61,12 +61,14 @@ const StockService = (() => {
 	};
 	const getStocks = async () => {
 		const data = await StockModel.find().exec();
-		return data.map((stock): StockInterfaceWithID => ({
-			...stock._doc,
-			price: stock.price,
-			slope: stock.slope,
-			double_slope: stock.double_slope,
-		}));
+		return data.map(
+			(stock): StockInterfaceWithID => ({
+				...stock._doc,
+				price: stock.price,
+				slope: stock.slope,
+				double_slope: stock.double_slope,
+			})
+		);
 	};
 	const getStock = async (_id: string): Promise<StockInterfaceWithID> => {
 		return await StockModel.findById(_id).exec();
@@ -80,7 +82,7 @@ const StockService = (() => {
 		return updatedStock;
 	};
 	return {
-		generateCompanyStock: AddRandomStocks,
+		AddRandomStocks,
 		generateRandomStock,
 		addStock,
 		getStocks,

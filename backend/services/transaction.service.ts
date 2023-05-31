@@ -45,18 +45,18 @@ const TransactionService = (() => {
           return portfolio;
      };
 
-     const deposit = async(
+     const deposit = (
           portfolio: PortfolioInterface,
           transaction: Transaction
-     ): Promise<PortfolioInterface> => {
+     ): PortfolioInterface => {
           portfolio.currentBalance += transaction.amount;
           return portfolio;
      };
 
-     const withdraw = async(
+     const withdraw = (
           portfolio: PortfolioInterface,
           transaction: Transaction
-     ): Promise<PortfolioInterface> => {
+     ): PortfolioInterface => {
           if (portfolio.currentBalance < transaction.amount) throw new Error("Insufficient funds");
           portfolio.currentBalance -= transaction.amount;
           return portfolio;
