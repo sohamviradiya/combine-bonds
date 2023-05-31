@@ -96,20 +96,20 @@ const BotSchema = new Schema({
 					},
 				],
 			},
-			loss_aversion_parameter: {
-				type: [
-					{
-						reference_price: {
-							type: Schema.Types.Decimal128,
-							required: true,
-						},
-						tolerable_relative_loss: {
-							type: Schema.Types.Decimal128,
-							required: true,
-						},
+		},
+		loss_aversion_parameter: {
+			type: [
+				{
+					reference_price: {
+						type: Schema.Types.Decimal128,
+						required: true,
 					},
-				],
-			},
+					tolerable_relative_loss: {
+						type: Schema.Types.Decimal128,
+						required: true,
+					},
+				},
+			],
 		},
 		// bundle filling + bundle expansion = 1
 	},

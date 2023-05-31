@@ -76,5 +76,7 @@ const PortfolioSchema = new Schema({
 	},
 });
 
-export default  mongoose.models["Portfolio"] ??
+const PortfolioModel = mongoose.models["Portfolio"] ??
 	mongoose.model("Portfolio", PortfolioSchema);
+
+export default PortfolioModel;

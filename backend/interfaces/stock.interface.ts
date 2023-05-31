@@ -1,5 +1,5 @@
 export type ValuePoint = {
-	date: Number;
+	date: number;
 	market_valuation: number;
 	volume_in_market: number;
 };
