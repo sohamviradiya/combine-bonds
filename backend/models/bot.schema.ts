@@ -115,4 +115,5 @@ const BotSchema = new Schema({
 	},
 });
 
-export default mongoose.models["Bot"] ?? mongoose.model("Bot", BotSchema);
+const BotModel = mongoose.models["Bot"] ?? mongoose.model("Bot", BotSchema);
+export default BotModel;

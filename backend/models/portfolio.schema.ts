@@ -24,8 +24,7 @@ const PortfolioSchema = new Schema({
 						"Account Withdrawal",
 						"Account Deposit",
 						"Stock Purchase",
-						"Stock Sale",
-						"Stock Dividend",
+						"Stock Sale"
 					],
 				},
 				stock: {
@@ -53,11 +52,11 @@ const PortfolioSchema = new Schema({
 			{
 				value: {
 					type: Schema.Types.Decimal128,
-					required: false,
+					required: true,
 				},
 				date: {
 					type: Schema.Types.Number,
-					required: false,
+					required: true,
 				},
 			},
 		],

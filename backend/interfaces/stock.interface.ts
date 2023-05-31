@@ -15,7 +15,7 @@ export type StockInterface = {
 	name: string;
 	gross_volume: number;
 	class: keyof typeof STOCK_CLASSES;
-	timeline: [ValuePoint];
+	timeline: ValuePoint[];
 	createdAt: Date;
 	company: string;
 };

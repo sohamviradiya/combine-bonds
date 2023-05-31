@@ -77,4 +77,6 @@ stockSchema.virtual("double_slope").get(function (this: any) {
 	return (last_slope - second_last_slope) / second_last_slope;
 });
 
-export default mongoose.models["Stock"] ?? mongoose.model("Stock", stockSchema);
+const StockModel = mongoose.models["Stock"] ?? mongoose.model("Stock", stockSchema);
+
+export default StockModel;

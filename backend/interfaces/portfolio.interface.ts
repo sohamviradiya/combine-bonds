@@ -3,35 +3,39 @@ enum TRANSACTION_CLASS {
 	"ACCOUNT DEPOSIT",
 	"STOCK PURCHASE",
 	"STOCK SALE",
-	"STOCK DIVIDEND",
 }
+
+export type Transaction = {
+	class: keyof typeof TRANSACTION_CLASS;
+	stock?: string;
+	amount: number;
+	date: number;
+};
 
 type PortfolioInterface = {
 	user?: {
-		name: String;
-		bio?: String;
+		name: string;
+		bio?: string;
 	};
-	transactions: [
-		{
-			class: TRANSACTION_CLASS;
-			stock?: String;
-			amount: Number;
-			date: Number;
-		}
-	];
-	currentBalance: Number;
-	netWorth: [
-		{
-			value: Number;
-			date: Number;
-		}
-	];
-	investments: [
-		{
-			stock: String;
-			quantity: Number;
-		}
-	];
+	transactions: Transaction[];
+	currentBalance: number;
+	netWorth: {
+			value: number;
+			date: number;
+		}[];
+	investments: {
+			stock: string;
+			quantity: number;
+		}[];
+};
+
+export type createPortfolioDTO = Omit<
+	PortfolioInterface,
+	"transactions" | "netWorth" | "investments" | "currentBalance"
+>;
+
+export type PortfolioInterfaceWithID = PortfolioInterface & {
+	_id: string;
 };
 
 export default PortfolioInterface;

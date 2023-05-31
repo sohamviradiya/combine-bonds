@@ -32,7 +32,7 @@ export type companyInterface = {
 	established?: Date;
 	description?: string;
 	assets: Number;
-	stocks: [string];
+	stocks: string[];
 	headquarters?: string;
 	employees: Number;
 	market_capitalization: Number;

@@ -19,6 +19,6 @@ const MarketSchema = new Schema({
 	},
 }, { toJSON: { virtuals: true } });
 
+const MarketModel = mongoose.models["Market"] ?? mongoose.model("Market", MarketSchema);
 
-export default mongoose.models["Market"] ??
-	mongoose.model("Market", MarketSchema);
+export default MarketModel;

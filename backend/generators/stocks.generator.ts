@@ -6,8 +6,8 @@ const StockGenerator = async () => {
 		(company: { _id: string }) => company._id
 	);
 	return [
-		...(await StockService.generateCompanyStock(company_ids, "Voting")),
-		...(await StockService.generateCompanyStock(company_ids, "Bond")),
+		...(await StockService.AddRandomStocks(company_ids, "Voting")),
+		...(await StockService.AddRandomStocks(company_ids, "Bond")),
 	];
 };
 
