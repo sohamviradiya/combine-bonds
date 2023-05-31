@@ -3,19 +3,9 @@ import PortfolioInterface, {
 	Transaction,
 	PortfolioInterfaceWithID,
 } from "backend/interfaces/portfolio.interface";
-import { faker } from "@faker-js/faker";
 import PortfolioModel from "backend/models/portfolio.schema";
 import TransactionService from "./transaction.service";
 const PortfolioService = (() => {
-	const generateRandomPortfolio = (): createPortfolioDTO => {
-		return {
-			user: {
-				name: faker.internet.userName(),
-				bio: faker.lorem.paragraph(),
-			},
-		};
-	};
-
 	const addPortfolio = async (
 		portfolio: createPortfolioDTO
 	): Promise<PortfolioInterface> => {
@@ -70,7 +60,6 @@ const PortfolioService = (() => {
 	};
 
 	return {
-		generateRandomPortfolio,
 		addPortfolio,
 		getPortfolios,
 		getPortfolio,

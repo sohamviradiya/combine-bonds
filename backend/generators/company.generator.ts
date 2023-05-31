@@ -1,5 +1,5 @@
 import CompanyService from "backend/services/company.service";
-import companyInterface, {
+import  {
 	COMPANY_FIELDS,
 	COMPANY_FORMS,
 	createCompanyDto,
