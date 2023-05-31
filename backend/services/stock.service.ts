@@ -9,43 +9,6 @@ import {
 import CompanyModel from "backend/models/company.schema";
 
 const StockService = (() => {
-	const generateRandomStock = async (
-		company_id: string,
-		stock_class: keyof typeof STOCK_CLASSES
-	): Promise<createStockDto> => {
-		const company: {
-			name: string;
-			_id: string;
-		} = await CompanyModel.findById(company_id).exec();
-		return {
-			name:
-				"$" +
-				String(company.name).toUpperCase().slice(0, 4) +
-				" " +
-				stock_class,
-			class: stock_class,
-			company: company._id,
-			initial_value: {
-				date: 0,
-				market_valuation: Math.floor(Math.random() * 1000000000),
-				volume_in_market: Math.floor(Math.random() * 10000000),
-			},
-		} as createStockDto;
-	};
-	const AddRandomStocks = async (
-		company_ids: string[],
-		stock_class: keyof typeof STOCK_CLASSES
-	) => {
-		return await Promise.all(
-			company_ids.map(async (company_id): Promise<StockInterfaceWithID> => {
-				const stock = await StockService.generateRandomStock(
-					company_id,
-					stock_class
-				);
-				return (await StockService.addStock(stock)) as StockInterfaceWithID;
-			})
-		);
-	};
 	const addStock = async (stock: createStockDto) => {
 		const newStock = {
 			...stock,
@@ -74,16 +37,13 @@ const StockService = (() => {
 		return await StockModel.findById(_id).exec();
 	};
 	const addPoint = async (_id: string, valuePoint: ValuePoint) => {
-		const stock = await StockModel.findById(_id).exec();
+		const stock : StockInterfaceWithID = await StockModel.findById(_id).exec();
 		if (!stock) return null;
-		stock.timeline.unshift(valuePoint);
-		stock.timeline.pop();
-		const updatedStock = await stock?.save();
-		return updatedStock;
+		stock.timeline = stock.timeline.filter((point) => point.date < valuePoint.date - 100);
+		stock.timeline.push(valuePoint);
+		return await StockModel.findByIdAndUpdate(_id, stock).exec();
 	};
 	return {
-		AddRandomStocks,
-		generateRandomStock,
 		addStock,
 		getStocks,
 		getStock,

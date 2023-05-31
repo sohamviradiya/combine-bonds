@@ -22,10 +22,10 @@ const PortfolioService = (() => {
 		return await new PortfolioModel({
 			...portfolio,
 			transactions: [],
-			currentBalance: 10000,
+			currentBalance: 100000,
 			netWorth: [
 				{
-					value: 10000,
+					value: 100000,
 					date: 0,
 				},
 			],
@@ -74,6 +74,7 @@ const PortfolioService = (() => {
 		addPortfolio,
 		getPortfolios,
 		getPortfolio,
+		performTransaction,
 	};
 })();
 
