@@ -4,7 +4,7 @@ export type ValuePoint = {
 	volume_in_market: number;
 };
 
-export enum STOCK_CLASSES {
+export enum STOCK_CLASS {
 	"Voting" = 0, // high volume dependence
 	"Non-Voting" = 1, // high market sentiment dependence
 	"Bond" = 2, // low random fluctuation, high market sentiment dependence
@@ -14,7 +14,7 @@ export enum STOCK_CLASSES {
 export type StockInterface = {
 	name: string;
 	gross_volume: number;
-	class: keyof typeof STOCK_CLASSES;
+	class: keyof typeof STOCK_CLASS;
 	timeline: ValuePoint[];
 	createdAt: Date;
 	company: string;

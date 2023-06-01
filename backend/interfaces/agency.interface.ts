@@ -7,17 +7,17 @@ export enum AGENCY_CLASS {
 
 type AgencyInterface = {
 	class: keyof typeof AGENCY_CLASS;
-	stock: String;
+	stock: string;
 	market_valuation_parameter: {
-		steady_increase: Number;
-		random_fluctuation: Number;
-		market_sentiment_dependence_parameter: Number;
-		market_volume_dependence_parameter: Number;
+		steady_increase: number;
+		random_fluctuation: number;
+		market_sentiment_dependence_parameter: number;
+		market_volume_dependence_parameter: number;
 	};
 };
 
 export type AgencyInterfaceWithId = AgencyInterface & {
-	_id: String;
+	_id: string;
 };
 
 export default AgencyInterface;

@@ -31,11 +31,11 @@ export type companyInterface = {
 	form: keyof typeof COMPANY_FORMS;
 	established?: Date;
 	description?: string;
-	assets: Number;
+	assets: number;
 	stocks: string[];
 	headquarters?: string;
-	employees: Number;
-	market_capitalization: Number;
+	employees: number;
+	market_capitalization: number;
 };
 
 export type companyInterfaceWithId = companyInterface & {

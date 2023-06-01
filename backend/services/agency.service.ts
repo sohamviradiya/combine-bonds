@@ -3,7 +3,6 @@ import { AGENCY_CLASS } from "backend/interfaces/agency.interface";
 import StockService from "backend/services/stock.service";
 import AgencyModel from "backend/models/agency.schema";
 const AgencyService = (() => {
-	
 	const addAgency = async (agency: AgencyInterface) => {
 		const newAgency = new AgencyModel({
 			...agency,

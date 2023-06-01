@@ -4,12 +4,7 @@ const BotSchema = new Schema({
 	class: {
 		type: Schema.Types.String,
 		required: true,
-		enum: [
-			"Safe-investing",
-			"Aggressive-investing",
-			"Speculative-investing",
-			"Day-trading",
-		],
+		enum: ["Safe", "Aggressive", "Speculative", "Random"],
 	},
 	trade_period: {
 		type: Schema.Types.Number, // in slots (1 slot = 15 minute)
@@ -55,6 +50,7 @@ const BotSchema = new Schema({
 			lows_rising_investment_parameters: {
 				parameter: {
 					// top-n stock with d/dt(price) ~ 0 and d2/dt2(price) > 0
+					type: Schema.Types.Decimal128,
 					required: true,
 				},
 				weight_distribution: {
@@ -111,7 +107,6 @@ const BotSchema = new Schema({
 				},
 			],
 		},
-		// bundle filling + bundle expansion = 1
 	},
 });
 

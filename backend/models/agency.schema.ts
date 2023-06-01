@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import { EXPORT_DETAIL } from "next/dist/shared/lib/constants";
 
 const AgencySchema = new Schema({
 	class: {
@@ -34,6 +33,6 @@ const AgencySchema = new Schema({
 		},
 	},
 });
-const AgencyModel = mongoose.models["Agency"] ??
-	mongoose.model("Agency", AgencySchema);
+const AgencyModel =
+	mongoose.models["Agency"] ?? mongoose.model("Agency", AgencySchema);
 export default AgencyModel;

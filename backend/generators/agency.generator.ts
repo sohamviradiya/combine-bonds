@@ -1,8 +1,9 @@
 import AgencyService from "backend/services/agency.service";
 import StockModel from "backend/models/stock.schema";
-import AgencyInterface, { AGENCY_CLASS } from "backend/interfaces/agency.interface";
+import AgencyInterface, {
+	AGENCY_CLASS,
+} from "backend/interfaces/agency.interface";
 import StockService from "backend/services/stock.service";
-
 
 const generateAgency = async (stock_id: string): Promise<AgencyInterface> => {
 	const stock = await StockService.getStock(stock_id);
@@ -53,11 +54,11 @@ const AgencyGenerator = async () => {
 	return await Promise.all(
 		stock_ids.map(
 			async (stock) =>
-				await AgencyService.addAgency(
-					await generateAgency(stock._id)
-				)
+				await AgencyService.addAgency(await generateAgency(stock._id))
 		)
 	);
 };
+
+
 
 export default AgencyGenerator;

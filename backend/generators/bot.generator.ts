@@ -1,7 +1,7 @@
 import BotInterface, { BOT_CLASS } from "backend/interfaces/bot.interface";
+import PortfolioModel from "backend/models/portfolio.schema";
+import BotService from "backend/services/bot.service";
 const generateWeights = (num: number) => {
-	// sorted descending
-	// sum = 1
 	let weights = [];
 	for (let i = 0; i < num; i++) {
 		weights.push(Math.random());
@@ -11,13 +11,12 @@ const generateWeights = (num: number) => {
 	weights = weights.map((w) => w / sum);
 	return weights;
 };
+
 const generateRandomBot = (
 	portfolio_id: string,
 	trade_period: number
 ): BotInterface => {
-	const bot_class = Object.values(BOT_CLASS)[
-		Math.floor(Math.random() * 4)
-	] as keyof typeof BOT_CLASS;
+	const bot_class = Object.values(BOT_CLASS)[Math.floor(Math.random() * 4)];
 	let investment_amount_per_slot = {
 		balance_dependence_parameter: 0,
 		market_sentiment_dependence_parameter: 0,
@@ -41,95 +40,87 @@ const generateRandomBot = (
 		parameter: 0,
 		weight_distribution: Array<number>(),
 	};
-	let loss_aversion_parameter = Array<number>();
-	switch (bot_class) {
-		case "SAFE INVESTOR": {
-			investment_amount_per_slot = {
-				balance_dependence_parameter: 0.3 + Math.random() * 0.1,
-				market_sentiment_dependence_parameter: 0.3 + Math.random() * 0.1,
-			};
-			bundle_expansion = {
+
+	if (bot_class === "Safe") {
+		investment_amount_per_slot = {
+			balance_dependence_parameter: 0.3 + Math.random() * 0.1,
+			market_sentiment_dependence_parameter: 0.3 + Math.random() * 0.1,
+		};
+		bundle_expansion = {
+			parameter: 0.2 + Math.random() * 0.1,
+			high_raise_investment_parameters: {
+				parameter: 0.3 + Math.random() * 0.1,
+				weight_distribution: generateWeights(2),
+			},
+			lows_rising_investment_parameters: {
+				parameter: 0.3 + Math.random() * 0.1,
+				weight_distribution: generateWeights(2),
+			},
+			random_investment_parameters: {
 				parameter: 0.2 + Math.random() * 0.1,
-				high_raise_investment_parameters: {
-					parameter: 0.3 + Math.random() * 0.1,
-					weight_distribution: generateWeights(2),
-				},
-				lows_rising_investment_parameters: {
-					parameter: 0.3 + Math.random() * 0.1,
-					weight_distribution: generateWeights(2),
-				},
-				random_investment_parameters: {
-					parameter: 0.2 + Math.random() * 0.1,
-					weight_distribution: generateWeights(2),
-				},
-			};
-			break;
-		}
-		case "AGGRESSIVE INVESTOR": {
-			investment_amount_per_slot = {
-				balance_dependence_parameter: 0.5 + Math.random() * 0.1,
-				market_sentiment_dependence_parameter: 0.5 + Math.random() * 0.1,
-			};
-			bundle_expansion = {
+				weight_distribution: generateWeights(2),
+			},
+		};
+	} else if (bot_class === "Aggressive") {
+		investment_amount_per_slot = {
+			balance_dependence_parameter: 0.5 + Math.random() * 0.1,
+			market_sentiment_dependence_parameter: 0.5 + Math.random() * 0.1,
+		};
+		bundle_expansion = {
+			parameter: 0.4 + Math.random() * 0.1,
+			high_raise_investment_parameters: {
+				parameter: 0.3 + Math.random() * 0.1,
+				weight_distribution: generateWeights(4),
+			},
+			lows_rising_investment_parameters: {
+				parameter: 0.3 + Math.random() * 0.1,
+				weight_distribution: generateWeights(4),
+			},
+			random_investment_parameters: {
+				parameter: 0.2 + Math.random() * 0.1,
+				weight_distribution: generateWeights(4),
+			},
+		};
+	} else if (bot_class === "Speculative") {
+		investment_amount_per_slot = {
+			balance_dependence_parameter: 0.4 + Math.random() * 0.1,
+			market_sentiment_dependence_parameter: 0.6 + Math.random() * 0.1,
+		};
+		bundle_expansion = {
+			parameter: 0.2 + Math.random() * 0.1,
+			high_raise_investment_parameters: {
 				parameter: 0.4 + Math.random() * 0.1,
-				high_raise_investment_parameters: {
-					parameter: 0.3 + Math.random() * 0.1,
-					weight_distribution: generateWeights(4),
-				},
-				lows_rising_investment_parameters: {
-					parameter: 0.3 + Math.random() * 0.1,
-					weight_distribution: generateWeights(4),
-				},
-				random_investment_parameters: {
-					parameter: 0.2 + Math.random() * 0.1,
-					weight_distribution: generateWeights(4),
-				},
-			};
-			break;
-		}
-		case "SPECULATIVE INVESTOR": {
-			investment_amount_per_slot = {
-				balance_dependence_parameter: 0.4 + Math.random() * 0.1,
-				market_sentiment_dependence_parameter: 0.6 + Math.random() * 0.1,
-			};
-			bundle_expansion = {
+				weight_distribution: generateWeights(4),
+			},
+			lows_rising_investment_parameters: {
+				parameter: 0.4 + Math.random() * 0.1,
+				weight_distribution: generateWeights(4),
+			},
+			random_investment_parameters: {
 				parameter: 0.2 + Math.random() * 0.1,
-				high_raise_investment_parameters: {
-					parameter: 0.4 + Math.random() * 0.1,
-					weight_distribution: generateWeights(4),
-				},
-				lows_rising_investment_parameters: {
-					parameter: 0.4 + Math.random() * 0.1,
-					weight_distribution: generateWeights(4),
-				},
-				random_investment_parameters: {
-					parameter: 0.2 + Math.random() * 0.1,
-					weight_distribution: generateWeights(4),
-				},
-			};
-			break;
-		}
-		case "DAY TRADER": {
-			investment_amount_per_slot = {
-				balance_dependence_parameter: 0.5 + Math.random() * 0.1,
-				market_sentiment_dependence_parameter: 0.5 + Math.random() * 0.1,
-			};
-			bundle_expansion = {
-				parameter: 0.5 + Math.random() * 0.1,
-				high_raise_investment_parameters: {
-					parameter: 0.2 + Math.random() * 0.1,
-					weight_distribution: generateWeights(2),
-				},
-				lows_rising_investment_parameters: {
-					parameter: 0.2 + Math.random() * 0.1,
-					weight_distribution: generateWeights(2),
-				},
-				random_investment_parameters: {
-					parameter: 0.6 + Math.random() * 0.1,
-					weight_distribution: generateWeights(5),
-				},
-			};
-		}
+				weight_distribution: generateWeights(4),
+			},
+		};
+	} else if (bot_class === "Random") {
+		investment_amount_per_slot = {
+			balance_dependence_parameter: 0.5 + Math.random() * 0.1,
+			market_sentiment_dependence_parameter: 0.5 + Math.random() * 0.1,
+		};
+		bundle_expansion = {
+			parameter: 0.5 + Math.random() * 0.1,
+			high_raise_investment_parameters: {
+				parameter: 0,
+				weight_distribution: generateWeights(0),
+			},
+			lows_rising_investment_parameters: {
+				parameter: 0,
+				weight_distribution: generateWeights(0),
+			},
+			random_investment_parameters: {
+				parameter: 1,
+				weight_distribution: generateWeights(5),
+			},
+		};
 	}
 	bundle_filling = {
 		parameter: 1 - bundle_expansion.parameter,
@@ -145,5 +136,18 @@ const generateRandomBot = (
 			bundle_filling: bundle_filling,
 			loss_aversion_parameter: [],
 		},
-	};
+	} as BotInterface;
 };
+
+const BotGenerator = async () => {
+	const portfolio_ids = (await PortfolioModel.find({}, { _id: 1 }).exec()).map(
+		(portfolio: { _id: string }) => portfolio._id
+	);
+	return Promise.all(
+		portfolio_ids.map(async (portfolio_id: string) => {
+			console.log(generateRandomBot(portfolio_id, 1));
+		})
+	);
+};
+
+export default BotGenerator;

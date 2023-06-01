@@ -2,7 +2,7 @@ import StockModel from "backend/models/stock.schema";
 import {
 	ValuePoint,
 	createStockDto,
-	STOCK_CLASSES,
+	STOCK_CLASS,
 	StockInterface,
 	StockInterfaceWithID,
 } from "backend/interfaces/stock.interface";
@@ -40,7 +40,7 @@ const StockService = (() => {
 			double_slope: data.double_slope,
 		};
 	};
-	
+
 	const addPoint = async (_id: string, valuePoint: ValuePoint) => {
 		const stock: StockInterfaceWithID = await StockModel.findById(_id).exec();
 		if (!stock) return null;

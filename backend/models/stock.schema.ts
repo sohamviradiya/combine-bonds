@@ -1,48 +1,51 @@
-import { STOCK_CLASSES, ValuePoint } from "backend/interfaces/stock.interface";
+import { STOCK_CLASS, ValuePoint } from "backend/interfaces/stock.interface";
 import mongoose, { Schema } from "mongoose";
 
-const stockSchema = new Schema({
-	name: {
-		type: Schema.Types.String,
-		required: true,
-	},
-	gross_volume: {
-		type: Schema.Types.Number,
-		required: true,
-	},
-	timeline: {
-		type: [
-			{
-				date: {
-					type: Schema.Types.Number,
-					required: true,
+const stockSchema = new Schema(
+	{
+		name: {
+			type: Schema.Types.String,
+			required: true,
+		},
+		gross_volume: {
+			type: Schema.Types.Number,
+			required: true,
+		},
+		timeline: {
+			type: [
+				{
+					date: {
+						type: Schema.Types.Number,
+						required: true,
+					},
+					market_valuation: {
+						type: Schema.Types.Number,
+						required: true,
+					},
+					volume_in_market: {
+						type: Schema.Types.Number,
+						required: true,
+					}, // price = market_valuation / volume_in_market
 				},
-				market_valuation: {
-					type: Schema.Types.Number,
-					required: true,
-				},
-				volume_in_market: {
-					type: Schema.Types.Number,
-					required: true,
-				}, // price = market_valuation / volume_in_market
-			},
-		],
+			],
+		},
+		class: {
+			type: Schema.Types.String,
+			required: true,
+			enum: Object.values(STOCK_CLASS),
+		},
+		createdAt: {
+			type: Schema.Types.Date,
+			required: false,
+		},
+		company: {
+			type: Schema.Types.ObjectId,
+			ref: "Company",
+			required: true,
+		},
 	},
-	class: {
-		type: Schema.Types.String,
-		required: true,
-		enum: Object.values(STOCK_CLASSES),
-	},
-	createdAt: {
-		type: Schema.Types.Date,
-		required: false,
-	},
-	company: {
-		type: Schema.Types.ObjectId,
-		ref: "Company",
-		required: true,
-	},
-}, { toJSON: { virtuals: true } });
+	{ toJSON: { virtuals: true } }
+);
 
 stockSchema.virtual("price").get(function (this: any) {
 	if (this.timeline.length < 1) return 0;
@@ -77,6 +80,7 @@ stockSchema.virtual("double_slope").get(function (this: any) {
 	return (last_slope - second_last_slope) / second_last_slope;
 });
 
-const StockModel = mongoose.models["Stock"] ?? mongoose.model("Stock", stockSchema);
+const StockModel =
+	mongoose.models["Stock"] ?? mongoose.model("Stock", stockSchema);
 
 export default StockModel;
