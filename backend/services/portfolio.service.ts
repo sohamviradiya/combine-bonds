@@ -47,15 +47,20 @@ const PortfolioService = (() => {
 		transaction: Transaction
 	): Promise<PortfolioInterfaceWithID> => {
 		let portfolio = await getPortfolio(id);
-		if (transaction.class === "ACCOUNT DEPOSIT")
-			portfolio = TransactionService.deposit(portfolio, transaction);
-		else if (transaction.class === "ACCOUNT WITHDRAWAL")
-			portfolio = TransactionService.withdraw(portfolio, transaction);
-		else if (transaction.class === "STOCK PURCHASE")
-			portfolio = await TransactionService.buyStock(portfolio, transaction);
-		else if (transaction.class === "STOCK SALE")
-			portfolio = await TransactionService.sellStock(portfolio, transaction);
-		else throw new Error("Invalid transaction class");
+		try {
+			if (transaction.class === "ACCOUNT DEPOSIT")
+				portfolio = TransactionService.deposit(portfolio, transaction);
+			else if (transaction.class === "ACCOUNT WITHDRAWAL")
+				portfolio = TransactionService.withdraw(portfolio, transaction);
+			else if (transaction.class === "STOCK PURCHASE")
+				portfolio = await TransactionService.buyStock(portfolio, transaction);
+			else if (transaction.class === "STOCK SALE")
+				portfolio = await TransactionService.sellStock(portfolio, transaction);
+			else throw new Error("Invalid transaction class");
+		} catch (err) {
+			throw err;
+		}
+		portfolio.transactions.push(transaction);
 		return await updatePortfolio(portfolio, id);
 	};
 

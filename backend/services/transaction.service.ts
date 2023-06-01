@@ -17,7 +17,7 @@ const TransactionService = (() => {
 				price: 1,
           }).exec();
           if (stockIndex === -1) {
-			const stock_quantity = Math.round(transaction.amount / stock_price.price);
+			const stock_quantity = transaction.amount / stock_price.price;
 			portfolio.investments.push({stock: transaction.stock,quantity: stock_quantity });
 		} else {
 			portfolio.investments[stockIndex].quantity += Math.round(
@@ -38,7 +38,7 @@ const TransactionService = (() => {
           const stock_price = await StockModel.findById(transaction.stock, {
                price: 1,
           }).exec();
-          const stock_quantity = Math.round(transaction.amount / stock_price.price);
+          const stock_quantity = transaction.amount / stock_price.price;
           if (portfolio.investments[stockIndex].quantity < stock_quantity) throw new Error("Insufficient stocks");
           portfolio.investments[stockIndex].quantity -= stock_quantity;
           portfolio.currentBalance += transaction.amount;
