@@ -12,8 +12,6 @@ const StockService = (() => {
 	const addStock = async (stock: createStockDto) => {
 		const newStock = {
 			...stock,
-			timeline: [stock.initial_value],
-			gross_volume: 1000000,
 			createdAt: new Date(),
 		} as StockInterface;
 		const newStockDoc = await new StockModel({ ...newStock }).save();
@@ -34,12 +32,21 @@ const StockService = (() => {
 		);
 	};
 	const getStock = async (_id: string): Promise<StockInterfaceWithID> => {
-		return await StockModel.findById(_id).exec();
+		const data = await StockModel.findById(_id).exec();
+		return {
+			...data._doc,
+			price: data.price,
+			slope: data.slope,
+			double_slope: data.double_slope,
+		};
 	};
+	
 	const addPoint = async (_id: string, valuePoint: ValuePoint) => {
-		const stock : StockInterfaceWithID = await StockModel.findById(_id).exec();
+		const stock: StockInterfaceWithID = await StockModel.findById(_id).exec();
 		if (!stock) return null;
-		stock.timeline = stock.timeline.filter((point) => point.date < valuePoint.date - 100);
+		stock.timeline = stock.timeline.filter(
+			(point) => point.date < valuePoint.date - 100
+		);
 		stock.timeline.push(valuePoint);
 		return await StockModel.findByIdAndUpdate(_id, stock).exec();
 	};

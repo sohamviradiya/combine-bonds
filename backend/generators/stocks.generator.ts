@@ -24,16 +24,21 @@ const generateRandomStock = async (
 		name: string;
 		_id: string;
 	} = await CompanyModel.findById(company_id).exec();
+	const gross_volume = Math.floor((0.1 + Math.random()) * Math.pow(10, 7 + 3 * Math.random()));
+	const market_valuation = gross_volume * (0.1 + Math.random()) * 100;
 	return {
 		name:
 			"$" + String(company.name).toUpperCase().slice(0, 4) + " " + stock_class,
 		class: stock_class,
 		company: company._id,
-		initial_value: {
-			date: 0,
-			market_valuation: Math.floor(Math.random() * 1000000000),
-			volume_in_market: Math.floor(Math.random() * 10000000),
-		},
+		gross_volume,
+		timeline: [
+			{
+				date: 0,
+				market_valuation,
+				volume_in_market: 0,
+			},
+		],
 	} as createStockDto;
 };
 const AddRandomStocks = async (
@@ -42,14 +47,10 @@ const AddRandomStocks = async (
 ) => {
 	return await Promise.all(
 		company_ids.map(async (company_id): Promise<StockInterfaceWithID> => {
-			const stock = await generateRandomStock(
-				company_id,
-				stock_class
-			);
+			const stock = await generateRandomStock(company_id, stock_class);
 			return (await StockService.addStock(stock)) as StockInterfaceWithID;
 		})
 	);
 };
-
 
 export default StockGenerator;

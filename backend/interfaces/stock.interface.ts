@@ -27,9 +27,4 @@ export type StockInterfaceWithID = StockInterface & {
 	double_slope: number;
 };
 
-export type createStockDto = Omit<
-	StockInterface,
-	"timeline" | "gross_volume" | "createdAt"
-> & {
-	initial_value: ValuePoint;
-};
+export type createStockDto = Omit<StockInterface, "createdAt">;
