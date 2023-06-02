@@ -12,10 +12,7 @@ const generateWeights = (num: number) => {
 	return weights;
 };
 
-const generateBot = (
-	portfolio_id: string,
-	trade_period: number
-): BotInterface => {
+const generateBot = (portfolio_id: string, trade_period: number): BotInterface => {
 	const bot_class = Object.values(BOT_CLASS)[Math.floor(Math.random() * 4)];
 	let investment_amount_per_slot = {
 		balance_dependence_parameter: 0,
@@ -44,7 +41,7 @@ const generateBot = (
 	if (bot_class == "Safe") {
 		investment_amount_per_slot = {
 			balance_dependence_parameter: 0.3 + Math.random() * 0.1,
-			market_sentiment_dependence_parameter: 0.3 + Math.random() * 0.1,
+			market_sentiment_dependence_parameter: 0,
 		};
 		bundle_expansion = {
 			parameter: 0.2 + Math.random() * 0.1,
@@ -57,14 +54,14 @@ const generateBot = (
 				weight_distribution: generateWeights(2),
 			},
 			random_investment_parameters: {
-				parameter: 0.2 + Math.random() * 0.1,
+				parameter: 0,
 				weight_distribution: generateWeights(2),
 			},
 		};
 	} else if (bot_class == "Aggressive") {
 		investment_amount_per_slot = {
 			balance_dependence_parameter: 0.5 + Math.random() * 0.1,
-			market_sentiment_dependence_parameter: 0.5 + Math.random() * 0.1,
+			market_sentiment_dependence_parameter: 0,
 		};
 		bundle_expansion = {
 			parameter: 0.4 + Math.random() * 0.1,
@@ -77,7 +74,7 @@ const generateBot = (
 				weight_distribution: generateWeights(4),
 			},
 			random_investment_parameters: {
-				parameter: 0.2 + Math.random() * 0.1,
+				parameter: 0,
 				weight_distribution: generateWeights(4),
 			},
 		};
@@ -122,10 +119,17 @@ const generateBot = (
 			},
 		};
 	} else throw new Error("Bot class not found");
+	investment_amount_per_slot.market_sentiment_dependence_parameter =
+		1 - investment_amount_per_slot.balance_dependence_parameter;
 	bundle_filling = {
 		parameter: 1 - bundle_expansion.parameter,
 		weight_distribution: [],
 	};
+	bundle_expansion.random_investment_parameters.parameter =
+		1 -
+		bundle_expansion.high_raise_investment_parameters.parameter -
+		bundle_expansion.lows_rising_investment_parameters.parameter;
+
 	return {
 		portfolio: portfolio_id,
 		trade_period: trade_period,
