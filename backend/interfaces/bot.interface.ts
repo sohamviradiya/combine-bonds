@@ -36,6 +36,7 @@ type BotInterface = {
 		loss_aversion_parameter: {
 			reference_price: number;
 			tolerable_relative_loss: number;
+			stock: string;
 		}[];
 	};
 };

@@ -7,7 +7,7 @@ const BotSchema = new Schema({
 		enum: ["Safe", "Aggressive", "Speculative", "Random"],
 	},
 	trade_period: {
-		type: Schema.Types.Number, 
+		type: Schema.Types.Number,
 		required: true,
 	},
 	portfolio: {
@@ -33,7 +33,6 @@ const BotSchema = new Schema({
 			},
 			high_raise_investment_parameters: {
 				parameter: {
-					
 					type: Schema.Types.Decimal128,
 					required: true,
 				},
@@ -42,7 +41,7 @@ const BotSchema = new Schema({
 						{
 							type: Schema.Types.Decimal128,
 							required: true,
-						}, 
+						},
 					],
 				},
 			},
@@ -56,7 +55,7 @@ const BotSchema = new Schema({
 						{
 							type: Schema.Types.Decimal128,
 							required: true,
-						}, 
+						},
 					],
 				},
 			},
@@ -100,6 +99,11 @@ const BotSchema = new Schema({
 						type: Schema.Types.Decimal128,
 						required: true,
 					},
+					stock: {
+						type: Schema.Types.ObjectId,
+						ref: "Stock",
+						required: true,
+					}
 				},
 			],
 		},
