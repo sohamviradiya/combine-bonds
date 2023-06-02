@@ -12,7 +12,7 @@ const generateWeights = (num: number) => {
 	return weights;
 };
 
-const generateRandomBot = (
+const generateBot = (
 	portfolio_id: string,
 	trade_period: number
 ): BotInterface => {
@@ -41,7 +41,7 @@ const generateRandomBot = (
 		weight_distribution: Array<number>(),
 	};
 
-	if (bot_class === "Safe") {
+	if (bot_class == "Safe") {
 		investment_amount_per_slot = {
 			balance_dependence_parameter: 0.3 + Math.random() * 0.1,
 			market_sentiment_dependence_parameter: 0.3 + Math.random() * 0.1,
@@ -61,7 +61,7 @@ const generateRandomBot = (
 				weight_distribution: generateWeights(2),
 			},
 		};
-	} else if (bot_class === "Aggressive") {
+	} else if (bot_class == "Aggressive") {
 		investment_amount_per_slot = {
 			balance_dependence_parameter: 0.5 + Math.random() * 0.1,
 			market_sentiment_dependence_parameter: 0.5 + Math.random() * 0.1,
@@ -81,7 +81,7 @@ const generateRandomBot = (
 				weight_distribution: generateWeights(4),
 			},
 		};
-	} else if (bot_class === "Speculative") {
+	} else if (bot_class == "Speculative") {
 		investment_amount_per_slot = {
 			balance_dependence_parameter: 0.4 + Math.random() * 0.1,
 			market_sentiment_dependence_parameter: 0.6 + Math.random() * 0.1,
@@ -101,7 +101,7 @@ const generateRandomBot = (
 				weight_distribution: generateWeights(4),
 			},
 		};
-	} else if (bot_class === "Random") {
+	} else if (bot_class == "Random") {
 		investment_amount_per_slot = {
 			balance_dependence_parameter: 0.5 + Math.random() * 0.1,
 			market_sentiment_dependence_parameter: 0.5 + Math.random() * 0.1,
@@ -121,7 +121,7 @@ const generateRandomBot = (
 				weight_distribution: generateWeights(5),
 			},
 		};
-	}
+	} else throw new Error("Bot class not found");
 	bundle_filling = {
 		parameter: 1 - bundle_expansion.parameter,
 		weight_distribution: [],
@@ -129,7 +129,7 @@ const generateRandomBot = (
 	return {
 		portfolio: portfolio_id,
 		trade_period: trade_period,
-		class: bot_class,
+		bot_class,
 		parameters: {
 			investment_amount_per_slot: investment_amount_per_slot,
 			bundle_expansion: bundle_expansion,
@@ -145,7 +145,7 @@ const BotGenerator = async () => {
 	);
 	return Promise.all(
 		portfolio_ids.map(async (portfolio_id: string) => {
-			console.log(generateRandomBot(portfolio_id, 1));
+			await BotService.addBot(generateBot(portfolio_id, 1));
 		})
 	);
 };

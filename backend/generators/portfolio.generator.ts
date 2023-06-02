@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { createPortfolioDTO } from "backend/interfaces/portfolio.interface";
 import PortfolioService from "backend/services/portfolio.service";
-const generateRandomPortfolio = (): createPortfolioDTO => {
+const generatePortfolio = (): createPortfolioDTO => {
 	return {
 		user: {
 			name: faker.internet.userName(),
@@ -10,10 +10,9 @@ const generateRandomPortfolio = (): createPortfolioDTO => {
 	};
 };
 
-
 const PortfolioGenerator = async () => {
-	for(let i = 0; i < 10; i++) {
-		await PortfolioService.addPortfolio(generateRandomPortfolio());
+	for (let i = 0; i < 10; i++) {
+		await PortfolioService.addPortfolio(generatePortfolio());
 	}
 };
 

@@ -5,10 +5,10 @@ export type ValuePoint = {
 };
 
 export enum STOCK_CLASS {
-	"Voting" = 0, // high volume dependence
-	"Non-Voting" = 1, // high market sentiment dependence
-	"Bond" = 2, // low random fluctuation, high market sentiment dependence
-	"Debenture" = 3, // high random fluctuation, high market sentiment dependence, high volume dependence
+	"Voting" = 0, 
+	"Non-Voting" = 1, 
+	"Bond" = 2,
+	"Debenture" = 3, 
 }
 
 export type StockInterface = {

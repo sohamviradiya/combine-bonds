@@ -38,7 +38,7 @@ const generateAgency = async (stock_id: string): Promise<AgencyInterface> => {
 		market_volume_dependence_parameter = 0.5 + Math.random() * 0.1;
 	}
 	return {
-		class: agency_class,
+		agency_class,
 		stock: stock_id,
 		market_valuation_parameter: {
 			steady_increase,
@@ -58,7 +58,5 @@ const AgencyGenerator = async () => {
 		)
 	);
 };
-
-
 
 export default AgencyGenerator;

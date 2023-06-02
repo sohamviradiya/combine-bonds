@@ -1,13 +1,13 @@
 export enum BOT_CLASS {
-	"Safe", // high bundle filling, low bundle expansion, very high trade period
-	"Aggressive", // high random investment, low trade period
-	"Speculative", // low random investment, high trade period
-	"Random", // high bundle expansion, low bundle filling, low trade period
+	"Safe", 
+	"Aggressive", 
+	"Speculative",
+	"Random", 
 }
 
 type BotInterface = {
-	class: keyof typeof BOT_CLASS;
-	trade_period: number; // in slots (1 slot = 15 minute)
+	bot_class: keyof typeof BOT_CLASS;
+	trade_period: number;
 	portfolio: string;
 	parameters: {
 		investment_amount_per_slot: {

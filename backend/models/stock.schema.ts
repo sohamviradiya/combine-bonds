@@ -25,7 +25,7 @@ const stockSchema = new Schema(
 					volume_in_market: {
 						type: Schema.Types.Number,
 						required: true,
-					}, // price = market_valuation / volume_in_market
+					}, 
 				},
 			],
 		},

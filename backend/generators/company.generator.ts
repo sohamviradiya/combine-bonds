@@ -8,7 +8,7 @@ import { faker } from "@faker-js/faker";
 
 const company_names = [] as string[];
 
-const generateRandomCompany = (): createCompanyDto => {
+const generateCompany = (): createCompanyDto => {
 	let company_name = faker.science.chemicalElement().name;
 	while (company_names.includes(company_name))
 		company_name = faker.science.chemicalElement().name;
@@ -26,7 +26,7 @@ const generateRandomCompany = (): createCompanyDto => {
 
 const CompanyGenerator = async () => {
 	for (let i = 0; i < 25; i++)
-		await CompanyService.addCompany(generateRandomCompany());
+		await CompanyService.addCompany(generateCompany());
 };
 
 export default CompanyGenerator;

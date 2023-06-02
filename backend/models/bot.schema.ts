@@ -1,13 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 
 const BotSchema = new Schema({
-	class: {
+	bot_class: {
 		type: Schema.Types.String,
 		required: true,
 		enum: ["Safe", "Aggressive", "Speculative", "Random"],
 	},
 	trade_period: {
-		type: Schema.Types.Number, // in slots (1 slot = 15 minute)
+		type: Schema.Types.Number, 
 		required: true,
 	},
 	portfolio: {
@@ -18,7 +18,6 @@ const BotSchema = new Schema({
 	parameters: {
 		investment_amount_per_slot: {
 			balance_dependence_parameter: {
-				//% of total account balance (<1%) * relative increase in market cap during last slot
 				type: Schema.Types.Decimal128,
 				required: true,
 			},
@@ -34,7 +33,7 @@ const BotSchema = new Schema({
 			},
 			high_raise_investment_parameters: {
 				parameter: {
-					// top-n stocks
+					
 					type: Schema.Types.Decimal128,
 					required: true,
 				},
@@ -43,13 +42,12 @@ const BotSchema = new Schema({
 						{
 							type: Schema.Types.Decimal128,
 							required: true,
-						}, // sum of weights = 1
+						}, 
 					],
 				},
 			},
 			lows_rising_investment_parameters: {
 				parameter: {
-					// top-n stock with d/dt(price) ~ 0 and d2/dt2(price) > 0
 					type: Schema.Types.Decimal128,
 					required: true,
 				},
@@ -58,13 +56,12 @@ const BotSchema = new Schema({
 						{
 							type: Schema.Types.Decimal128,
 							required: true,
-						}, // sum of weights = 1
+						}, 
 					],
 				},
 			},
 			random_investment_parameters: {
 				parameter: {
-					// random-n stocks
 					type: Schema.Types.Decimal128,
 					required: true,
 				},
@@ -80,7 +77,6 @@ const BotSchema = new Schema({
 		},
 		bundle_filling: {
 			parameter: {
-				// increasing investment in the existing bundle
 				type: Schema.Types.Decimal128,
 				required: true,
 			},
@@ -111,4 +107,5 @@ const BotSchema = new Schema({
 });
 
 const BotModel = mongoose.models["Bot"] ?? mongoose.model("Bot", BotSchema);
+
 export default BotModel;

@@ -1,12 +1,9 @@
 export enum AGENCY_CLASS {
-	"Steady", // low random fluctuation, low market sentiment dependence, low volume dependence
-	"Trendy", // high market sentiment dependence, low volume dependence,
-	"Random", // high random fluctuation, low market sentiment dependence, low volume dependence
-	"Aggressive", // high volume dependence, high market sentiment dependence
+	"Steady", "Trendy", "Random", "Aggressive", 
 }
 
 type AgencyInterface = {
-	class: keyof typeof AGENCY_CLASS;
+	agency_class: keyof typeof AGENCY_CLASS;
 	stock: string;
 	market_valuation_parameter: {
 		steady_increase: number;

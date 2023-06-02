@@ -13,10 +13,6 @@ const MarketSchema = new Schema({
 		type: Schema.Types.Number,
 		required: true,
 	},
-	market_sentience_index: {
-		type: Schema.Types.Number,
-		required: true,
-	},
 }, { toJSON: { virtuals: true } });
 
 const MarketModel = mongoose.models["Market"] ?? mongoose.model("Market", MarketSchema);
