@@ -47,12 +47,14 @@ const StockService = (() => {
 		return stocks.map((stock) => stock._id);
 	}
 	const getHighSlopeStocks = async (count: number) => {
-		const stocks = await StockModel.find({}, { _id: 1 }).sort({ slope: -1 }).limit(count).exec();
-		return stocks.map((stock) => stock._id);
+		const stocks = await getStocks();
+		stocks.sort((a, b) => b.slope - a.slope);
+		return stocks.slice(0, count).map((stock) => stock._id);
 	}
 	const getHighDoubleSlopeStocks = async (count: number) => {
-		const stocks = await StockModel.find({}, { _id: 1 }).sort({ double_slope: -1 }).limit(count).exec();
-		return stocks.map((stock) => stock._id);
+		const stocks = await getStocks();
+		stocks.sort((a, b) => b.double_slope - a.double_slope);
+		return stocks.slice(0, count).map((stock) => stock._id);
 	}
 
 	return { changeVolume, addStock, getStocks, getStock, addPoint, getRandomStocks, getHighSlopeStocks, getHighDoubleSlopeStocks };
