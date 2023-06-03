@@ -37,6 +37,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 		parameter: 0,
 		weight_distribution: Array<number>(),
 	};
+	let loss_aversion_parameter = 0;
 
 	if (bot_class == "Safe") {
 		investment_amount_per_slot = {
@@ -58,6 +59,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 				weight_distribution: generateWeights(2),
 			},
 		};
+		loss_aversion_parameter = 0.1 + Math.random() * 0.1;
 	} else if (bot_class == "Aggressive") {
 		investment_amount_per_slot = {
 			balance_dependence_parameter: 0.5 + Math.random() * 0.1,
@@ -78,6 +80,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 				weight_distribution: generateWeights(4),
 			},
 		};
+		loss_aversion_parameter = 0.2 + Math.random() * 0.1;
 	} else if (bot_class == "Speculative") {
 		investment_amount_per_slot = {
 			balance_dependence_parameter: 0.4 + Math.random() * 0.1,
@@ -98,6 +101,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 				weight_distribution: generateWeights(4),
 			},
 		};
+		loss_aversion_parameter = 0.15 + Math.random() * 0.1;
 	} else if (bot_class == "Random") {
 		investment_amount_per_slot = {
 			balance_dependence_parameter: 0.5 + Math.random() * 0.1,
@@ -118,6 +122,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 				weight_distribution: generateWeights(5),
 			},
 		};
+		loss_aversion_parameter = 0.3 + Math.random() * 0.1;
 	} else throw new Error("Bot class not found");
 	investment_amount_per_slot.market_sentiment_dependence_parameter =
 		1 - investment_amount_per_slot.balance_dependence_parameter;
@@ -138,7 +143,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 			investment_amount_per_slot: investment_amount_per_slot,
 			bundle_expansion: bundle_expansion,
 			bundle_filling: bundle_filling,
-			loss_aversion_parameter: [],
+			loss_aversion_parameter,
 		},
 	} as BotInterface;
 };

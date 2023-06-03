@@ -89,23 +89,8 @@ const BotSchema = new Schema({
 			},
 		},
 		loss_aversion_parameter: {
-			type: [
-				{
-					reference_price: {
-						type: Schema.Types.Decimal128,
-						required: true,
-					},
-					tolerable_relative_loss: {
-						type: Schema.Types.Decimal128,
-						required: true,
-					},
-					stock: {
-						type: Schema.Types.ObjectId,
-						ref: "Stock",
-						required: true,
-					}
-				},
-			],
+			type: Schema.Types.Decimal128,
+			required: true,
 		},
 	},
 });

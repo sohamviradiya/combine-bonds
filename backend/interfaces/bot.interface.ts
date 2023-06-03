@@ -1,8 +1,8 @@
 export enum BOT_CLASS {
-	"Safe", 
-	"Aggressive", 
+	"Safe",
+	"Aggressive",
 	"Speculative",
-	"Random", 
+	"Random",
 }
 
 type BotInterface = {
@@ -33,16 +33,16 @@ type BotInterface = {
 			parameter: number;
 			weight_distribution: number[];
 		};
-		loss_aversion_parameter: {
-			reference_price: number;
-			tolerable_relative_loss: number;
-			stock: string;
-		}[];
+		loss_aversion_parameter: number;
 	};
 };
+
+
+const BOT_PATIENCE = 0.1;
 
 export type BotInterfaceWithID = BotInterface & {
 	_id: string;
 };
 
 export default BotInterface;
+export { BOT_PATIENCE };
