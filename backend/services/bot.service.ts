@@ -14,6 +14,9 @@ const BotService = (() => {
 	const getBot = async (bot_id: string) => {
 		return await BotModel.findById(bot_id).exec();
 	};
+
+
+	
 	return {
 		addBot,
 		getBots,
