@@ -1,20 +1,14 @@
 import StockModel from "backend/models/stock.schema";
-import {
-	ValuePoint,
-	createStockDto,
-	STOCK_CLASS,
-	StockInterface,
-	StockInterfaceWithID,
-} from "backend/interfaces/stock.interface";
+import { ValuePoint, createStockDto, StockInterface, StockInterfaceWithID } from "backend/interfaces/stock.interface";
 import CompanyModel from "backend/models/company.schema";
 const StockService = (() => {
-	const addStock = async (stock: createStockDto) => {
+	const add = async (stock: createStockDto) => {
 		const newStock = { ...stock, createdAt: new Date() } as StockInterface;
 		const newStockDoc = await new StockModel({ ...newStock }).save();
 		await CompanyModel.findByIdAndUpdate(stock.company, { $push: { stocks: newStockDoc._id } }).exec();
 		return newStockDoc;
 	};
-	const getStocks = async () => {
+	const getAll = async () => {
 		const data = await StockModel.find().exec();
 		return data.map(
 			(stock): StockInterfaceWithID => ({
@@ -25,7 +19,7 @@ const StockService = (() => {
 			})
 		);
 	};
-	const getStock = async (_id: string): Promise<StockInterfaceWithID> => {
+	const get = async (_id: string): Promise<StockInterfaceWithID> => {
 		const data = await StockModel.findById(_id).exec();
 		return { ...data._doc, price: data.price, slope: data.slope, double_slope: data.double_slope };
 	};
@@ -35,6 +29,11 @@ const StockService = (() => {
 		stock.timeline[stock.timeline.length - 1].volume_in_market += change;
 		return StockModel.findByIdAndUpdate(_id, stock).exec();
 	};
+	const getMarketCap = async (_id: string) => {
+		const { timeline }: { timeline: Array<ValuePoint> } = await StockModel.findById(_id, { timeline: 1 }).exec();
+		return timeline[timeline.length - 1].market_valuation;
+	};
+
 	const addPoint = async (_id: string, valuePoint: ValuePoint) => {
 		const stock: StockInterfaceWithID = await StockModel.findById(_id).exec();
 		if (!stock) return null;
@@ -42,30 +41,21 @@ const StockService = (() => {
 		stock.timeline.push(valuePoint);
 		return await StockModel.findByIdAndUpdate(_id, stock).exec();
 	};
-	const getRandomStocks = async (count: number) => {
+	const getRandom = async (count: number) => {
 		const stocks = await StockModel.find({}, { _id: 1 }).limit(count).exec();
 		return stocks.map((stock) => stock._id);
 	};
-	const getHighSlopeStocks = async (count: number) => {
-		const stocks = await getStocks();
+	const getHighSlope = async (count: number) => {
+		const stocks = await getAll();
 		stocks.sort((a, b) => b.slope - a.slope);
 		return stocks.slice(0, count).map((stock) => stock._id);
 	};
-	const getHighDoubleSlopeStocks = async (count: number) => {
-		const stocks = await getStocks();
+	const getHighDoubleSlope = async (count: number) => {
+		const stocks = await getAll();
 		stocks.sort((a, b) => b.double_slope - a.double_slope);
 		return stocks.slice(0, count).map((stock) => stock._id);
 	};
 
-	return {
-		changeVolume,
-		addStock,
-		getStocks,
-		getStock,
-		addPoint,
-		getRandomStocks,
-		getHighSlopeStocks,
-		getHighDoubleSlopeStocks,
-	};
+	return { changeVolume, add, getAll, get, addPoint, getMarketCap, getRandom, getHighSlope, getHighDoubleSlope };
 })();
 export default StockService;

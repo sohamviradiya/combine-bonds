@@ -1,17 +1,12 @@
 import CompanyService from "backend/services/company.service";
-import {
-	COMPANY_FIELDS,
-	COMPANY_FORMS,
-	createCompanyDto,
-} from "backend/interfaces/company.interface";
+import { COMPANY_FIELDS, COMPANY_FORMS, createCompanyDto } from "backend/interfaces/company.interface";
 import { faker } from "@faker-js/faker";
 
 const company_names = [] as string[];
 
 const generateCompany = (): createCompanyDto => {
 	let company_name = faker.science.chemicalElement().name;
-	while (company_names.includes(company_name))
-		company_name = faker.science.chemicalElement().name;
+	while (company_names.includes(company_name)) company_name = faker.science.chemicalElement().name;
 	return {
 		name: company_name,
 		field: Object.values(COMPANY_FIELDS)[Math.floor(Math.random() * 14)],
@@ -25,8 +20,7 @@ const generateCompany = (): createCompanyDto => {
 };
 
 const CompanyGenerator = async () => {
-	for (let i = 0; i < 25; i++)
-		await CompanyService.addCompany(generateCompany());
+	for (let i = 0; i < 25; i++) await CompanyService.add(generateCompany());
 };
 
 export default CompanyGenerator;

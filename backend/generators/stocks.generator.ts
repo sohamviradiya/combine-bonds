@@ -33,7 +33,7 @@ const AddRandomStocks = async (company_ids: string[], stock_class: keyof typeof 
 	return await Promise.all(
 		company_ids.map(async (company_id): Promise<StockInterfaceWithID> => {
 			const stock = await generateStock(company_id, stock_class);
-			return (await StockService.addStock(stock)) as StockInterfaceWithID;
+			return (await StockService.add(stock)) as StockInterfaceWithID;
 		})
 	);
 };

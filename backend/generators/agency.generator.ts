@@ -1,16 +1,11 @@
 import AgencyService from "backend/services/agency.service";
 import StockModel from "backend/models/stock.schema";
-import AgencyInterface, {
-	AGENCY_CLASS,
-} from "backend/interfaces/agency.interface";
+import AgencyInterface, { AGENCY_CLASS } from "backend/interfaces/agency.interface";
 import StockService from "backend/services/stock.service";
 
 const generateAgency = async (stock_id: string): Promise<AgencyInterface> => {
-	const stock = await StockService.getStock(stock_id);
-	const agency_class =
-		stock.class == "Bond"
-			? "Steady"
-			: Object.values(AGENCY_CLASS)[Math.floor(Math.random() * 4)];
+	const stock = await StockService.get(stock_id);
+	const agency_class = stock.class == "Bond" ? "Steady" : Object.values(AGENCY_CLASS)[Math.floor(Math.random() * 4)];
 	let steady_increase = 0;
 	let random_fluctuation = 0;
 	let market_sentiment_dependence_parameter = 0;
@@ -51,12 +46,7 @@ const generateAgency = async (stock_id: string): Promise<AgencyInterface> => {
 
 const AgencyGenerator = async () => {
 	const stock_ids = await StockModel.find({}, { _id: 1 }).exec();
-	return await Promise.all(
-		stock_ids.map(
-			async (stock) =>
-				await AgencyService.addAgency(await generateAgency(stock._id))
-		)
-	);
+	return await Promise.all(stock_ids.map(async (stock) => await AgencyService.add(await generateAgency(stock._id))));
 };
 
 export default AgencyGenerator;

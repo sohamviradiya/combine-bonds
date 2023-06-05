@@ -7,7 +7,7 @@ import PortfolioModel from "backend/models/portfolio.schema";
 import TransactionService from "./transaction.service";
 import StockService from "./stock.service";
 const PortfolioService = (() => {
-	const addPortfolio = async (portfolio: createPortfolioDTO): Promise<PortfolioInterface> => {
+	const add = async (portfolio: createPortfolioDTO): Promise<PortfolioInterface> => {
 		return await new PortfolioModel({
 			...portfolio,
 			transactions: [],
@@ -22,22 +22,16 @@ const PortfolioService = (() => {
 		}).save();
 	};
 
-	const getPortfolios = async (): Promise<PortfolioInterface[]> => {
+	const getAll = async (): Promise<PortfolioInterface[]> => {
 		return await PortfolioModel.find().exec();
 	};
 
-	const getPortfolio = async (portfolio_id: string): Promise<PortfolioInterface> => {
+	const get = async (portfolio_id: string): Promise<PortfolioInterface> => {
 		return await PortfolioModel.findById(portfolio_id).exec();
 	};
 
-	const updatePortfolio = async (portfolio: PortfolioInterface, id: string): Promise<PortfolioInterfaceWithID> => {
-		return await PortfolioModel.findByIdAndUpdate(id, portfolio, {
-			new: true,
-		}).exec();
-	};
-
 	const performTransaction = async (id: string, transaction: Transaction): Promise<PortfolioInterfaceWithID> => {
-		let portfolio = await getPortfolio(id);
+		let portfolio = await get(id);
 		try {
 			if (transaction.class === "ACCOUNT DEPOSIT") portfolio = TransactionService.deposit(portfolio, transaction);
 			else if (transaction.class === "ACCOUNT WITHDRAWAL")
@@ -51,15 +45,15 @@ const PortfolioService = (() => {
 			throw err;
 		}
 		portfolio.transactions.push(transaction);
-		return await updatePortfolio(portfolio, id);
+		return await PortfolioModel.findByIdAndUpdate(id, portfolio, { new: true }).exec();
 	};
 
-	const evaluatePortfolio = async (portfolio_id: string) => {
-		const portfolio = await getPortfolio(portfolio_id);
+	const evaluate = async (portfolio_id: string) => {
+		const portfolio = await get(portfolio_id);
 		const investments = portfolio.investments;
 		const new_stock_amounts = await Promise.all(
 			investments.map(async (investment) => {
-				const stock_price = (await StockService.getStock(investment.stock)).price;
+				const stock_price = (await StockService.get(investment.stock)).price;
 				return investment.quantity * stock_price;
 			})
 		);
@@ -70,13 +64,7 @@ const PortfolioService = (() => {
 		});
 	};
 
-	return {
-		evaluatePortfolio,
-		addPortfolio,
-		getPortfolios,
-		getPortfolio,
-		performTransaction,
-	};
+	return { evaluate, add, getAll, get, performTransaction };
 })();
 
 export default PortfolioService;

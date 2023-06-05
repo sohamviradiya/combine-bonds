@@ -3,22 +3,22 @@ import AgencyModel from "backend/models/agency.schema";
 import StockService from "./stock.service";
 import MarketService from "./market.service";
 const AgencyService = (() => {
-	const addAgency = async (agency: AgencyInterface) => {
+	const add = async (agency: AgencyInterface) => {
 		const newAgency = new AgencyModel({
 			...agency,
 		});
 		return await newAgency.save();
 	};
-	const getAgencies = async () => {
+	const getAll = async () => {
 		return await AgencyModel.find({}).exec();
 	};
-	const getAgency = async (agency_id: string) => {
+	const get = async (agency_id: string) => {
 		return await AgencyModel.findById(agency_id).exec();
 	};
-	const evaluateAgency = async (agency_id: string) => {
-		const agency = await getAgency(agency_id);
+	const evaluate = async (agency_id: string) => {
+		const agency = await get(agency_id);
 		const parameters = agency.market_valuation_parameter;
-		const stock = await StockService.getStock(agency.stock);
+		const stock = await StockService.get(agency.stock);
 		let market_valuation = stock.timeline[stock.timeline.length - 1].market_valuation;
 
 		market_valuation = (1 + INTENSITY_CONSTANT * parameters.steady_increase) * market_valuation;
@@ -50,12 +50,7 @@ const AgencyService = (() => {
 		return market_valuation;
 	};
 
-	return {
-		addAgency,
-		getAgencies,
-		getAgency,
-		EvaluateAgency: evaluateAgency,
-	};
+	return { add, getAll, get, evaluate };
 })();
 
 export default AgencyService;

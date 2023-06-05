@@ -12,7 +12,7 @@ const generatePortfolio = (): createPortfolioDTO => {
 
 const PortfolioGenerator = async () => {
 	for (let i = 0; i < 10; i++) {
-		await PortfolioService.addPortfolio(generatePortfolio());
+		await PortfolioService.add(generatePortfolio());
 	}
 };
 

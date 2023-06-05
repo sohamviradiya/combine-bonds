@@ -1,7 +1,7 @@
 import MarketModel from "backend/models/market.schema";
 
 const MarketService = (() => {
-	const getMarket = async () => {
+	const get = async () => {
 		return await MarketModel.aggregate([
 			{
 				$group: {
@@ -11,7 +11,7 @@ const MarketService = (() => {
 			},
 		]).exec();
 	};
-	const getMarketTimeline = async () => {
+	const getTimeline = async () => {
 		return await MarketModel.find().exec();
 	};
 	const getRelativeCumulativeMarketCapitalization = async () => {
@@ -25,7 +25,7 @@ const MarketService = (() => {
 		const [Market, prevMarket] = await MarketModel.find({}).sort({ date: -1 }).limit(2).exec();
 		return (Market.cumulative_net_worth - prevMarket.cumulative_net_worth) / prevMarket.cumulative_net_worth;
 	};
-	return { getMarket, getMarketTimeline, getRelativeCumulativeMarketCapitalization, getRelativeCumulativeNetWorth };
+	return { get, getTimeline, getRelativeCumulativeMarketCapitalization, getRelativeCumulativeNetWorth };
 })();
 
 export default MarketService;
