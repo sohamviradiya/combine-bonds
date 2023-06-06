@@ -154,7 +154,7 @@ const BotGenerator = async () => {
 	);
 	return Promise.all(
 		portfolio_ids.map(async (portfolio_id: string) => {
-			await BotService.addBot(generateBot(portfolio_id, 1));
+			await BotService.add(generateBot(portfolio_id, 1));
 		})
 	);
 };

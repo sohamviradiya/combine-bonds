@@ -13,23 +13,22 @@ const AgencySchema = new Schema({
 	},
 	market_valuation_parameter: {
 		steady_increase: {
-			type: Schema.Types.Decimal128,
+			type: Schema.Types.Number,
 			required: true,
 		},
 		random_fluctuation: {
-			type: Schema.Types.Decimal128,
+			type: Schema.Types.Number,
 			required: true,
 		},
 		market_sentiment_dependence_parameter: {
-			type: Schema.Types.Decimal128,
+			type: Schema.Types.Number,
 			required: true,
 		},
 		market_volume_dependence_parameter: {
-			type: Schema.Types.Decimal128,
+			type: Schema.Types.Number,
 			required: true,
 		},
 	},
 });
-const AgencyModel =
-	mongoose.models["Agency"] ?? mongoose.model("Agency", AgencySchema);
+const AgencyModel = mongoose.models["Agency"] ?? mongoose.model("Agency", AgencySchema);
 export default AgencyModel;

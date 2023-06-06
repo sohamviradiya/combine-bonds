@@ -1,8 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import {
-	COMPANY_FIELDS,
-	COMPANY_FORMS,
-} from "backend/interfaces/company.interface";
+import { COMPANY_FIELDS, COMPANY_FORMS } from "backend/interfaces/company.interface";
 const CompanySchema = new Schema({
 	name: {
 		type: Schema.Types.String,
@@ -27,7 +24,7 @@ const CompanySchema = new Schema({
 		required: true,
 	},
 	assets: {
-		type: Schema.Types.Decimal128,
+		type: Schema.Types.Number,
 		required: true,
 	},
 	stocks: {

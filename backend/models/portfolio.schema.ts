@@ -20,12 +20,7 @@ const PortfolioSchema = new Schema({
 				class: {
 					type: Schema.Types.String,
 					required: true,
-					enum: [
-						"Account Withdrawal",
-						"Account Deposit",
-						"Stock Purchase",
-						"Stock Sale"
-					],
+					enum: ["Account Withdrawal", "Account Deposit", "Stock Purchase", "Stock Sale"],
 				},
 				stock: {
 					type: Schema.Types.ObjectId,
@@ -44,14 +39,14 @@ const PortfolioSchema = new Schema({
 		],
 	},
 	currentBalance: {
-		type: Schema.Types.Decimal128,
+		type: Schema.Types.Number,
 		required: true,
 	},
 	netWorth: {
 		type: [
 			{
 				value: {
-					type: Schema.Types.Decimal128,
+					type: Schema.Types.Number,
 					required: true,
 				},
 				date: {
@@ -76,7 +71,6 @@ const PortfolioSchema = new Schema({
 	},
 });
 
-const PortfolioModel = mongoose.models["Portfolio"] ??
-	mongoose.model("Portfolio", PortfolioSchema);
+const PortfolioModel = mongoose.models["Portfolio"] ?? mongoose.model("Portfolio", PortfolioSchema);
 
 export default PortfolioModel;
