@@ -10,21 +10,22 @@ const TransactionService = (() => {
 		if (!transaction.stock) throw new Error("Stock not found");
 		const data = await StockModel.findById(transaction.stock).exec();
 		const stock = {
-			...data.doc,
+			...data._doc,
 			price: data.price,
 		} as StockInterfaceWithID;
 
 		if (portfolio.currentBalance < transaction.amount) throw new Error("Insufficient funds");
-
+		console.log(data);
 
 		const stockIndex = portfolio.investments.findIndex((investment) => investment.stock == transaction.stock);
 		const stock_quantity = transaction.amount / stock.price;
 		if (stockIndex === -1) {
 			portfolio.investments.push({ stock: transaction.stock, quantity: stock_quantity });
 			// Add portfolio to stock.traders
-			if (stock.traders.findIndex((trader) => trader == id) === -1) stock.traders.push(id);
-		} else portfolio.investments[stockIndex].quantity += stock_quantity;
-
+			stock.traders.push(id);
+		} else {
+			portfolio.investments[stockIndex].quantity += stock_quantity;
+		}
 		stock.timeline[stock.timeline.length - 1].volume_in_market += stock_quantity;
 
 		await StockModel.findByIdAndUpdate(transaction.stock, stock);
@@ -40,10 +41,9 @@ const TransactionService = (() => {
 		if (!transaction.stock) throw new Error("Stock not found");
 		const data = await StockModel.findById(transaction.stock).exec();
 		const stock = {
-			...data.doc,
+			...data._doc,
 			price: data.price,
 		} as StockInterfaceWithID;
-
 
 		const stockIndex = portfolio.investments.findIndex((investment) => investment.stock == transaction.stock);
 
@@ -65,7 +65,7 @@ const TransactionService = (() => {
 			portfolio.investments.splice(stockIndex, 1);
 			stock.traders = stock.traders.filter((trader) => trader != id);
 		}
-		
+
 		await StockModel.findByIdAndUpdate(transaction.stock, stock);
 		return portfolio;
 	};

@@ -23,7 +23,7 @@ const AgencyService = (() => {
 		const parameters = agency.market_valuation_parameter;
 		const data = await StockModel.findById(agency.stock).exec();
 		const stock = {
-			...data.doc,
+			...data._doc,
 			price: data.price,
 		} as StockInterfaceWithID;
 
