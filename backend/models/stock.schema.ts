@@ -51,7 +51,6 @@ const stockSchema = new Schema(
 					required: true,
 				},
 			],
-			required: true,
 		},
 	},
 	{ toJSON: { virtuals: true } }

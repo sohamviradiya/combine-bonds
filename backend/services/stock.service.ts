@@ -19,10 +19,17 @@ const StockService = (() => {
 			})
 		);
 	};
+
 	const get = async (_id: string): Promise<StockInterfaceWithID> => {
 		const data = await StockModel.findById(_id).exec();
 		return { ...data._doc, price: data.price, slope: data.slope, double_slope: data.double_slope };
 	};
+
+	const getValue = async (_id: string) => {
+		const data = await StockModel.findById(_id).exec();
+		return { price: data.price, slope: data.slope, double_slope: data.double_slope };
+	};
+
 	const changeVolume = async (_id: string, change: number) => {
 		const stock: StockInterfaceWithID = await StockModel.findById(_id).exec();
 		if (!stock) return null;
@@ -56,6 +63,17 @@ const StockService = (() => {
 		return stocks.slice(0, count).map((stock) => stock._id);
 	};
 
-	return { changeVolume, add, getAll, get, addPoint, getMarketCap, getRandom, getHighSlope, getHighDoubleSlope };
+	return {
+		changeVolume,
+		add,
+		getAll,
+		get,
+		getValue,
+		addPoint,
+		getMarketCap,
+		getRandom,
+		getHighSlope,
+		getHighDoubleSlope,
+	};
 })();
 export default StockService;
