@@ -37,9 +37,9 @@ const PortfolioService = (() => {
 			else if (transaction.class === "ACCOUNT WITHDRAWAL")
 				portfolio = TransactionService.withdraw(portfolio, transaction);
 			else if (transaction.class === "STOCK PURCHASE")
-				portfolio = await TransactionService.buyStock(portfolio, transaction);
+				portfolio = await TransactionService.buyStock(id , portfolio, transaction);
 			else if (transaction.class === "STOCK SALE")
-				portfolio = await TransactionService.sellStock(portfolio, transaction);
+				portfolio = await TransactionService.sellStock(id, portfolio, transaction);
 			else throw new Error("Invalid transaction class");
 		} catch (err) {
 			throw err;

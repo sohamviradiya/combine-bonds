@@ -18,6 +18,7 @@ export type StockInterface = {
 	timeline: ValuePoint[];
 	createdAt: Date;
 	company: string;
+	traders: string[];
 };
 
 export type StockInterfaceWithID = StockInterface & {
@@ -27,4 +28,4 @@ export type StockInterfaceWithID = StockInterface & {
 	double_slope: number;
 };
 
-export type createStockDto = Omit<StockInterface, "createdAt">;
+export type createStockDto = Omit<StockInterface, "createdAt" | "traders">;

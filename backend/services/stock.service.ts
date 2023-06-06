@@ -3,7 +3,7 @@ import { ValuePoint, createStockDto, StockInterface, StockInterfaceWithID } from
 import CompanyModel from "backend/models/company.schema";
 const StockService = (() => {
 	const add = async (stock: createStockDto) => {
-		const newStock = { ...stock, createdAt: new Date() } as StockInterface;
+		const newStock = { ...stock, createdAt: new Date(), traders: [] } as StockInterface;
 		const newStockDoc = await new StockModel({ ...newStock }).save();
 		await CompanyModel.findByIdAndUpdate(stock.company, { $push: { stocks: newStockDoc._id } }).exec();
 		return newStockDoc;

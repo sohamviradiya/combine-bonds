@@ -25,7 +25,7 @@ const stockSchema = new Schema(
 					volume_in_market: {
 						type: Schema.Types.Number,
 						required: true,
-					}, 
+					},
 				},
 			],
 		},
@@ -43,6 +43,16 @@ const stockSchema = new Schema(
 			ref: "Company",
 			required: true,
 		},
+		traders: {
+			type: [
+				{
+					type: Schema.Types.ObjectId,
+					ref: "Portfolio",
+					required: true,
+				},
+			],
+			required: true,
+		},
 	},
 	{ toJSON: { virtuals: true } }
 );
@@ -58,8 +68,7 @@ stockSchema.virtual("slope").get(function (this: any) {
 	const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
 	const second_last_point: ValuePoint = this.timeline[this.timeline.length - 2];
 	return (
-		(Number(last_point.market_valuation) -
-			Number(second_last_point.market_valuation)) /
+		(Number(last_point.market_valuation) - Number(second_last_point.market_valuation)) /
 		Number(second_last_point.market_valuation)
 	);
 });
@@ -70,17 +79,14 @@ stockSchema.virtual("double_slope").get(function (this: any) {
 	const second_last_point: ValuePoint = this.timeline[this.timeline.length - 2];
 	const third_last_point: ValuePoint = this.timeline[this.timeline.length - 3];
 	const last_slope =
-		(Number(last_point.market_valuation) -
-			Number(second_last_point.market_valuation)) /
+		(Number(last_point.market_valuation) - Number(second_last_point.market_valuation)) /
 		Number(second_last_point.market_valuation);
 	const second_last_slope =
-		(Number(second_last_point.market_valuation) -
-			Number(third_last_point.market_valuation)) /
+		(Number(second_last_point.market_valuation) - Number(third_last_point.market_valuation)) /
 		Number(third_last_point.market_valuation);
 	return (last_slope - second_last_slope) / second_last_slope;
 });
 
-const StockModel =
-	mongoose.models["Stock"] ?? mongoose.model("Stock", stockSchema);
+const StockModel = mongoose.models["Stock"] ?? mongoose.model("Stock", stockSchema);
 
 export default StockModel;
