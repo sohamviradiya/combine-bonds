@@ -5,7 +5,7 @@ export enum AGENCY_CLASS {
 	"Aggressive",
 }
 
-const INTENSITY_CONSTANT = 0.2;
+const INTENSITY_CONSTANT = 0.05;
 
 type AgencyInterface = {
 	agency_class: keyof typeof AGENCY_CLASS;
