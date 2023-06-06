@@ -1,7 +1,10 @@
 import AgencyInterface, { INTENSITY_CONSTANT } from "backend/interfaces/agency.interface";
 import AgencyModel from "backend/models/agency.schema";
-import StockService from "./stock.service";
+import StockModel from "backend/models/stock.schema";
 import MarketService from "./market.service";
+import StockService from "./stock.service";
+import { StockInterfaceWithID } from "backend/interfaces/stock.interface";
+
 const AgencyService = (() => {
 	const add = async (agency: AgencyInterface) => {
 		const newAgency = new AgencyModel({
@@ -18,7 +21,12 @@ const AgencyService = (() => {
 	const evaluate = async (agency_id: string) => {
 		const agency = await get(agency_id);
 		const parameters = agency.market_valuation_parameter;
-		const stock = await StockService.get(agency.stock);
+		const data = await StockModel.findById(agency.stock).exec();
+		const stock = {
+			...data.doc,
+			price: data.price,
+		} as StockInterfaceWithID;
+
 		let market_valuation = stock.timeline[stock.timeline.length - 1].market_valuation;
 
 		market_valuation = (1 + INTENSITY_CONSTANT * parameters.steady_increase) * market_valuation;

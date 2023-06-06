@@ -5,7 +5,8 @@ import PortfolioInterface, {
 } from "backend/interfaces/portfolio.interface";
 import PortfolioModel from "backend/models/portfolio.schema";
 import TransactionService from "./transaction.service";
-import StockService from "./stock.service";
+import StockModel from "backend/models/stock.schema";
+
 const PortfolioService = (() => {
 	const add = async (portfolio: createPortfolioDTO): Promise<PortfolioInterface> => {
 		return await new PortfolioModel({
@@ -53,8 +54,8 @@ const PortfolioService = (() => {
 		const investments = portfolio.investments;
 		const new_stock_amounts = await Promise.all(
 			investments.map(async (investment) => {
-				const stock_price = (await StockService.get(investment.stock)).price;
-				return investment.quantity * stock_price;
+				const data = await StockModel.findById(investment.stock).exec();
+				return investment.quantity * data.price;
 			})
 		);
 		const new_net_worth = portfolio.currentBalance + new_stock_amounts.reduce((a, b) => a + b, 0);
