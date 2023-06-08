@@ -16,6 +16,7 @@ const StockService = (() => {
 				price: stock.price,
 				slope: stock.slope,
 				double_slope: stock.double_slope,
+				three_day_slope: stock.three_day_slope,
 			})
 		);
 	};
