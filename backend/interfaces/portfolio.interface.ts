@@ -5,9 +5,17 @@ enum TRANSACTION_CLASS {
 	"STOCK SALE",
 }
 
-export type Transaction = {
-	class: keyof typeof TRANSACTION_CLASS;
-	stock?: string;
+export type Investment = {
+	stock: string;
+	quantity: number;
+};
+
+export type Transaction = ({class: "ACCOUNT WITHDRAWAL" | "ACCOUNT DEPOSIT";}
+	| {
+			class: "STOCK PURCHASE" | "STOCK SALE";
+			stock: string;
+	  }
+) & {
 	amount: number;
 	date: number;
 };
@@ -20,13 +28,10 @@ type PortfolioInterface = {
 	transactions: Transaction[];
 	currentBalance: number;
 	netWorth: {
-			value: number;
-			date: number;
-		}[];
-	investments: {
-			stock: string;
-			quantity: number;
-		}[];
+		value: number;
+		date: number;
+	}[];
+	investments: Investment[];
 };
 
 export type createPortfolioDTO = Omit<
