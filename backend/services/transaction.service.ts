@@ -59,7 +59,7 @@ const TransactionService = (() => {
 		portfolio.investments[stockIndex].quantity -= stock_quantity;
 
 		// Remove stock from portfolio if quantity is less than 0.1
-		if (portfolio.investments[stockIndex].quantity < 1) {
+		if (portfolio.investments[stockIndex].quantity < 0.25) {
 			portfolio.currentBalance += portfolio.investments[stockIndex].quantity * stock.price;
 			stock.timeline[stock.timeline.length - 1].volume_in_market -= portfolio.investments[stockIndex].quantity;
 			portfolio.investments.splice(stockIndex, 1);

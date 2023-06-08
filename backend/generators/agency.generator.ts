@@ -12,22 +12,22 @@ const generateAgency = async (stock_id: string): Promise<AgencyInterface> => {
 	let market_volume_dependence_parameter = 0;
 
 	if (agency_class == "Steady") {
-		steady_increase = 0.35 + Math.random() * 0.1;
+		steady_increase = 0.1 + Math.random() * 0.1;
 		random_fluctuation = 0.05 + Math.random() * 0.1;
 		market_sentiment_dependence_parameter = 0.15 + Math.random() * 0.1;
 		market_volume_dependence_parameter = 0.2 + Math.random() * 0.1;
 	} else if (agency_class == "Trendy") {
-		steady_increase = 0.1 + Math.random() * 0.1;
+		steady_increase = Math.random() * 0.1;
 		random_fluctuation = 0.2 + Math.random() * 0.1;
 		market_sentiment_dependence_parameter = 0.45 + Math.random() * 0.1;
 		market_volume_dependence_parameter = 0.25 + Math.random() * 0.1;
 	} else if (agency_class == "Random") {
-		steady_increase = 0.1 + Math.random() * 0.1;
+		steady_increase = 0;
 		random_fluctuation = 0.6 + Math.random() * 0.1;
 		market_sentiment_dependence_parameter = 0.1 + Math.random() * 0.1;
 		market_volume_dependence_parameter = 0.2 + Math.random() * 0.1;
 	} else if (agency_class == "Aggressive") {
-		steady_increase = 0.1 + Math.random() * 0.1;
+		steady_increase = Math.random() * 0.05;
 		random_fluctuation = 0.1 + Math.random() * 0.1;
 		market_sentiment_dependence_parameter = 0.3 + Math.random() * 0.1;
 		market_volume_dependence_parameter = 0.5 + Math.random() * 0.1;

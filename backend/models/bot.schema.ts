@@ -26,13 +26,13 @@ const BotSchema = new Schema({
 				required: true,
 			},
 		},
-		bundle_expansion: {
-			parameter: {
+		bundle_expansion_parameter: {
+			value: {
 				type: Schema.Types.Number,
 				required: true,
 			},
 			high_raise_investment_parameters: {
-				parameter: {
+				value: {
 					type: Schema.Types.Number,
 					required: true,
 				},
@@ -46,7 +46,7 @@ const BotSchema = new Schema({
 				},
 			},
 			lows_rising_investment_parameters: {
-				parameter: {
+				value: {
 					type: Schema.Types.Number,
 					required: true,
 				},
@@ -60,7 +60,7 @@ const BotSchema = new Schema({
 				},
 			},
 			random_investment_parameters: {
-				parameter: {
+				value: {
 					type: Schema.Types.Number,
 					required: true,
 				},
@@ -74,8 +74,8 @@ const BotSchema = new Schema({
 				},
 			},
 		},
-		bundle_filling: {
-			parameter: {
+		bundle_filling_parameter: {
+			value: {
 				type: Schema.Types.Number,
 				required: true,
 			},

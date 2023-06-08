@@ -27,7 +27,12 @@ const StockService = (() => {
 
 	const getValue = async (_id: string) => {
 		const data = await StockModel.findById(_id).exec();
-		return { price: data.price, slope: data.slope, double_slope: data.double_slope };
+		return {
+			price: data.price,
+			slope: data.slope,
+			double_slope: data.double_slope,
+			three_day_slope: data.three_day_slope,
+		};
 	};
 
 	const changeVolume = async (_id: string, change: number) => {
