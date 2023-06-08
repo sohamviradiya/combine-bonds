@@ -6,6 +6,8 @@ import PortfolioInterface, {
 import PortfolioModel from "backend/models/portfolio.schema";
 import TransactionService from "./transaction.service";
 import StockModel from "backend/models/stock.schema";
+import StockService from "./stock.service";
+import MarketService from "./market.service";
 
 const PortfolioService = (() => {
 	const add = async (portfolio: createPortfolioDTO): Promise<PortfolioInterface> => {
@@ -31,21 +33,23 @@ const PortfolioService = (() => {
 		return await PortfolioModel.findById(portfolio_id).exec();
 	};
 
-	const performTransaction = async (id: string, transaction: Transaction): Promise<PortfolioInterfaceWithID> => {
+	const performTransactions = async (id: string, transactions: Transaction[]): Promise<PortfolioInterfaceWithID> => {
 		let portfolio = await get(id);
-		try {
-			if (transaction.class === "ACCOUNT DEPOSIT") portfolio = TransactionService.deposit(portfolio, transaction);
-			else if (transaction.class === "ACCOUNT WITHDRAWAL")
-				portfolio = TransactionService.withdraw(portfolio, transaction);
-			else if (transaction.class === "STOCK PURCHASE")
-				portfolio = await TransactionService.buyStock(id , portfolio, transaction);
-			else if (transaction.class === "STOCK SALE")
-				portfolio = await TransactionService.sellStock(id, portfolio, transaction);
-			else throw new Error("Invalid transaction class");
-		} catch (err) {
-			throw err;
+		for (let transaction of transactions) {
+			try {
+				if (transaction.class === "ACCOUNT DEPOSIT") portfolio = TransactionService.deposit(portfolio, transaction);
+				else if (transaction.class === "ACCOUNT WITHDRAWAL")
+					portfolio = TransactionService.withdraw(portfolio, transaction);
+				else if (transaction.class === "STOCK PURCHASE")
+					portfolio = await TransactionService.buyStock(id, portfolio, transaction);
+				else if (transaction.class === "STOCK SALE")
+					portfolio = await TransactionService.sellStock(id, portfolio, transaction);
+				else throw new Error("Invalid transaction class");
+			} catch (err) {
+				throw err;
+			}
+			portfolio.transactions.push(transaction);
 		}
-		portfolio.transactions.push(transaction);
 		return await PortfolioModel.findByIdAndUpdate(id, portfolio, { new: true }).exec();
 	};
 
@@ -65,7 +69,22 @@ const PortfolioService = (() => {
 		});
 	};
 
-	return { evaluate, add, getAll, get, performTransaction };
+	const dump = async (portfolio_id: string) => {
+		const portfolio = await get(portfolio_id);
+		const investments = portfolio.investments;
+		const transactions: Transaction[] = [];
+		investments.forEach(async (investment) => {
+			transactions.push({
+				class: "STOCK SALE",
+				stock: investment.stock,
+				amount: investment.quantity * (await StockService.getValue(investment.stock)).price,
+				date: await MarketService.getDate(),
+			});
+		});
+		return await performTransactions(portfolio_id, transactions);
+	};
+
+	return { evaluate, add, getAll, get, performTransactions, dump };
 })();
 
 export default PortfolioService;
