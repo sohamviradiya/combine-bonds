@@ -86,6 +86,12 @@ stockSchema.virtual("double_slope").get(function (this: any) {
 	return (last_slope - second_last_slope) / second_last_slope;
 });
 
+stockSchema.virtual("three_day_slope").get(function (this: any) {
+	if (this.timeline.length < 4) return 0;
+	const point_1: ValuePoint = this.timeline[this.timeline.length - 1];
+	const point_2: ValuePoint = this.timeline[this.timeline.length - 4];
+	return (Number(point_1.market_valuation) - Number(point_2.market_valuation)) / Number(point_2.market_valuation);
+});
 const StockModel = mongoose.models["Stock"] ?? mongoose.model("Stock", stockSchema);
 
 export default StockModel;
