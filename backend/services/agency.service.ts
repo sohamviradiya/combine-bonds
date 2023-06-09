@@ -13,8 +13,9 @@ const AgencyService = (() => {
 		return await newAgency.save();
 	};
 	const getAll = async () => {
-		return await AgencyModel.find({}).exec();
+		return (await AgencyModel.find({}, { _id: 1 }).exec()).map((agency) => String(agency._id));
 	};
+
 	const get = async (agency_id: string) => {
 		return await AgencyModel.findById(agency_id).exec();
 	};
@@ -29,13 +30,13 @@ const AgencyService = (() => {
 
 		let market_valuation = stock.timeline[stock.timeline.length - 1].market_valuation;
 		market_valuation = (1 + INTENSITY_CONSTANT * parameters.steady_increase) * market_valuation;
-		console.log(parameters.steady_increase * INTENSITY_CONSTANT);
 
 		const random_num = 2 * (Math.random() - 0.5);
 		market_valuation = (1 + INTENSITY_CONSTANT * parameters.random_fluctuation * random_num) * market_valuation;
 
 		const market_sentiment = await MarketService.getRelativeCumulativeNetWorth();
-		market_valuation = (1 + INTENSITY_CONSTANT * parameters.market_sentiment_dependence_parameter * market_sentiment) * market_valuation;
+		market_valuation =
+			(1 + INTENSITY_CONSTANT * parameters.market_sentiment_dependence_parameter * market_sentiment) * market_valuation;
 
 		let volume_change_ratio = 0;
 		if (stock.timeline.length < 2) volume_change_ratio = 0;

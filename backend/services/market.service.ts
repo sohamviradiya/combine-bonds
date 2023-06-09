@@ -6,13 +6,14 @@ import PortfolioModel from "backend/models/portfolio.schema";
 
 const MarketService = (() => {
 	const get = async () => {
-		return await MarketModel.find({}).sort({date: -1}).exec();
+		return await MarketModel.find({}).sort({ date: -1 }).exec();
 	};
 	const getTimeline = async () => {
 		return await MarketModel.find().exec();
 	};
 	const getRelativeCumulativeMarketCapitalization = async () => {
 		const [Market, prevMarket] = await MarketModel.find({}).sort({ date: -1 }).limit(2).exec();
+		if(!prevMarket) return 0;
 		return (
 			(Market.cumulative_market_capitalization - prevMarket.cumulative_market_capitalization) /
 			prevMarket.cumulative_market_capitalization
@@ -20,12 +21,12 @@ const MarketService = (() => {
 	};
 	const getRelativeCumulativeNetWorth = async () => {
 		const [Market, prevMarket] = await MarketModel.find({}).sort({ date: -1 }).limit(2).exec();
+		if(!prevMarket) return 0;
 		return (Market.cumulative_net_worth - prevMarket.cumulative_net_worth) / prevMarket.cumulative_net_worth;
 	};
 	const getDate = async () => {
 		const [Market] = await MarketModel.find({}, { date: 1 }).sort({ date: -1 }).limit(1).exec();
-		console.log(Market);
-		if (!Market) return 0;
+		if (!Market) return -1;
 		return Market.date;
 	};
 	const evaluate = async () => {
