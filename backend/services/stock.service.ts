@@ -63,8 +63,9 @@ const StockService = (() => {
 		stocks.sort((a, b) => b.slope - a.slope);
 		return stocks.slice(0, count).map((stock) => stock._id);
 	};
+
 	const getHighDoubleSlope = async (count: number) => {
-		const stocks = await getAll();
+		const stocks = (await getAll()).filter((stock) => stock.slope > 0);
 		stocks.sort((a, b) => b.double_slope - a.double_slope);
 		return stocks.slice(0, count).map((stock) => stock._id);
 	};
