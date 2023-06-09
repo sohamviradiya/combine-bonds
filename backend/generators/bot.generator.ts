@@ -48,15 +48,15 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 			value: 0.2 + Math.random() * 0.1,
 			high_raise_investment_parameters: {
 				value: 0.3 + Math.random() * 0.1,
-				weight_distribution: generateWeights(2),
+				weight_distribution: generateWeights(1),
 			},
 			lows_rising_investment_parameters: {
 				value: 0.3 + Math.random() * 0.1,
-				weight_distribution: generateWeights(2),
+				weight_distribution: generateWeights(1),
 			},
 			random_investment_parameters: {
 				value: 0,
-				weight_distribution: generateWeights(2),
+				weight_distribution: generateWeights(0),
 			},
 		};
 		loss_aversion_parameter = 0.05 + Math.random() * 0.1;
@@ -70,15 +70,15 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 			value: 0.4 + Math.random() * 0.1,
 			high_raise_investment_parameters: {
 				value: 0.3 + Math.random() * 0.1,
-				weight_distribution: generateWeights(4),
+				weight_distribution: generateWeights(3),
 			},
 			lows_rising_investment_parameters: {
 				value: 0.3 + Math.random() * 0.1,
-				weight_distribution: generateWeights(4),
+				weight_distribution: generateWeights(3),
 			},
 			random_investment_parameters: {
 				value: 0,
-				weight_distribution: generateWeights(4),
+				weight_distribution: generateWeights(1),
 			},
 		};
 		loss_aversion_parameter = 0.1 + Math.random() * 0.1;
@@ -92,15 +92,15 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 			value: 0.2 + Math.random() * 0.1,
 			high_raise_investment_parameters: {
 				value: 0.4 + Math.random() * 0.1,
-				weight_distribution: generateWeights(4),
+				weight_distribution: generateWeights(2),
 			},
 			lows_rising_investment_parameters: {
 				value: 0.4 + Math.random() * 0.1,
-				weight_distribution: generateWeights(4),
+				weight_distribution: generateWeights(2),
 			},
 			random_investment_parameters: {
 				value: 0.2 + Math.random() * 0.1,
-				weight_distribution: generateWeights(4),
+				weight_distribution: generateWeights(1),
 			},
 		};
 		loss_aversion_parameter = 0.15 + Math.random() * 0.1;
