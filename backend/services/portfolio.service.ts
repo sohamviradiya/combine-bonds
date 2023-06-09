@@ -2,6 +2,7 @@ import PortfolioInterface, {
 	createPortfolioDTO,
 	Transaction,
 	PortfolioInterfaceWithID,
+	PORTFOLIO_STARTING_BALANCE,
 } from "backend/interfaces/portfolio.interface";
 import PortfolioModel from "backend/models/portfolio.schema";
 import TransactionService from "./transaction.service";
@@ -14,10 +15,10 @@ const PortfolioService = (() => {
 		return await new PortfolioModel({
 			...portfolio,
 			transactions: [],
-			currentBalance: 100000,
+			currentBalance: PORTFOLIO_STARTING_BALANCE,
 			netWorth: [
 				{
-					value: 100000,
+					value: PORTFOLIO_STARTING_BALANCE,
 					date: 0,
 				},
 			],

@@ -37,11 +37,10 @@ type BotInterface = {
 	};
 };
 
-const BOT_PARAMETER = 0.1;
+export const BOT_PARAMETER = 0.1;
 
 export type BotInterfaceWithID = BotInterface & {
 	_id: string;
 };
 
 export default BotInterface;
-export { BOT_PARAMETER };

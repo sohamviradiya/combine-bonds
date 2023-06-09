@@ -43,4 +43,6 @@ export type PortfolioInterfaceWithID = PortfolioInterface & {
 	_id: string;
 };
 
+export const PORTFOLIO_STARTING_BALANCE = 100000;
+
 export default PortfolioInterface;

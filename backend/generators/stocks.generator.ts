@@ -47,7 +47,6 @@ const AddRandomPrices = async () => {
 				timeline: { date: number; market_valuation: number; volume_in_market: number }[];
 			}) => {
 				const timeline = stock.timeline.sort((a, b) => a.date - b.date);
-				console.log(timeline);
 				const new_date = timeline[timeline.length - 1].date + 1;
 				const new_market_valuation = timeline[timeline.length - 1].market_valuation * (1 + 0.1 * (Math.random() - 0.5));
 				return await StockService.addPoint(stock._id, {

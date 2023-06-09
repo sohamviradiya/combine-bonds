@@ -5,8 +5,6 @@ type MarketInterface = {
 	market_sentience_index: number;
 };
 
-const MARKET_BASE = 10000;
-
-export { MARKET_BASE };
+export const MARKET_BASE = 10000;
 
 export default MarketInterface;
