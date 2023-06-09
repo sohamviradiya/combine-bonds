@@ -3,12 +3,14 @@ import PortfolioInterface, {
 	Transaction,
 	PortfolioInterfaceWithID,
 	PORTFOLIO_STARTING_BALANCE,
+	DUMP_THRESHOLD,
 } from "backend/interfaces/portfolio.interface";
 import PortfolioModel from "backend/models/portfolio.schema";
 import TransactionService from "./transaction.service";
 import StockModel from "backend/models/stock.schema";
 import StockService from "./stock.service";
 import MarketService from "./market.service";
+import StockGenerator from "backend/generators/stocks.generator";
 
 const PortfolioService = (() => {
 	const add = async (portfolio: createPortfolioDTO): Promise<PortfolioInterface> => {
@@ -30,7 +32,7 @@ const PortfolioService = (() => {
 		return (await PortfolioModel.find({}, { _id: 1 }).exec()).map((portfolio) => portfolio._id);
 	};
 
-	const get = async (portfolio_id: string): Promise<PortfolioInterface> => {
+	const get = async (portfolio_id: string): Promise<PortfolioInterfaceWithID> => {
 		return await PortfolioModel.findById(portfolio_id).exec();
 	};
 
@@ -55,20 +57,37 @@ const PortfolioService = (() => {
 	};
 
 	const evaluate = async (portfolio_id: string) => {
-		const date = await MarketService.getDate();
 		const portfolio = await get(portfolio_id);
 		const investments = portfolio.investments;
-		const new_stock_amounts = await Promise.all(
-			investments.map(async (investment) => {
-				const data = await StockModel.findById(investment.stock).exec();
-				return investment.quantity * data.price;
-			})
-		);
-		const new_net_worth = portfolio.currentBalance + new_stock_amounts.reduce((a, b) => a + b, 0);
+		const date = portfolio.netWorth[portfolio.netWorth.length - 1].date + 1;
+		let new_stock_amount = 0;
+		let dumped_stocks_amount = 0;
+		let dumped_stocks: string[] = [];
+		let transactions: Transaction[] = [];
+		for (let investment of investments) {
+			const price = await StockService.getValue(investment.stock);
+			const amount = investment.quantity * price.price;
+			if (amount < DUMP_THRESHOLD) {
+				await StockModel.findByIdAndUpdate(investment.stock, { $pull: { traders: portfolio_id } }).exec();
+				dumped_stocks.push(investment.stock);
+				transactions.push({
+					class: "STOCK SALE",
+					stock: investment.stock,
+					amount,
+					date,
+				});
+				dumped_stocks_amount += amount;
+			} else {
+				new_stock_amount += amount;
+			}
+		}
 		portfolio.netWorth.push({
-			value: new_net_worth,
+			value: portfolio.currentBalance + new_stock_amount + dumped_stocks_amount,
 			date,
 		});
+		portfolio.investments = portfolio.investments.filter((investment) => dumped_stocks.includes(investment.stock));
+		await performTransactions(portfolio_id, transactions);
+		await PortfolioModel.findByIdAndUpdate(portfolio_id, portfolio, { new: true }).exec();
 	};
 
 	const dump = async (portfolio_id: string) => {
