@@ -13,7 +13,7 @@ const MarketService = (() => {
 	};
 	const getRelativeCumulativeMarketCapitalization = async () => {
 		const [Market, prevMarket] = await MarketModel.find({}).sort({ date: -1 }).limit(2).exec();
-		if(!prevMarket) return 0;
+		if (!prevMarket) return 0;
 		return (
 			(Market.cumulative_market_capitalization - prevMarket.cumulative_market_capitalization) /
 			prevMarket.cumulative_market_capitalization
@@ -21,7 +21,7 @@ const MarketService = (() => {
 	};
 	const getRelativeCumulativeNetWorth = async () => {
 		const [Market, prevMarket] = await MarketModel.find({}).sort({ date: -1 }).limit(2).exec();
-		if(!prevMarket) return 0;
+		if (!prevMarket) return 0;
 		return (Market.cumulative_net_worth - prevMarket.cumulative_net_worth) / prevMarket.cumulative_net_worth;
 	};
 	const getDate = async () => {
