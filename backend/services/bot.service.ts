@@ -16,9 +16,11 @@ const BotService = (() => {
 		});
 		return await newBot.save();
 	};
+
 	const getAll = async () => {
-		return await BotModel.find({}).exec();
+		return (await BotModel.find({}, { _id: 1 }).exec()).map((bot) => bot._id);
 	};
+	
 	const get = async (bot_id: string) => {
 		return await BotModel.findById(bot_id).exec();
 	};
@@ -98,7 +100,6 @@ const BotService = (() => {
 		weight_distributions: BotInterface["parameters"]["bundle_expansion_parameter"]["high_raise_investment_parameters"]["weight_distribution"],
 		date: number
 	): Promise<Transaction[]> => {
-		
 		const n = weight_distributions.length;
 		const transactions: Transaction[] = [];
 		const stocks = await StockService.getHighSlope(n);
@@ -119,7 +120,6 @@ const BotService = (() => {
 		weight_distributions: BotInterface["parameters"]["bundle_expansion_parameter"]["lows_rising_investment_parameters"]["weight_distribution"],
 		date: number
 	): Promise<Transaction[]> => {
-		
 		const n = weight_distributions.length;
 		const transactions: Transaction[] = [];
 		const stocks = await StockService.getHighDoubleSlope(n);
@@ -173,7 +173,7 @@ const BotService = (() => {
 		const portfolio_data = await PortfolioModel.findById(portfolio).exec();
 
 		const transactions: Transaction[] = [];
-		
+
 		transactions.push(...(await avertLoss(portfolio_data.investments, parameters.loss_aversion_parameter, date)));
 
 		const balance_component =
@@ -184,9 +184,8 @@ const BotService = (() => {
 			MARKET_BASE;
 
 		const total_investment_amount = BOT_PARAMETER * (balance_component + market_market_component);
-		
-		transactions.push(...(await avertLoss(portfolio_data.investments, parameters.loss_aversion_parameter, date)));
 
+		transactions.push(...(await avertLoss(portfolio_data.investments, parameters.loss_aversion_parameter, date)));
 
 		const bundle_filling_amount = total_investment_amount * parameters.bundle_filling_parameter.value;
 
@@ -200,7 +199,7 @@ const BotService = (() => {
 		);
 
 		const budget_expansion_amount = total_investment_amount * parameters.bundle_expansion_parameter.value;
-		
+
 		transactions.push(
 			...(await expandBundle(
 				portfolio_data.investments,

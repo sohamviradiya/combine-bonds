@@ -26,8 +26,8 @@ const PortfolioService = (() => {
 		}).save();
 	};
 
-	const getAll = async (): Promise<PortfolioInterface[]> => {
-		return await PortfolioModel.find().exec();
+	const getAll = async () => {
+		return (await PortfolioModel.find({}, { _id: 1 }).exec()).map((portfolio) => portfolio._id);
 	};
 
 	const get = async (portfolio_id: string): Promise<PortfolioInterface> => {
@@ -55,6 +55,7 @@ const PortfolioService = (() => {
 	};
 
 	const evaluate = async (portfolio_id: string) => {
+		const date = await MarketService.getDate();
 		const portfolio = await get(portfolio_id);
 		const investments = portfolio.investments;
 		const new_stock_amounts = await Promise.all(
@@ -66,7 +67,7 @@ const PortfolioService = (() => {
 		const new_net_worth = portfolio.currentBalance + new_stock_amounts.reduce((a, b) => a + b, 0);
 		portfolio.netWorth.push({
 			value: new_net_worth,
-			date: portfolio.netWorth.length,
+			date,
 		});
 	};
 
@@ -74,14 +75,14 @@ const PortfolioService = (() => {
 		const portfolio = await get(portfolio_id);
 		const investments = portfolio.investments;
 		const transactions: Transaction[] = [];
-		investments.forEach(async (investment) => {
+		for (let investment of investments) {
 			transactions.push({
 				class: "STOCK SALE",
 				stock: investment.stock,
 				amount: investment.quantity * (await StockService.getValue(investment.stock)).price,
 				date: await MarketService.getDate(),
 			});
-		});
+		}
 		return await performTransactions(portfolio_id, transactions);
 	};
 
