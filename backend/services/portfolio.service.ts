@@ -10,7 +10,6 @@ import TransactionService from "./transaction.service";
 import StockModel from "backend/models/stock.schema";
 import StockService from "./stock.service";
 import MarketService from "./market.service";
-import StockGenerator from "backend/generators/stocks.generator";
 
 const PortfolioService = (() => {
 	const add = async (portfolio: createPortfolioDTO): Promise<PortfolioInterface> => {
@@ -57,16 +56,16 @@ const PortfolioService = (() => {
 	};
 
 	const evaluate = async (portfolio_id: string) => {
+		console.log("Evaluating portfolio", portfolio_id);
 		const portfolio = await get(portfolio_id);
 		const investments = portfolio.investments;
 		const date = portfolio.netWorth[portfolio.netWorth.length - 1].date + 1;
-		let new_stock_amount = 0;
-		let dumped_stocks_amount = 0;
-		let dumped_stocks: string[] = [];
-		let transactions: Transaction[] = [];
+		let gross_amount = 0;
+		const dumped_stocks: string[] = [];
+		const transactions: Transaction[] = [];
 		for (let investment of investments) {
-			const price = await StockService.getValue(investment.stock);
-			const amount = investment.quantity * price.price;
+			const value = await StockService.getValue(investment.stock);
+			const amount = investment.quantity * value.price;
 			if (amount < DUMP_THRESHOLD) {
 				await StockModel.findByIdAndUpdate(investment.stock, { $pull: { traders: portfolio_id } }).exec();
 				dumped_stocks.push(investment.stock);
@@ -76,17 +75,19 @@ const PortfolioService = (() => {
 					amount,
 					date,
 				});
-				dumped_stocks_amount += amount;
-			} else {
-				new_stock_amount += amount;
 			}
+			gross_amount += amount;
 		}
+		
+		await performTransactions(portfolio_id, transactions);
+
 		portfolio.netWorth.push({
-			value: portfolio.currentBalance + new_stock_amount + dumped_stocks_amount,
+			value: portfolio.currentBalance + gross_amount,
 			date,
 		});
+
 		portfolio.investments = portfolio.investments.filter((investment) => dumped_stocks.includes(investment.stock));
-		await performTransactions(portfolio_id, transactions);
+
 		await PortfolioModel.findByIdAndUpdate(portfolio_id, portfolio, { new: true }).exec();
 	};
 

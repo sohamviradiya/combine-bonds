@@ -20,6 +20,7 @@ const AgencyService = (() => {
 		return await AgencyModel.findById(agency_id).exec();
 	};
 	const evaluate = async (agency_id: string) => {
+		console.log("Evaluating agency " + agency_id);
 		const agency = await get(agency_id);
 		const parameters = agency.market_valuation_parameter;
 		const data = await StockModel.findById(agency.stock).exec();
