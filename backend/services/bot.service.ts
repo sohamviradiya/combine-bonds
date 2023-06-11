@@ -166,7 +166,6 @@ const BotService = (() => {
 	};
 
 	const evaluate = async (bot_id: string) => {
-		console.log("Evaluating bot ", bot_id);
 		const { portfolio, parameters }: { portfolio: string; parameters: BotInterface["parameters"] } =
 			await BotModel.findById(bot_id, { portfolio: 1, parameters: 1 }).exec();
 		const date = await MarketService.getDate();
@@ -211,6 +210,7 @@ const BotService = (() => {
 		);
 
 		await PortfolioService.performTransactions(portfolio, transactions);
+		return total_investment_amount;
 	};
 
 	return { add, getAll, get, evaluate };

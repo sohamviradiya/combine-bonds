@@ -20,10 +20,9 @@ const generateCompany = (): createCompanyDto => {
 };
 
 const CompanyGenerator = async () => {
-	for (let i = 0; i < 50; i++) {
+	for (let i = 0; i < 10; i++) {
 		const company = generateCompany();
 		await CompanyService.add(company);
-		console.log("Added company " + company.name);
 	}
 };
 

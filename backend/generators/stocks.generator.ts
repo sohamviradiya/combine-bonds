@@ -1,7 +1,6 @@
 import CompanyModel from "backend/models/company.schema";
 import StockService from "backend/services/stock.service";
-import { createStockDto, STOCK_CLASS, StockInterfaceWithID } from "backend/interfaces/stock.interface";
-import StockModel from "backend/models/stock.schema";
+import { createStockDto, STOCK_CLASS } from "backend/interfaces/stock.interface";
 
 const StockGenerator = async () => {
 	const company_ids = (await CompanyModel.find({}, { _id: 1 }).exec()).map((company: { _id: string }) => company._id);
@@ -31,11 +30,12 @@ const generateStock = async (company_id: string, stock_class: keyof typeof STOCK
 	} as createStockDto;
 };
 const AddRandomStocks = async (company_ids: string[], stock_class: keyof typeof STOCK_CLASS) => {
-	for (let company_id of company_ids) {
-		const stock = await generateStock(company_id, stock_class);
-		await StockService.add(stock);
-		console.log("Added stock " + stock.name);
-	}
+	Promise.all(
+		company_ids.map(async (company_id) => {
+			const stock = await generateStock(company_id, stock_class);
+			await StockService.add(stock);
+		})
+	);
 };
 
 export default StockGenerator;

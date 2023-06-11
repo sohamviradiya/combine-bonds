@@ -22,6 +22,6 @@ export type AgencyInterfaceWithId = AgencyInterface & {
 };
 
 
-export const INTENSITY_CONSTANT = 0.05;
+export const INTENSITY_CONSTANT = 0.02;
 
 export default AgencyInterface;

@@ -14,7 +14,9 @@ const TransactionService = (() => {
 
 		if (portfolio.currentBalance < transaction.amount) throw new Error("Insufficient funds");
 
-		const stockIndex = portfolio.investments.findIndex((investment) => investment.stock == transaction.stock);
+		const stockIndex = portfolio.investments.findIndex(
+			(investment) => String(investment.stock) == String(transaction.stock)
+		);
 		const stock_quantity = transaction.amount / stock.price;
 		if (stockIndex === -1) {
 			portfolio.investments.push({ stock: transaction.stock, quantity: stock_quantity });
@@ -38,15 +40,17 @@ const TransactionService = (() => {
 			...data._doc,
 			price: data.price,
 		} as StockInterfaceWithID;
-
-		const stockIndex = portfolio.investments.findIndex((investment) => investment.stock == transaction.stock);
+		const stockIndex = portfolio.investments.findIndex(
+			(investment) => String(investment.stock) == String(transaction.stock)
+		);
 
 		if (stockIndex === -1) throw new Error("Stock not found in portfolio");
 
-		const stock_quantity = transaction.amount / stock.price;
+		let stock_quantity = transaction.amount / stock.price;
 		stock.timeline[stock.timeline.length - 1].volume_in_market -= stock_quantity;
 
-		if (portfolio.investments[stockIndex].quantity < stock_quantity) throw new Error("Insufficient stocks");
+		if (portfolio.investments[stockIndex].quantity < stock_quantity)
+			stock_quantity = portfolio.investments[stockIndex].quantity;
 
 		portfolio.currentBalance += transaction.amount;
 		portfolio.investments[stockIndex].quantity -= stock_quantity;

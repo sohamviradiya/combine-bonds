@@ -56,29 +56,29 @@ const PortfolioService = (() => {
 	};
 
 	const evaluate = async (portfolio_id: string) => {
-		console.log("Evaluating portfolio", portfolio_id);
 		const portfolio = await get(portfolio_id);
 		const investments = portfolio.investments;
 		const date = portfolio.netWorth[portfolio.netWorth.length - 1].date + 1;
 		let gross_amount = 0;
 		const dumped_stocks: string[] = [];
 		const transactions: Transaction[] = [];
-		for (let investment of investments) {
-			const value = await StockService.getValue(investment.stock);
-			const amount = investment.quantity * value.price;
-			if (amount < DUMP_THRESHOLD) {
-				await StockModel.findByIdAndUpdate(investment.stock, { $pull: { traders: portfolio_id } }).exec();
-				dumped_stocks.push(investment.stock);
-				transactions.push({
-					class: "STOCK SALE",
-					stock: investment.stock,
-					amount,
-					date,
-				});
-			}
-			gross_amount += amount;
-		}
-		
+		Promise.all(
+			investments.map(async (investment) => {
+				const value = await StockService.getValue(investment.stock);
+				const amount = investment.quantity * value.price;
+				if (amount < DUMP_THRESHOLD) {
+					await StockModel.findByIdAndUpdate(investment.stock, { $pull: { traders: portfolio_id } }).exec();
+					dumped_stocks.push(String(investment.stock));
+					transactions.push({
+						class: "STOCK SALE",
+						stock: investment.stock,
+						amount,
+						date,
+					});
+				}
+				gross_amount += amount;
+			})
+		);
 		await performTransactions(portfolio_id, transactions);
 
 		portfolio.netWorth.push({
@@ -86,23 +86,36 @@ const PortfolioService = (() => {
 			date,
 		});
 
-		portfolio.investments = portfolio.investments.filter((investment) => dumped_stocks.includes(investment.stock));
+		portfolio.investments = portfolio.investments.filter((investment) =>
+			dumped_stocks.includes(String(investment.stock))
+		);
 
-		await PortfolioModel.findByIdAndUpdate(portfolio_id, portfolio, { new: true }).exec();
+		await PortfolioModel.findByIdAndUpdate(
+			portfolio_id,
+			{
+				netWorth: portfolio.netWorth,
+				investments: portfolio.investments,
+			},
+			{ new: true }
+		).exec();
+		return portfolio.netWorth[portfolio.netWorth.length - 1];
 	};
 
 	const dump = async (portfolio_id: string) => {
 		const portfolio = await get(portfolio_id);
 		const investments = portfolio.investments;
 		const transactions: Transaction[] = [];
-		for (let investment of investments) {
-			transactions.push({
-				class: "STOCK SALE",
-				stock: investment.stock,
-				amount: investment.quantity * (await StockService.getValue(investment.stock)).price,
-				date: await MarketService.getDate(),
-			});
-		}
+		Promise.all(
+			investments.map(async (investment) => {
+				const stock_price = (await StockService.getValue(investment.stock)).price;
+				transactions.push({
+					class: "STOCK SALE",
+					stock: investment.stock,
+					amount: investment.quantity * stock_price,
+					date: portfolio.netWorth[portfolio.netWorth.length - 1].date,
+				});
+			})
+		);
 		return await performTransactions(portfolio_id, transactions);
 	};
 

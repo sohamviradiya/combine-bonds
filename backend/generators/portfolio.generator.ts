@@ -11,10 +11,9 @@ const generatePortfolio = (): createPortfolioDTO => {
 };
 
 const PortfolioGenerator = async () => {
-	for (let i = 0; i < 100; i++) {
+	for (let i = 0; i < 10; i++) {
 		const portfolio = generatePortfolio();
 		await PortfolioService.add(portfolio);
-		console.log("Added portfolio " + portfolio.user?.name);
 	}
 };
 

@@ -151,13 +151,14 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 };
 
 const BotGenerator = async () => {
-	const portfolio_ids = (await PortfolioModel.find({}, { _id: 1 }).exec()).map(portfolio => portfolio._id);
-	
-	for (let portfolio_id of portfolio_ids) {
-		const bot = generateBot(portfolio_id, 1);
-		await BotService.add(bot);
-		console.log("Bot added for" + portfolio_id);
-	}
+	const portfolio_ids = (await PortfolioModel.find({}, { _id: 1 }).exec()).map((portfolio) => portfolio._id);
+
+	Promise.all(
+		portfolio_ids.map(async (portfolio_id) => {
+			const bot = generateBot(portfolio_id, 1);
+			await BotService.add(bot);
+		})
+	);
 };
 
 export default BotGenerator;

@@ -30,7 +30,6 @@ const MarketService = (() => {
 		return Market.date;
 	};
 	const evaluate = async () => {
-		console.log("Evaluating market");
 		const new_date = (await getDate()) + 1;
 		const stocks: StockInterface[] = await StockModel.find({}, { timeline: 1 }).exec();
 		const market_caps = stocks.map((stock) => stock.timeline[stock.timeline.length - 1].market_valuation);
