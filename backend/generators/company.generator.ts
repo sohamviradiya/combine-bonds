@@ -4,6 +4,8 @@ import { faker } from "@faker-js/faker";
 
 const company_names = [] as string[];
 
+const NUM_OF_COMPANIES = 30;
+
 const generateCompany = (): createCompanyDto => {
 	let company_name = faker.science.chemicalElement().name;
 	while (company_names.includes(company_name)) company_name = faker.science.chemicalElement().name;
@@ -20,7 +22,7 @@ const generateCompany = (): createCompanyDto => {
 };
 
 const CompanyGenerator = async () => {
-	for (let i = 0; i < 10; i++) {
+	for (let i = 0; i < NUM_OF_COMPANIES; i++) {
 		const company = generateCompany();
 		await CompanyService.add(company);
 	}

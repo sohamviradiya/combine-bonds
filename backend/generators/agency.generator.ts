@@ -47,7 +47,7 @@ const generateAgency = async (stock_id: string): Promise<AgencyInterface> => {
 const AgencyGenerator = async () => {
 	const stock_ids = (await StockModel.find({}, { _id: 1 }).exec()).map((stock) => stock._id);
 
-	Promise.all(
+	await Promise.all(
 		stock_ids.map(async (stock_id) => {
 			const agency = await generateAgency(stock_id);
 			await AgencyService.add(agency);

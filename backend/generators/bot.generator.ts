@@ -153,7 +153,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 const BotGenerator = async () => {
 	const portfolio_ids = (await PortfolioModel.find({}, { _id: 1 }).exec()).map((portfolio) => portfolio._id);
 
-	Promise.all(
+	await Promise.all(
 		portfolio_ids.map(async (portfolio_id) => {
 			const bot = generateBot(portfolio_id, 1);
 			await BotService.add(bot);

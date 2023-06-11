@@ -30,7 +30,7 @@ const generateStock = async (company_id: string, stock_class: keyof typeof STOCK
 	} as createStockDto;
 };
 const AddRandomStocks = async (company_ids: string[], stock_class: keyof typeof STOCK_CLASS) => {
-	Promise.all(
+	await Promise.all(
 		company_ids.map(async (company_id) => {
 			const stock = await generateStock(company_id, stock_class);
 			await StockService.add(stock);
