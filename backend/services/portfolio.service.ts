@@ -9,7 +9,7 @@ import PortfolioModel from "backend/models/portfolio.schema";
 import TransactionService from "./transaction.service";
 import StockModel from "backend/models/stock.schema";
 import StockService from "./stock.service";
-import MarketService from "./market.service";
+import { DATE_LIMIT } from "backend/interfaces/market.interface";
 
 const PortfolioService = (() => {
 	const add = async (portfolio: createPortfolioDTO): Promise<PortfolioInterface> => {
@@ -89,7 +89,9 @@ const PortfolioService = (() => {
 		);
 		await performTransactions(portfolio_id, transactions);
 
-		portfolio.netWorth.filter((value) => value.date > date - 100);
+		portfolio.transactions.filter((transaction) => transaction.date > date - DATE_LIMIT);
+
+		portfolio.netWorth.filter((value) => value.date > date - DATE_LIMIT);
 		portfolio.netWorth.push({ value: portfolio.currentBalance + gross_amount, date });
 
 		portfolio.investments = portfolio.investments.filter(

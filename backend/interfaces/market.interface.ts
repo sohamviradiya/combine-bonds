@@ -7,4 +7,6 @@ type MarketInterface = {
 
 export const MARKET_BASE = 1000;
 
+export const DATE_LIMIT = 100;
+
 export default MarketInterface;

@@ -3,7 +3,7 @@ import MarketModel from "backend/models/market.schema";
 import StockModel from "backend/models/stock.schema";
 import PortfolioInterface from "backend/interfaces/portfolio.interface";
 import PortfolioModel from "backend/models/portfolio.schema";
-
+import { DATE_LIMIT } from "backend/interfaces/market.interface";
 const MarketService = (() => {
 	const get = async () => {
 		return await MarketModel.find({}).sort({ date: -1 }).exec();
@@ -29,8 +29,8 @@ const MarketService = (() => {
 		if (!Market) return -1;
 		return Market.date;
 	};
-	const evaluate = async () => {
-		const new_date = (await getDate()) + 1;
+	const evaluate = async (new_date: number) => {
+		await MarketModel.deleteMany({ date: { $lte: new_date - DATE_LIMIT } }).exec();
 		const stocks: StockInterface[] = await StockModel.find({}, { timeline: 1 }).exec();
 		const market_caps = stocks.map((stock) => stock.timeline[stock.timeline.length - 1].market_valuation);
 		const cumulative_market_capitalization = market_caps.reduce((a, b) => a + b, 0);

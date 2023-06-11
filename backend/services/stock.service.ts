@@ -1,6 +1,7 @@
 import StockModel from "backend/models/stock.schema";
 import { ValuePoint, createStockDto, StockInterface, StockInterfaceWithID } from "backend/interfaces/stock.interface";
 import CompanyModel from "backend/models/company.schema";
+import { DATE_LIMIT } from "backend/interfaces/market.interface";
 const StockService = (() => {
 	const add = async (stock: createStockDto) => {
 		const newStock = { ...stock, createdAt: new Date(), traders: [] } as StockInterface;
@@ -50,7 +51,7 @@ const StockService = (() => {
 	const addPoint = async (_id: string, valuePoint: ValuePoint) => {
 		const stock: StockInterfaceWithID = await StockModel.findById(_id).exec();
 		if (!stock) return null;
-		stock.timeline = stock.timeline.filter((point) => point.date > valuePoint.date - 100);
+		stock.timeline = stock.timeline.filter((point) => point.date > valuePoint.date - DATE_LIMIT);
 		stock.timeline.push(valuePoint);
 		return await StockModel.findByIdAndUpdate(_id, stock).exec();
 	};
