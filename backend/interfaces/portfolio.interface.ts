@@ -10,7 +10,8 @@ export type Investment = {
 	quantity: number;
 };
 
-export type Transaction = ({class: "ACCOUNT WITHDRAWAL" | "ACCOUNT DEPOSIT";}
+export type Transaction = (
+	| { class: "ACCOUNT WITHDRAWAL" | "ACCOUNT DEPOSIT" }
 	| {
 			class: "STOCK PURCHASE" | "STOCK SALE";
 			stock: string;
@@ -44,5 +45,5 @@ export type PortfolioInterfaceWithID = PortfolioInterface & {
 };
 
 export const PORTFOLIO_STARTING_BALANCE = 100000;
-export const DUMP_THRESHOLD = 25; 
+export const DUMP_THRESHOLD = 10;
 export default PortfolioInterface;

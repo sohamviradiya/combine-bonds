@@ -28,7 +28,7 @@ const PortfolioService = (() => {
 	};
 
 	const getAll = async () => {
-		return (await PortfolioModel.find({}, { _id: 1 }).exec()).map((portfolio) => portfolio._id);
+		return (await PortfolioModel.find({}, { _id: 1 }).exec()).map((portfolio) => portfolio._id) as string[];
 	};
 
 	const get = async (portfolio_id: string): Promise<PortfolioInterfaceWithID> => {
@@ -52,17 +52,25 @@ const PortfolioService = (() => {
 			}
 			portfolio.transactions.push(transaction);
 		}
-		return await PortfolioModel.findByIdAndUpdate(id, portfolio, { new: true }).exec();
+		return await PortfolioModel.findByIdAndUpdate(
+			id,
+			{
+				currentBalance: portfolio.currentBalance,
+				investments: portfolio.investments,
+				transactions: portfolio.transactions,
+			},
+			{ new: true }
+		).exec();
 	};
 
 	const evaluate = async (portfolio_id: string) => {
 		const portfolio = await get(portfolio_id);
 		const investments = portfolio.investments;
-		const date = portfolio.netWorth[portfolio.netWorth.length - 1].date + 1;
+		const date = portfolio.netWorth[portfolio.netWorth.length - 1].date + 1 || 0;
 		let gross_amount = 0;
 		const dumped_stocks: string[] = [];
 		const transactions: Transaction[] = [];
-		Promise.all(
+		await Promise.all(
 			investments.map(async (investment) => {
 				const value = await StockService.getValue(investment.stock);
 				const amount = investment.quantity * value.price;
@@ -81,13 +89,11 @@ const PortfolioService = (() => {
 		);
 		await performTransactions(portfolio_id, transactions);
 
-		portfolio.netWorth.push({
-			value: portfolio.currentBalance + gross_amount,
-			date,
-		});
+		portfolio.netWorth.filter((value) => value.date > date - 100);
+		portfolio.netWorth.push({ value: portfolio.currentBalance + gross_amount, date });
 
-		portfolio.investments = portfolio.investments.filter((investment) =>
-			dumped_stocks.includes(String(investment.stock))
+		portfolio.investments = portfolio.investments.filter(
+			(investment) => !dumped_stocks.includes(String(investment.stock))
 		);
 
 		await PortfolioModel.findByIdAndUpdate(
@@ -105,7 +111,7 @@ const PortfolioService = (() => {
 		const portfolio = await get(portfolio_id);
 		const investments = portfolio.investments;
 		const transactions: Transaction[] = [];
-		Promise.all(
+		await Promise.all(
 			investments.map(async (investment) => {
 				const stock_price = (await StockService.getValue(investment.stock)).price;
 				transactions.push({

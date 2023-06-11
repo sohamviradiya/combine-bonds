@@ -20,7 +20,7 @@ const BotService = (() => {
 	const getAll = async () => {
 		return (await BotModel.find({}, { _id: 1 }).exec()).map((bot) => bot._id);
 	};
-	
+
 	const get = async (bot_id: string) => {
 		return await BotModel.findById(bot_id).exec();
 	};

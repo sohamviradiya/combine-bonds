@@ -17,10 +17,9 @@ const TransactionService = (() => {
 		const stockIndex = portfolio.investments.findIndex(
 			(investment) => String(investment.stock) == String(transaction.stock)
 		);
-		const stock_quantity = transaction.amount / stock.price;
+		const stock_quantity: number = transaction.amount / stock.price;
 		if (stockIndex === -1) {
 			portfolio.investments.push({ stock: transaction.stock, quantity: stock_quantity });
-			// Add portfolio to stock.traders
 			stock.traders.push(id);
 		} else {
 			portfolio.investments[stockIndex].quantity += stock_quantity;
