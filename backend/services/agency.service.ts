@@ -34,16 +34,12 @@ const AgencyService = (() => {
 		increase_coefficient += parameters.market_sentiment_dependence_parameter * market_sentiment;
 
 		let volume_change_ratio = 0;
-		if (stock.timeline.length < 2) volume_change_ratio = 0;
+		if (stock.timeline.length < 2) volume_change_ratio = 1;
 		else {
-			const current_volume = stock.timeline[stock.timeline.length - 1].volume_in_market;
-			const previous_volume = stock.timeline[stock.timeline.length - 2].volume_in_market;
-
-			if (previous_volume === 0) {
-				volume_change_ratio = 0;
-			} else {
-				volume_change_ratio = (current_volume - previous_volume) / previous_volume;
-			}
+			const current_volume = Number(stock.timeline[stock.timeline.length - 1].volume_in_market);
+			const previous_volume = Number(stock.timeline[stock.timeline.length - 2].volume_in_market);
+			if (previous_volume === 0) volume_change_ratio = current_volume !== 0 ? 1 : 0;
+			else volume_change_ratio = (current_volume - previous_volume) / previous_volume;
 		}
 		increase_coefficient += parameters.market_volume_dependence_parameter * volume_change_ratio;
 
@@ -53,7 +49,7 @@ const AgencyService = (() => {
 
 		const volume_in_market = stock.timeline[stock.timeline.length - 1].volume_in_market;
 		await StockService.addPoint(agency.stock, {
-			date: stock.timeline.length,
+			date: 0,
 			market_valuation,
 			volume_in_market,
 		});
