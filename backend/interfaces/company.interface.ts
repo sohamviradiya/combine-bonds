@@ -29,7 +29,7 @@ export type companyInterface = {
 	name: string;
 	field: keyof typeof COMPANY_FIELDS;
 	form: keyof typeof COMPANY_FORMS;
-	established?: Date;
+	established?: number;
 	description?: string;
 	assets: number;
 	stocks: string[];
