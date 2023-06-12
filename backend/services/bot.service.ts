@@ -1,8 +1,7 @@
-import BotInterface from "backend/interfaces/bot.interface";
 import { Investment, Transaction } from "backend/interfaces/portfolio.interface";
 import BotModel from "backend/models/bot.schema";
 import PortfolioService from "./portfolio.service";
-import { BOT_PARAMETER } from "backend/interfaces/bot.interface";
+import BotInterface, { BOT_PARAMETER, BOT_SAFETY_PARAMETER } from "backend/interfaces/bot.interface";
 import PortfolioModel from "backend/models/portfolio.schema";
 import MarketService from "./market.service";
 import { MARKET_BASE } from "backend/interfaces/market.interface";
@@ -32,8 +31,9 @@ const BotService = (() => {
 	): Promise<Transaction[]> => {
 		const transactions: Transaction[] = [];
 		for (let investment of bundle) {
-			const { three_day_slope, price } = await StockService.getValue(investment.stock);
-			if (three_day_slope < -loss_aversion_parameter) {
+			const { fall_since_peak, price } = await StockService.getValue(investment.stock);
+			if (fall_since_peak < -loss_aversion_parameter * BOT_SAFETY_PARAMETER) {
+				console.log("Averting loss", fall_since_peak);
 				transactions.push({
 					stock: investment.stock,
 					amount: investment.quantity * price,

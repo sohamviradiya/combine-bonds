@@ -91,7 +91,7 @@ const PortfolioService = (() => {
 
 		portfolio.transactions.filter((transaction) => transaction.date > date - DATE_LIMIT);
 
-		portfolio.netWorth.filter((value) => value.date > date - DATE_LIMIT);
+		portfolio.netWorth = portfolio.netWorth.filter((value) => value.date > date - DATE_LIMIT);
 		portfolio.netWorth.push({ value: portfolio.currentBalance + gross_amount, date });
 
 		portfolio.investments = portfolio.investments.filter(

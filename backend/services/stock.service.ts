@@ -17,7 +17,7 @@ const StockService = (() => {
 				price: stock.price,
 				slope: stock.slope,
 				double_slope: stock.double_slope,
-				three_day_slope: stock.three_day_slope,
+				fall_since_peak: stock.fall_since_peak,
 			})
 		);
 	};
@@ -33,7 +33,7 @@ const StockService = (() => {
 			price: data.price,
 			slope: data.slope,
 			double_slope: data.double_slope,
-			three_day_slope: data.three_day_slope,
+			fall_since_peak: data.fall_since_peak,
 		};
 	};
 
@@ -51,9 +51,12 @@ const StockService = (() => {
 	const addPoint = async (_id: string, valuePoint: ValuePoint) => {
 		const stock: StockInterfaceWithID = await StockModel.findById(_id).exec();
 		if (!stock) return null;
-		stock.timeline = stock.timeline.filter((point) => point.date > valuePoint.date - DATE_LIMIT);
-		stock.timeline.push(valuePoint);
-		return await StockModel.findByIdAndUpdate(_id, stock).exec();
+		const new_date = stock.timeline[stock.timeline.length - 1].date + 1;
+		stock.timeline = stock.timeline.filter((point) => point.date > new_date - DATE_LIMIT);
+		stock.timeline.push({ ...valuePoint, date: new_date });
+		return await StockModel.findByIdAndUpdate(_id, {
+			timeline: stock.timeline,
+		}).exec();
 	};
 	const getRandom = async (count: number) => {
 		const stocks = await StockModel.find({}, { _id: 1 }).limit(count).exec();
