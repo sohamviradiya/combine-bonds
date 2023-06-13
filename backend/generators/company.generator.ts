@@ -4,7 +4,7 @@ import { faker } from "@faker-js/faker";
 
 const company_names = [""] as string[];
 
-const NUM_OF_COMPANIES = 30;
+const NUM_OF_COMPANIES = 20;
 
 const generateCompany = (): createCompanyDto => {
 	let company_name = "";
