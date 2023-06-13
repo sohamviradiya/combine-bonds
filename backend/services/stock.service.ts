@@ -43,6 +43,7 @@ const StockService = (() => {
 		stock.timeline[stock.timeline.length - 1].volume_in_market += change;
 		return StockModel.findByIdAndUpdate(_id, stock).exec();
 	};
+	
 	const getMarketCap = async (_id: string) => {
 		const { timeline }: { timeline: Array<ValuePoint> } = await StockModel.findById(_id, { timeline: 1 }).exec();
 		return timeline[timeline.length - 1].market_valuation;
@@ -58,10 +59,12 @@ const StockService = (() => {
 			timeline: stock.timeline,
 		}).exec();
 	};
+
 	const getRandom = async (count: number) => {
 		const stocks = await StockModel.find({}, { _id: 1 }).limit(count).exec();
 		return stocks.map((stock) => stock._id);
 	};
+
 	const getHighSlope = async (count: number) => {
 		const stocks = await getAll();
 		stocks.sort((a, b) => b.slope - a.slope);

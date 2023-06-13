@@ -47,7 +47,7 @@ const TransactionService = (() => {
 
 		let stock_quantity = transaction.amount / stock.price;
 		stock.timeline[stock.timeline.length - 1].volume_in_market -= stock_quantity;
-
+		
 		if (portfolio.investments[stockIndex].quantity < stock_quantity)
 			stock_quantity = portfolio.investments[stockIndex].quantity;
 
