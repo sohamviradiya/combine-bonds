@@ -33,7 +33,6 @@ const BotService = (() => {
 		for (let investment of bundle) {
 			const { fall_since_peak, price } = await StockService.getValue(investment.stock);
 			if (fall_since_peak >= loss_aversion_parameter * BOT_SAFETY_PARAMETER) {
-				console.log("Averting loss", fall_since_peak);
 				transactions.push({
 					stock: investment.stock,
 					amount: investment.quantity * price,

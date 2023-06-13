@@ -88,14 +88,15 @@ stockSchema.virtual("double_slope").get(function (this: any) {
 
 stockSchema.virtual("fall_since_peak").get(function (this: any) {
 	if (this.timeline.length < 2) return 0;
-	const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
-	const peak_point: ValuePoint = this.timeline.reduce((prev: ValuePoint, curr: ValuePoint) =>
-		Number(prev.market_valuation) > Number(curr.market_valuation) ? prev : curr
-	, this.timeline[0]);
-	return (
-		(Number(peak_point.market_valuation) - Number(last_point.market_valuation)) /
-		Number(peak_point.market_valuation)
-	);
+	const latest_market_valuation = this.timeline[this.timeline.length - 1].market_valuation;
+	let k = this.timeline.length - 2;
+	while (k >= 0 && this.timeline[k].market_valuation >= this.timeline[k + 1].market_valuation) k--;
+	if (k >= 0)
+		return (
+			(Number(latest_market_valuation) - Number(this.timeline[k].market_valuation)) /
+			Number(this.timeline[k].market_valuation)
+		);
+	else return 0;
 });
 const StockModel = mongoose.models["Stock"] ?? mongoose.model("Stock", stockSchema);
 
