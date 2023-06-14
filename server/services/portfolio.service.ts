@@ -3,7 +3,7 @@ import PortfolioInterface, {
 	Transaction,
 	PortfolioInterfaceWithID,
 	PORTFOLIO_STARTING_BALANCE,
-	DUMP_THRESHOLD,
+	STOCK_DUMP_THRESHOLD,
 } from "server/types/portfolio.interface";
 import PortfolioModel from "server/models/portfolio.schema";
 import TransactionService from "./transaction.service";
@@ -74,7 +74,7 @@ const PortfolioService = (() => {
 			investments.map(async (investment) => {
 				const value = await StockService.getValue(investment.stock);
 				const amount = investment.quantity * value.price;
-				if (amount < DUMP_THRESHOLD) {
+				if (amount < STOCK_DUMP_THRESHOLD) {
 					await StockModel.findByIdAndUpdate(investment.stock, { $pull: { traders: portfolio_id } }).exec();
 					dumped_stocks.push(String(investment.stock));
 					transactions.push({

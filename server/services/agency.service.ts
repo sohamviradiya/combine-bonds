@@ -1,4 +1,7 @@
-import AgencyInterface, { AgencyInterfaceWithId, INTENSITY_CONSTANT } from "server/types/agency.interface";
+import AgencyInterface, {
+	AgencyInterfaceWithId,
+	AGENCY_PRICE_INCREMENT_PARAMETER,
+} from "server/types/agency.interface";
 import AgencyModel from "server/models/agency.schema";
 import StockModel from "server/models/stock.schema";
 import MarketService from "./market.service";
@@ -45,7 +48,7 @@ const AgencyService = (() => {
 
 		let market_valuation = stock.timeline[stock.timeline.length - 1].market_valuation;
 
-		market_valuation *= 1 + increase_coefficient * INTENSITY_CONSTANT;
+		market_valuation *= 1 + increase_coefficient * AGENCY_PRICE_INCREMENT_PARAMETER;
 
 		const volume_in_market = stock.timeline[stock.timeline.length - 1].volume_in_market;
 		await StockService.addPoint(agency.stock, {

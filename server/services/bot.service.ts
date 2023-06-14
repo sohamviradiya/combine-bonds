@@ -1,7 +1,7 @@
 import { Investment, Transaction } from "server/types/portfolio.interface";
 import BotModel from "server/models/bot.schema";
 import PortfolioService from "./portfolio.service";
-import BotInterface, { BOT_INVESTMENT_PARAMETER, BOT_SAFETY_PARAMETER } from "server/types/bot.interface";
+import BotInterface, { BOT_INVESTMENT_PARAMETER, BOT_LOSS_AVERSION_PARAMETER, BOT_STOCK_CLEARANCE_PARAMETER } from "server/types/bot.interface";
 import PortfolioModel from "server/models/portfolio.schema";
 import MarketService from "./market.service";
 import { MARKET_BASE } from "server/types/market.interface";
@@ -24,7 +24,7 @@ const BotService = (() => {
 		return await BotModel.findById(bot_id).exec();
 	};
 
-	const avertLoss = async (
+	const updateBundle = async (
 		bundle: Investment[],
 		loss_aversion_parameter: number,
 		stock_clearance_parameter: number,
@@ -34,8 +34,8 @@ const BotService = (() => {
 		for (let investment of bundle) {
 			const { fall_since_peak, price, rise_since_trough } = await StockService.getValue(investment.stock);
 			if (
-				fall_since_peak >= loss_aversion_parameter * BOT_SAFETY_PARAMETER ||
-				rise_since_trough >= stock_clearance_parameter * BOT_SAFETY_PARAMETER
+				fall_since_peak >= loss_aversion_parameter * BOT_LOSS_AVERSION_PARAMETER ||
+				rise_since_trough >= stock_clearance_parameter * BOT_STOCK_CLEARANCE_PARAMETER
 			) {
 				transactions.push({
 					stock: investment.stock,
@@ -183,7 +183,7 @@ const BotService = (() => {
 		const transactions: Transaction[] = [];
 
 		transactions.push(
-			...(await avertLoss(
+			...(await updateBundle(
 				portfolio_data.investments,
 				parameters.loss_aversion_parameter,
 				parameters.stock_clearance_parameter,

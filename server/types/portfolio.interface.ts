@@ -45,5 +45,5 @@ export type PortfolioInterfaceWithID = PortfolioInterface & {
 };
 
 export const PORTFOLIO_STARTING_BALANCE = 100000;
-export const DUMP_THRESHOLD = 10;
+export const STOCK_DUMP_THRESHOLD = 10;
 export default PortfolioInterface;
