@@ -1,12 +1,12 @@
-import { Investment, Transaction } from "backend/interfaces/portfolio.interface";
-import BotModel from "backend/models/bot.schema";
+import { Investment, Transaction } from "server/types/portfolio.interface";
+import BotModel from "server/models/bot.schema";
 import PortfolioService from "./portfolio.service";
-import BotInterface, { BOT_PARAMETER, BOT_SAFETY_PARAMETER } from "backend/interfaces/bot.interface";
-import PortfolioModel from "backend/models/portfolio.schema";
+import BotInterface, { BOT_PARAMETER, BOT_SAFETY_PARAMETER } from "server/types/bot.interface";
+import PortfolioModel from "server/models/portfolio.schema";
 import MarketService from "./market.service";
-import { MARKET_BASE } from "backend/interfaces/market.interface";
+import { MARKET_BASE } from "server/types/market.interface";
 import StockService from "./stock.service";
-import StockModel from "backend/models/stock.schema";
+import StockModel from "server/models/stock.schema";
 
 const BotService = (() => {
 	const add = async (bot: BotInterface) => {
@@ -27,12 +27,13 @@ const BotService = (() => {
 	const avertLoss = async (
 		bundle: Investment[],
 		loss_aversion_parameter: number,
+		stock_clearance_parameter: number,
 		date: number
 	): Promise<Transaction[]> => {
 		const transactions: Transaction[] = [];
 		for (let investment of bundle) {
-			const { fall_since_peak, price } = await StockService.getValue(investment.stock);
-			if (fall_since_peak >= loss_aversion_parameter * BOT_SAFETY_PARAMETER) {
+			const { fall_since_peak, price, rise_since_trough } = await StockService.getValue(investment.stock);
+			if (fall_since_peak >= loss_aversion_parameter * BOT_SAFETY_PARAMETER || rise_since_trough >=  stock_clearance_parameter * BOT_SAFETY_PARAMETER ) {
 				transactions.push({
 					stock: investment.stock,
 					amount: investment.quantity * price,
@@ -173,7 +174,7 @@ const BotService = (() => {
 
 		const transactions: Transaction[] = [];
 
-		transactions.push(...(await avertLoss(portfolio_data.investments, parameters.loss_aversion_parameter, date)));
+		transactions.push(...(await avertLoss(portfolio_data.investments, parameters.loss_aversion_parameter,parameters.stock_clearance_parameter , date)));
 
 		const balance_component =
 			parameters.investment_amount_per_slot.balance_dependence_parameter * portfolio_data.currentBalance;
@@ -183,8 +184,6 @@ const BotService = (() => {
 			MARKET_BASE;
 
 		const total_investment_amount = BOT_PARAMETER * (balance_component + market_market_component);
-
-		transactions.push(...(await avertLoss(portfolio_data.investments, parameters.loss_aversion_parameter, date)));
 
 		const bundle_filling_amount = total_investment_amount * parameters.bundle_filling_parameter.value;
 

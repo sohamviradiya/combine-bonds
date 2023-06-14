@@ -34,6 +34,7 @@ type BotInterface = {
 			weight_distribution: number[];
 		};
 		loss_aversion_parameter: number;
+		stock_clearance_parameter: number;
 	};
 };
 

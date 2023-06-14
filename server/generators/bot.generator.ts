@@ -1,6 +1,6 @@
-import BotInterface, { BOT_CLASS } from "backend/interfaces/bot.interface";
-import PortfolioModel from "backend/models/portfolio.schema";
-import BotService from "backend/services/bot.service";
+import BotInterface, { BOT_CLASS } from "server/types/bot.interface";
+import PortfolioModel from "server/models/portfolio.schema";
+import BotService from "server/services/bot.service";
 const generateWeights = (num: number) => {
 	let weights = [];
 	for (let i = 0; i < num; i++) {
@@ -38,6 +38,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 		weight_distribution: Array<number>(),
 	};
 	let loss_aversion_parameter = 0;
+	let stock_clearance_parameter = 0;
 
 	if (bot_class == "Safe") {
 		investment_amount_per_slot = {
@@ -60,6 +61,8 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 			},
 		};
 		loss_aversion_parameter = 0.05 + Math.random() * 0.1;
+		stock_clearance_parameter = 0.6 + Math.random() * 0.1;
+
 		bundle_filling_parameter.weight_distribution = generateWeights(3);
 	} else if (bot_class == "Aggressive") {
 		investment_amount_per_slot = {
@@ -82,6 +85,8 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 			},
 		};
 		loss_aversion_parameter = 0.1 + Math.random() * 0.1;
+		stock_clearance_parameter = 0.7 + Math.random() * 0.1;
+
 		bundle_filling_parameter.weight_distribution = generateWeights(4);
 	} else if (bot_class == "Speculative") {
 		investment_amount_per_slot = {
@@ -104,6 +109,8 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 			},
 		};
 		loss_aversion_parameter = 0.15 + Math.random() * 0.1;
+		stock_clearance_parameter = 0.5 + Math.random() * 0.1;
+
 		bundle_filling_parameter.weight_distribution = generateWeights(3);
 	} else if (bot_class == "Random") {
 		investment_amount_per_slot = {
@@ -126,6 +133,8 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 			},
 		};
 		loss_aversion_parameter = 0.2 + Math.random() * 0.1;
+		stock_clearance_parameter = 0.25 + Math.random() * 0.1;
+		
 		bundle_filling_parameter.weight_distribution = [];
 	} else throw new Error("Bot class not found");
 
@@ -146,8 +155,9 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 			bundle_expansion_parameter: bundle_expansion_parameter,
 			bundle_filling_parameter: bundle_filling_parameter,
 			loss_aversion_parameter,
+			stock_clearance_parameter
 		},
-	} as BotInterface;
+	};
 };
 
 const BotGenerator = async () => {

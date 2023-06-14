@@ -26,6 +26,7 @@ export type StockInterfaceWithID = StockInterface & {
 	slope: number;
 	price: number;
 	double_slope: number;
+	rise_since_trough: number;
 };
 
 export type createStockDto = Omit<StockInterface, "createdAt" | "traders">;

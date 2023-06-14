@@ -10,21 +10,20 @@ const StockService = (() => {
 		return newStockDoc;
 	};
 	const getAll = async () => {
-		const data = await StockModel.find().exec();
-		return data.map(
-			(stock): StockInterfaceWithID => ({
-				...stock._doc,
-				price: stock.price,
-				slope: stock.slope,
-				double_slope: stock.double_slope,
-				fall_since_peak: stock.fall_since_peak,
-			})
-		);
+		const data = await StockModel.find({}, { _id: 1 }).exec();
+		return data.map((stock) => stock._id);
 	};
 
 	const get = async (_id: string): Promise<StockInterfaceWithID> => {
 		const data = await StockModel.findById(_id).exec();
-		return { ...data._doc, price: data.price, slope: data.slope, double_slope: data.double_slope };
+		return {
+			...data._doc,
+			price: data.price,
+			slope: data.slope,
+			double_slope: data.double_slope,
+			fall_since_peak: data.fall_since_peak,
+			rise_since_trough: data.rise_since_trough,
+		};
 	};
 
 	const getValue = async (_id: string) => {
@@ -34,6 +33,7 @@ const StockService = (() => {
 			slope: data.slope,
 			double_slope: data.double_slope,
 			fall_since_peak: data.fall_since_peak,
+			rise_since_trough: data.rise_since_trough,
 		};
 	};
 

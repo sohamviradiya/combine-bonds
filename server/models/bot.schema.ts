@@ -92,6 +92,10 @@ const BotSchema = new Schema({
 			type: Schema.Types.Number,
 			required: true,
 		},
+		stock_clearance_parameter: {
+			type: Schema.Types.Number,
+			required: true,
+		},
 	},
 });
 
