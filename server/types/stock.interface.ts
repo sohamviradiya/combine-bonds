@@ -28,6 +28,7 @@ export type StockValues = {
 	slope: number;
 	price: number;
 	double_slope: number;
+	fall_since_peak: number;
 	rise_since_trough: number;
 };
 

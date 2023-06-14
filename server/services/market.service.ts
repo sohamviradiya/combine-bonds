@@ -34,8 +34,10 @@ const MarketService = (() => {
 		const stocks: StockInterface[] = await StockModel.find({}, { timeline: 1 }).exec();
 		const market_caps = stocks.map((stock) => stock.timeline[stock.timeline.length - 1].market_valuation);
 		const cumulative_market_capitalization = market_caps.reduce((a, b) => a + b, 0);
-
+		
 		const portfolios: PortfolioInterface[] = await PortfolioModel.find({}, { netWorth: 1 }).exec();
+
+
 		const net_worths = portfolios.map((portfolio) => portfolio.netWorth[portfolio.netWorth.length - 1].value);
 		const cumulative_net_worth = net_worths.reduce((a, b) => a + b, 0);
 

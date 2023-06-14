@@ -1,7 +1,6 @@
-import PortfolioInterface, { PortfolioInterfaceWithID, Transaction } from "server/types/portfolio.interface";
+import { PortfolioInterfaceWithID, Transaction } from "server/types/portfolio.interface";
 import { StockInterfaceWithID } from "server/types/stock.interface";
 import StockModel from "server/models/stock.schema";
-import PortfolioService from "./portfolio.service";
 const TransactionService = (() => {
 	const buyStock = async (id: string, portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
 		if (transaction.class != "STOCK PURCHASE") throw new Error("Invalid transaction class");
@@ -24,6 +23,7 @@ const TransactionService = (() => {
 		} else {
 			portfolio.investments[stockIndex].quantity += stock_quantity;
 		}
+		
 		stock.timeline[stock.timeline.length - 1].volume_in_market += stock_quantity;
 
 		await StockModel.findByIdAndUpdate(transaction.stock, stock);
@@ -46,7 +46,7 @@ const TransactionService = (() => {
 		if (stockIndex === -1) throw new Error("Stock not found in portfolio");
 
 		let stock_quantity = transaction.amount / stock.price;
-		stock.timeline[stock.timeline.length - 1].volume_in_market -= stock_quantity;
+		stock.timeline[stock.timeline.length - 1].volume_in_market += stock_quantity;
 
 		if (portfolio.investments[stockIndex].quantity < stock_quantity)
 			stock_quantity = portfolio.investments[stockIndex].quantity;

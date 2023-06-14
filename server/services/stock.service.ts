@@ -9,9 +9,9 @@ const StockService = (() => {
 		await CompanyModel.findByIdAndUpdate(stock.company, { $push: { stocks: newStockDoc._id } }).exec();
 		return newStockDoc;
 	};
-	const getAll = async () => {
+	const getAll = async () : Promise<string[]> => {
 		const data = await StockModel.find({}, { _id: 1 }).exec();
-		return data.map((stock) => stock._id);
+		return data.map((stock) => String(stock._id));
 	};
 
 	const get = async (_id: string): Promise<StockInterfaceWithID> => {
@@ -49,13 +49,6 @@ const StockService = (() => {
 		}));
 	};
 
-	const changeVolume = async (_id: string, change: number) => {
-		const stock: StockInterfaceWithID = await StockModel.findById(_id).exec();
-		if (!stock) return null;
-		stock.timeline[stock.timeline.length - 1].volume_in_market += change;
-		return StockModel.findByIdAndUpdate(_id, stock).exec();
-	};
-
 	const getMarketCap = async (_id: string) => {
 		const { timeline }: { timeline: Array<ValuePoint> } = await StockModel.findById(_id, { timeline: 1 }).exec();
 		return timeline[timeline.length - 1].market_valuation;
@@ -90,7 +83,6 @@ const StockService = (() => {
 	};
 
 	return {
-		changeVolume,
 		add,
 		getAll,
 		get, 

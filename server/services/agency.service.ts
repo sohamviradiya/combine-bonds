@@ -6,7 +6,6 @@ import AgencyModel from "server/models/agency.schema";
 import StockModel from "server/models/stock.schema";
 import MarketService from "./market.service";
 import StockService from "./stock.service";
-import { StockInterfaceWithID } from "server/types/stock.interface";
 
 const AgencyService = (() => {
 	const add = async (agency: AgencyInterface) => {
@@ -26,7 +25,6 @@ const AgencyService = (() => {
 		const agency = await get(agency_id);
 		const parameters = agency.market_valuation_parameter;
 		const stock = await StockModel.findById(agency.stock).exec();
-
 		let increase_coefficient = 0;
 		increase_coefficient += parameters.steady_increase;
 
