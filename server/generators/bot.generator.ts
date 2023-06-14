@@ -81,7 +81,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 			},
 			random_investment_parameters: {
 				value: 0,
-				weight_distribution: generateWeights(1),
+				weight_distribution: generateWeights(2),
 			},
 		};
 		loss_aversion_parameter = 0.1 + Math.random() * 0.1;

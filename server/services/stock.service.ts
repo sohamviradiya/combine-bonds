@@ -1,5 +1,5 @@
 import StockModel from "server/models/stock.schema";
-import { ValuePoint, createStockDto, StockInterface, StockInterfaceWithID } from "server/types/stock.interface";
+import { ValuePoint, createStockDto, StockInterface, StockInterfaceWithID, StockValues } from "server/types/stock.interface";
 import CompanyModel from "server/models/company.schema";
 import { DATE_LIMIT } from "server/types/market.interface";
 const StockService = (() => {
@@ -37,6 +37,18 @@ const StockService = (() => {
 		};
 	};
 
+	const getAllValues = async () : Promise<StockValues[]> => {
+		const data = await StockModel.find().exec();
+		return data.map((stock: any) => ({
+			_id: stock._id,
+			price: stock.price,
+			slope: stock.slope,
+			double_slope: stock.double_slope,
+			fall_since_peak: stock.fall_since_peak,
+			rise_since_trough: stock.rise_since_trough,
+		}));
+	};
+
 	const changeVolume = async (_id: string, change: number) => {
 		const stock: StockInterfaceWithID = await StockModel.findById(_id).exec();
 		if (!stock) return null;
@@ -66,13 +78,13 @@ const StockService = (() => {
 	};
 
 	const getHighSlope = async (count: number) => {
-		const stocks = await getAll();
+		const stocks = await getAllValues();
 		stocks.sort((a, b) => b.slope - a.slope);
 		return stocks.slice(0, count).map((stock) => stock._id);
 	};
 
 	const getHighDoubleSlope = async (count: number) => {
-		const stocks = (await getAll()).filter((stock) => stock.slope > 0);
+		const stocks = (await getAllValues()).filter((stock) => stock.slope > 0);
 		stocks.sort((a, b) => b.double_slope - a.double_slope);
 		return stocks.slice(0, count).map((stock) => stock._id);
 	};
@@ -81,7 +93,7 @@ const StockService = (() => {
 		changeVolume,
 		add,
 		getAll,
-		get,
+		get, 
 		getValue,
 		addPoint,
 		getMarketCap,

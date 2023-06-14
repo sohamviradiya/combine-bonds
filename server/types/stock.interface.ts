@@ -21,7 +21,9 @@ export type StockInterface = {
 	traders: string[];
 };
 
-export type StockInterfaceWithID = StockInterface & {
+export type StockInterfaceWithID = StockInterface & StockValues;
+
+export type StockValues = {
 	_id: string;
 	slope: number;
 	price: number;
