@@ -1,4 +1,4 @@
-import companyInterface, { createCompanyDto } from "server/types/company.interface";
+import CompanyInterface, { CompanyInterfaceWithId, createCompanyDto } from "server/types/company.interface";
 import CompanyModel from "server/models/company.schema";
 const CompanyService = (() => {
 	const add = async (company: createCompanyDto) => {
@@ -15,7 +15,7 @@ const CompanyService = (() => {
 		return data;
 	};
 	const get = async (_id: string) => {
-		return await CompanyModel.findById(_id).exec();
+		return (await CompanyModel.findById(_id).exec()) as CompanyInterfaceWithId;
 	};
 	const evaluate = async (_id: string) => {
 		//

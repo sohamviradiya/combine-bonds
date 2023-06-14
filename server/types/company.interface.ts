@@ -25,11 +25,11 @@ export enum COMPANY_FORMS {
 	"Other" = 6,
 }
 
-export type companyInterface = {
+export type CompanyInterface = {
 	name: string;
 	field: keyof typeof COMPANY_FIELDS;
 	form: keyof typeof COMPANY_FORMS;
-	established?: number;
+	established?: Date;
 	description?: string;
 	assets: number;
 	stocks: string[];
@@ -38,13 +38,10 @@ export type companyInterface = {
 	market_capitalization: number;
 };
 
-export type companyInterfaceWithId = companyInterface & {
+export type CompanyInterfaceWithId = CompanyInterface & {
 	_id: string;
 };
 
-export type createCompanyDto = Omit<
-	companyInterface,
-	"stocks" | "market_capitalization"
->;
+export type createCompanyDto = Omit<CompanyInterface, "stocks" | "market_capitalization">;
 
-export default companyInterface;
+export default CompanyInterface;

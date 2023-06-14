@@ -92,7 +92,7 @@ stockSchema.virtual("fall_since_peak").get(function (this: any) {
 	let k = this.timeline.length - 2;
 	while (k >= 0 && this.timeline[k].market_valuation >= this.timeline[k + 1].market_valuation) k--;
 	return (
-		(Number(latest_market_valuation) - Number(this.timeline[k + 1].market_valuation)) /
+		(Number(this.timeline[k + 1].market_valuation) - Number(latest_market_valuation)) /
 		Number(this.timeline[k + 1].market_valuation)
 	);
 });
