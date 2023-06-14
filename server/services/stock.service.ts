@@ -1,7 +1,7 @@
-import StockModel from "backend/models/stock.schema";
-import { ValuePoint, createStockDto, StockInterface, StockInterfaceWithID } from "backend/interfaces/stock.interface";
-import CompanyModel from "backend/models/company.schema";
-import { DATE_LIMIT } from "backend/interfaces/market.interface";
+import StockModel from "server/models/stock.schema";
+import { ValuePoint, createStockDto, StockInterface, StockInterfaceWithID } from "server/types/stock.interface";
+import CompanyModel from "server/models/company.schema";
+import { DATE_LIMIT } from "server/types/market.interface";
 const StockService = (() => {
 	const add = async (stock: createStockDto) => {
 		const newStock = { ...stock, createdAt: new Date(), traders: [] } as StockInterface;
@@ -43,7 +43,7 @@ const StockService = (() => {
 		stock.timeline[stock.timeline.length - 1].volume_in_market += change;
 		return StockModel.findByIdAndUpdate(_id, stock).exec();
 	};
-	
+
 	const getMarketCap = async (_id: string) => {
 		const { timeline }: { timeline: Array<ValuePoint> } = await StockModel.findById(_id, { timeline: 1 }).exec();
 		return timeline[timeline.length - 1].market_valuation;

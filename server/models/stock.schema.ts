@@ -1,4 +1,4 @@
-import { STOCK_CLASS, ValuePoint } from "backend/interfaces/stock.interface";
+import { STOCK_CLASS, ValuePoint } from "server/types/stock.interface";
 import mongoose, { Schema } from "mongoose";
 
 const stockSchema = new Schema(
@@ -98,6 +98,21 @@ stockSchema.virtual("fall_since_peak").get(function (this: any) {
 		);
 	else return 0;
 });
+
+stockSchema.virtual("rise_since_trough").get(function (this: any) {
+	if (this.timeline.length < 2) return 0;
+	const latest_market_valuation = this.timeline[this.timeline.length - 1].market_valuation;
+	let k = this.timeline.length - 2;
+	while (k >= 0 && this.timeline[k].market_valuation <= this.timeline[k + 1].market_valuation) k--;
+	if (k >= 0)
+		return (
+			(Number(latest_market_valuation) - Number(this.timeline[k].market_valuation)) /
+			Number(this.timeline[k].market_valuation)
+		);
+	else return 0;
+});
+
+
 const StockModel = mongoose.models["Stock"] ?? mongoose.model("Stock", stockSchema);
 
 export default StockModel;

@@ -1,6 +1,6 @@
-import CompanyModel from "backend/models/company.schema";
-import StockService from "backend/services/stock.service";
-import { createStockDto, STOCK_CLASS } from "backend/interfaces/stock.interface";
+import CompanyModel from "server/models/company.schema";
+import StockService from "server/services/stock.service";
+import { createStockDto, STOCK_CLASS } from "server/types/stock.interface";
 
 const StockGenerator = async () => {
 	const company_ids = (await CompanyModel.find({}, { _id: 1 }).exec()).map((company: { _id: string }) => company._id);

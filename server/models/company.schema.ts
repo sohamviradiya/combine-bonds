@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { COMPANY_FIELDS, COMPANY_FORMS } from "backend/interfaces/company.interface";
+import { COMPANY_FIELDS, COMPANY_FORMS } from "server/types/company.interface";
 const CompanySchema = new Schema({
 	name: {
 		type: Schema.Types.String,

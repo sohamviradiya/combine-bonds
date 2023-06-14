@@ -1,5 +1,5 @@
-import CompanyService from "backend/services/company.service";
-import { COMPANY_FIELDS, COMPANY_FORMS, createCompanyDto } from "backend/interfaces/company.interface";
+import CompanyService from "server/services/company.service";
+import { COMPANY_FIELDS, COMPANY_FORMS, createCompanyDto } from "server/types/company.interface";
 import { faker } from "@faker-js/faker";
 
 const company_names = [""] as string[];

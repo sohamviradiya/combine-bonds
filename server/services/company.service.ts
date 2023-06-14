@@ -1,5 +1,5 @@
-import companyInterface, { createCompanyDto } from "backend/interfaces/company.interface";
-import CompanyModel from "backend/models/company.schema";
+import companyInterface, { createCompanyDto } from "server/types/company.interface";
+import CompanyModel from "server/models/company.schema";
 const CompanyService = (() => {
 	const add = async (company: createCompanyDto) => {
 		const newCompany = new CompanyModel({

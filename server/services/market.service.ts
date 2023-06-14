@@ -1,9 +1,9 @@
-import { StockInterface } from "backend/interfaces/stock.interface";
-import MarketModel from "backend/models/market.schema";
-import StockModel from "backend/models/stock.schema";
-import PortfolioInterface from "backend/interfaces/portfolio.interface";
-import PortfolioModel from "backend/models/portfolio.schema";
-import { DATE_LIMIT } from "backend/interfaces/market.interface";
+import { StockInterface } from "server/types/stock.interface";
+import MarketModel from "server/models/market.schema";
+import StockModel from "server/models/stock.schema";
+import PortfolioInterface from "server/types/portfolio.interface";
+import PortfolioModel from "server/models/portfolio.schema";
+import { DATE_LIMIT } from "server/types/market.interface";
 const MarketService = (() => {
 	const get = async () => {
 		return await MarketModel.find({}).sort({ date: -1 }).exec();

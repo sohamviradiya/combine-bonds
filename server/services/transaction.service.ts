@@ -1,6 +1,6 @@
-import PortfolioInterface, { PortfolioInterfaceWithID, Transaction } from "backend/interfaces/portfolio.interface";
-import { StockInterfaceWithID } from "backend/interfaces/stock.interface";
-import StockModel from "backend/models/stock.schema";
+import PortfolioInterface, { PortfolioInterfaceWithID, Transaction } from "server/types/portfolio.interface";
+import { StockInterfaceWithID } from "server/types/stock.interface";
+import StockModel from "server/models/stock.schema";
 import PortfolioService from "./portfolio.service";
 const TransactionService = (() => {
 	const buyStock = async (id: string, portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
@@ -47,7 +47,7 @@ const TransactionService = (() => {
 
 		let stock_quantity = transaction.amount / stock.price;
 		stock.timeline[stock.timeline.length - 1].volume_in_market -= stock_quantity;
-		
+
 		if (portfolio.investments[stockIndex].quantity < stock_quantity)
 			stock_quantity = portfolio.investments[stockIndex].quantity;
 

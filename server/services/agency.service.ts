@@ -1,9 +1,9 @@
-import AgencyInterface, { AgencyInterfaceWithId, INTENSITY_CONSTANT } from "backend/interfaces/agency.interface";
-import AgencyModel from "backend/models/agency.schema";
-import StockModel from "backend/models/stock.schema";
+import AgencyInterface, { AgencyInterfaceWithId, INTENSITY_CONSTANT } from "server/types/agency.interface";
+import AgencyModel from "server/models/agency.schema";
+import StockModel from "server/models/stock.schema";
 import MarketService from "./market.service";
 import StockService from "./stock.service";
-import { StockInterfaceWithID } from "backend/interfaces/stock.interface";
+import { StockInterfaceWithID } from "server/types/stock.interface";
 
 const AgencyService = (() => {
 	const add = async (agency: AgencyInterface) => {

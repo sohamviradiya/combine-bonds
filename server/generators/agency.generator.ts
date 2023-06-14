@@ -1,7 +1,7 @@
-import AgencyService from "backend/services/agency.service";
-import StockModel from "backend/models/stock.schema";
-import AgencyInterface, { AGENCY_CLASS } from "backend/interfaces/agency.interface";
-import StockService from "backend/services/stock.service";
+import AgencyService from "server/services/agency.service";
+import StockModel from "server/models/stock.schema";
+import AgencyInterface, { AGENCY_CLASS } from "server/types/agency.interface";
+import StockService from "server/services/stock.service";
 
 const generateAgency = async (stock_id: string): Promise<AgencyInterface> => {
 	const stock = await StockService.get(stock_id);

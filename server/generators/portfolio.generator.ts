@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { createPortfolioDTO } from "backend/interfaces/portfolio.interface";
-import PortfolioService from "backend/services/portfolio.service";
+import { createPortfolioDTO } from "server/types/portfolio.interface";
+import PortfolioService from "server/services/portfolio.service";
 
 const NUM_OF_PORTFOLIOS = 100;
 
