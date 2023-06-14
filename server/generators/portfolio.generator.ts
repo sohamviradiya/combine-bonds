@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { createPortfolioDTO } from "server/types/portfolio.interface";
 import PortfolioService from "server/services/portfolio.service";
 
-const NUM_OF_PORTFOLIOS = 100;
+const NUM_OF_PORTFOLIOS = 20;
 
 const generatePortfolio = (): createPortfolioDTO => {
 	return {
