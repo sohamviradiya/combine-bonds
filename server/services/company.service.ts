@@ -15,7 +15,7 @@ const CompanyService = (() => {
 		return data;
 	};
 	const get = async (_id: string) => {
-		return (await CompanyModel.findById(_id).exec()) as CompanyInterfaceWithId;
+		return { ...(await CompanyModel.findById(_id).exec())._doc } as CompanyInterfaceWithId;
 	};
 	const evaluate = async (_id: string) => {
 		//
