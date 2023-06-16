@@ -4,12 +4,12 @@ import PortfolioInterface, {
 	PortfolioInterfaceWithID,
 	PORTFOLIO_STARTING_BALANCE,
 	STOCK_DUMP_THRESHOLD,
-} from "server/types/portfolio.interface";
-import PortfolioModel from "server/models/portfolio.schema";
+} from "@/server/types/portfolio.interface";
+import PortfolioModel from "@/server/models/portfolio.schema";
 import TransactionService from "./transaction.service";
-import StockModel from "server/models/stock.schema";
+import StockModel from "@/server/models/stock.schema";
 import StockService from "./stock.service";
-import { DATE_LIMIT } from "server/types/market.interface";
+import { DATE_LIMIT } from "@/server/types/market.interface";
 
 const PortfolioService = (() => {
 	const add = async (portfolio: createPortfolioDTO): Promise<PortfolioInterface> => {

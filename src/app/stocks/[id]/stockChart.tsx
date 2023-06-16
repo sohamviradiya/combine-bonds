@@ -1,6 +1,10 @@
 "use client";
 
-import { ValuePoint } from "server/types/stock.interface";
+type ValuePoint = {
+     date: number;
+     market_valuation: number;
+     volume_in_market: number;
+};
 import { Chart } from "react-charts";
 import React from "react";
 import { AxisOptions } from "react-charts/types/types";

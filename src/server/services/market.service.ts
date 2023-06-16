@@ -1,9 +1,9 @@
-import { StockInterface } from "server/types/stock.interface";
-import MarketModel from "server/models/market.schema";
-import StockModel from "server/models/stock.schema";
-import PortfolioInterface from "server/types/portfolio.interface";
-import PortfolioModel from "server/models/portfolio.schema";
-import { DATE_LIMIT } from "server/types/market.interface";
+import { StockInterface } from "@/server/types/stock.interface";
+import MarketModel from "@/server/models/market.schema";
+import StockModel from "@/server/models/stock.schema";
+import PortfolioInterface from "@/server/types/portfolio.interface";
+import PortfolioModel from "@/server/models/portfolio.schema";
+import { DATE_LIMIT } from "@/server/types/market.interface";
 const MarketService = (() => {
 	const get = async () => {
 		return await MarketModel.find({}).sort({ date: -1 }).exec();
@@ -34,9 +34,8 @@ const MarketService = (() => {
 		const stocks: StockInterface[] = await StockModel.find({}, { timeline: 1 }).exec();
 		const market_caps = stocks.map((stock) => stock.timeline[stock.timeline.length - 1].market_valuation);
 		const cumulative_market_capitalization = market_caps.reduce((a, b) => a + b, 0);
-		
-		const portfolios: PortfolioInterface[] = await PortfolioModel.find({}, { netWorth: 1 }).exec();
 
+		const portfolios: PortfolioInterface[] = await PortfolioModel.find({}, { netWorth: 1 }).exec();
 
 		const net_worths = portfolios.map((portfolio) => portfolio.netWorth[portfolio.netWorth.length - 1].value);
 		const cumulative_net_worth = net_worths.reduce((a, b) => a + b, 0);

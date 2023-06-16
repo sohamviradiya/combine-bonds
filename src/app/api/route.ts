@@ -1,15 +1,14 @@
 import { NextResponse } from "next/server";
-import AgencyGenerator from "server/generators/agency.generator";
-import BotGenerator from "server/generators/bot.generator";
-import CompanyGenerator from "server/generators/company.generator";
-import PortfolioGenerator from "server/generators/portfolio.generator";
-import StockGenerator from "server/generators/stocks.generator";
-import connectDb from "server/mongoose.main";
-import AgencyService from "server/services/agency.service";
-import BotService from "server/services/bot.service";
-import MarketService from "server/services/market.service";
-import PortfolioService from "server/services/portfolio.service";
-import StockService from "server/services/stock.service";
+import AgencyGenerator from "@/server/generators/agency.generator";
+import BotGenerator from "@/server/generators/bot.generator";
+import CompanyGenerator from "@/server/generators/company.generator";
+import PortfolioGenerator from "@/server/generators/portfolio.generator";
+import StockGenerator from "@/server/generators/stocks.generator";
+import AgencyService from "@/server/services/agency.service";
+import BotService from "@/server/services/bot.service";
+import MarketService from "@/server/services/market.service";
+import PortfolioService from "@/server/services/portfolio.service";
+import connectDb from "@/server/mongoose.main";
 let k = 0;
 export async function GET() {
 	await connectDb();
@@ -23,7 +22,8 @@ export async function GET() {
 	const bots = await BotService.getAll();
 	const portfolios = await PortfolioService.getAll();
 	for (let i = 0; i < 30; i++) {
-		k++;console.log("Day", i);
+		k++;
+		console.log("Day", i);
 		await MarketService.evaluate(k);
 		console.log("Day", i, "Market Evaluated");
 		await Promise.all(agencies.map(async (agency) => await AgencyService.evaluate(agency)));
@@ -35,4 +35,5 @@ export async function GET() {
 		console.log("Relative Net Worth Change", await MarketService.getRelativeCumulativeNetWorth());
 		console.log("Relative Market Cap Change", await MarketService.getRelativeCumulativeMarketCapitalization());
 	}
+	return NextResponse.json({ message: "Done" });
 }

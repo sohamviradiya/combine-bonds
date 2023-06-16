@@ -1,7 +1,7 @@
 import styles from "src/app/page.module.css";
 import { Metadata } from "next";
-import StockService from "server/services/stock.service";
-import { StockLinkComponent } from "@/components/stockLink";
+import StockService from "@/server/services/stock.service";
+import { StockLinkComponent } from "@/app/stocks/stockLink";
 
 export default async function Page() {
      const stockIds = await StockService.getAll();

@@ -1,15 +1,19 @@
 import mongoose, { Schema } from "mongoose";
-
 const PortfolioSchema = new Schema({
 	user: {
 		type: {
 			name: {
 				type: Schema.Types.String,
 				required: true,
+				unique: true,
 			},
 			bio: {
 				type: Schema.Types.String,
 				required: false,
+			},
+			password: {
+				type: Schema.Types.String,
+				required: true,
 			},
 		},
 		required: false,

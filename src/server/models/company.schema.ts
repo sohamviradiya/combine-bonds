@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-import { COMPANY_FIELDS, COMPANY_FORMS } from "server/types/company.interface";
-import { STOCK_CLASS } from "server/types/stock.interface";
+import { COMPANY_FIELDS, COMPANY_FORMS } from "@/server/types/company.interface";
+import { STOCK_CLASS } from "@/server/types/stock.interface";
 const CompanySchema = new Schema({
 	name: {
 		type: Schema.Types.String,

@@ -1,6 +1,6 @@
-import BotInterface, { BOT_CLASS } from "server/types/bot.interface";
-import PortfolioModel from "server/models/portfolio.schema";
-import BotService from "server/services/bot.service";
+import BotInterface, { BOT_CLASS } from "@/server/types/bot.interface";
+import PortfolioModel from "@/server/models/portfolio.schema";
+import BotService from "@/server/services/bot.service";
 const generateWeights = (num: number) => {
 	let weights = [];
 	for (let i = 0; i < num; i++) {
@@ -134,7 +134,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 		};
 		loss_aversion_parameter = 0.2 + Math.random() * 0.1;
 		stock_clearance_parameter = 0.1 + Math.random() * 0.1;
-		
+
 		bundle_filling_parameter.weight_distribution = [];
 	} else throw new Error("Bot class not found");
 
@@ -155,7 +155,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 			bundle_expansion_parameter: bundle_expansion_parameter,
 			bundle_filling_parameter: bundle_filling_parameter,
 			loss_aversion_parameter,
-			stock_clearance_parameter
+			stock_clearance_parameter,
 		},
 	};
 };

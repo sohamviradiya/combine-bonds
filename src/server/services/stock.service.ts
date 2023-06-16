@@ -1,13 +1,13 @@
-import StockModel from "server/models/stock.schema";
+import StockModel from "@/server/models/stock.schema";
 import {
 	ValuePoint,
 	createStockDto,
 	StockInterface,
 	StockInterfaceWithID,
 	StockValues,
-} from "server/types/stock.interface";
-import CompanyModel from "server/models/company.schema";
-import { DATE_LIMIT } from "server/types/market.interface";
+} from "@/server/types/stock.interface";
+import CompanyModel from "@/server/models/company.schema";
+import { DATE_LIMIT } from "@/server/types/market.interface";
 const StockService = (() => {
 	const add = async (stock: createStockDto) => {
 		const newStock = { ...stock, createdAt: new Date(), traders: [] } as StockInterface;

@@ -25,6 +25,7 @@ type PortfolioInterface = {
 	user?: {
 		name: string;
 		bio?: string;
+		password: string;
 	};
 	transactions: Transaction[];
 	currentBalance: number;

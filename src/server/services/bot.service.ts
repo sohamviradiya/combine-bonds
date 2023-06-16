@@ -1,12 +1,16 @@
-import { Investment, Transaction } from "server/types/portfolio.interface";
-import BotModel from "server/models/bot.schema";
+import { Investment, Transaction } from "@/server/types/portfolio.interface";
+import BotModel from "@/server/models/bot.schema";
 import PortfolioService from "./portfolio.service";
-import BotInterface, { BOT_INVESTMENT_PARAMETER, BOT_LOSS_AVERSION_PARAMETER, BOT_STOCK_CLEARANCE_PARAMETER } from "server/types/bot.interface";
-import PortfolioModel from "server/models/portfolio.schema";
+import BotInterface, {
+	BOT_INVESTMENT_PARAMETER,
+	BOT_LOSS_AVERSION_PARAMETER,
+	BOT_STOCK_CLEARANCE_PARAMETER,
+} from "@/server/types/bot.interface";
+import PortfolioModel from "@/server/models/portfolio.schema";
 import MarketService from "./market.service";
-import { MARKET_BASE } from "server/types/market.interface";
+import { MARKET_BASE } from "@/server/types/market.interface";
 import StockService from "./stock.service";
-import StockModel from "server/models/stock.schema";
+import StockModel from "@/server/models/stock.schema";
 
 const BotService = (() => {
 	const add = async (bot: BotInterface) => {

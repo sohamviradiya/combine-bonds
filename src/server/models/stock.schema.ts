@@ -1,4 +1,4 @@
-import { STOCK_CLASS, ValuePoint } from "server/types/stock.interface";
+import { STOCK_CLASS, ValuePoint } from "@/server/types/stock.interface";
 import mongoose, { Schema } from "mongoose";
 
 const stockSchema = new Schema(
