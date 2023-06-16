@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { COMPANY_FIELDS, COMPANY_FORMS } from "server/types/company.interface";
+import { STOCK_CLASS } from "server/types/stock.interface";
 const CompanySchema = new Schema({
 	name: {
 		type: Schema.Types.String,
@@ -30,9 +31,16 @@ const CompanySchema = new Schema({
 	stocks: {
 		type: [
 			{
-				type: Schema.Types.ObjectId,
-				ref: "Stock",
-				required: true,
+				ref: {
+					type: Schema.Types.ObjectId,
+					ref: "Stock",
+					required: true,
+				},
+				class: {
+					type: Schema.Types.String,
+					required: true,
+					enum: Object.values(STOCK_CLASS),
+				},
 			},
 		],
 	},

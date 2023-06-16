@@ -1,15 +1,28 @@
 import StockModel from "server/models/stock.schema";
-import { ValuePoint, createStockDto, StockInterface, StockInterfaceWithID, StockValues } from "server/types/stock.interface";
+import {
+	ValuePoint,
+	createStockDto,
+	StockInterface,
+	StockInterfaceWithID,
+	StockValues,
+} from "server/types/stock.interface";
 import CompanyModel from "server/models/company.schema";
 import { DATE_LIMIT } from "server/types/market.interface";
 const StockService = (() => {
 	const add = async (stock: createStockDto) => {
 		const newStock = { ...stock, createdAt: new Date(), traders: [] } as StockInterface;
 		const newStockDoc = await new StockModel({ ...newStock }).save();
-		await CompanyModel.findByIdAndUpdate(stock.company, { $push: { stocks: newStockDoc._id } }).exec();
+		await CompanyModel.findByIdAndUpdate(stock.company, {
+			$push: {
+				stocks: {
+					_id: newStockDoc._id,
+					class: stock.class,
+				},
+			},
+		}).exec();
 		return newStockDoc;
 	};
-	const getAll = async () : Promise<string[]> => {
+	const getAll = async (): Promise<string[]> => {
 		const data = await StockModel.find({}, { _id: 1 }).exec();
 		return data.map((stock) => String(stock._id));
 	};
@@ -37,7 +50,7 @@ const StockService = (() => {
 		};
 	};
 
-	const getAllValues = async () : Promise<StockValues[]> => {
+	const getAllValues = async (): Promise<StockValues[]> => {
 		const data = await StockModel.find().exec();
 		return data.map((stock: any) => ({
 			_id: stock._id,
@@ -85,7 +98,7 @@ const StockService = (() => {
 	return {
 		add,
 		getAll,
-		get, 
+		get,
 		getValue,
 		addPoint,
 		getMarketCap,
