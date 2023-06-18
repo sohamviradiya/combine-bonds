@@ -28,7 +28,12 @@ const AgencySchema = new Schema({
 			type: Schema.Types.Number,
 			required: true,
 		},
+		dividend_ratio: {
+			type: Schema.Types.Number,
+			required: true,
+		},
 	},
 });
-const AgencyModel = mongoose.models["Agency"] ?? mongoose.model("Agency", AgencySchema);
+const AgencyModel =
+	mongoose.models["Agency"] ?? mongoose.model("Agency", AgencySchema);
 export default AgencyModel;

@@ -1,4 +1,8 @@
-import { STOCK_CLASS, ValuePoint } from "@/server/types/stock.interface";
+import {
+	DIVIDEND_FACTOR,
+	STOCK_CLASS,
+	ValuePoint,
+} from "@/server/types/stock.interface";
 import mongoose, { Schema } from "mongoose";
 
 const stockSchema = new Schema(
@@ -23,6 +27,10 @@ const stockSchema = new Schema(
 						required: true,
 					},
 					volume_in_market: {
+						type: Schema.Types.Number,
+						required: true,
+					},
+					dividend: {
 						type: Schema.Types.Number,
 						required: true,
 					},
@@ -67,7 +75,8 @@ stockSchema.virtual("slope").get(function (this: any) {
 	const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
 	const second_last_point: ValuePoint = this.timeline[this.timeline.length - 2];
 	return (
-		(Number(last_point.market_valuation) - Number(second_last_point.market_valuation)) /
+		(Number(last_point.market_valuation) -
+			Number(second_last_point.market_valuation)) /
 		Number(second_last_point.market_valuation)
 	);
 });
@@ -78,36 +87,51 @@ stockSchema.virtual("double_slope").get(function (this: any) {
 	const second_last_point: ValuePoint = this.timeline[this.timeline.length - 2];
 	const third_last_point: ValuePoint = this.timeline[this.timeline.length - 3];
 	const last_slope =
-		(Number(last_point.market_valuation) - Number(second_last_point.market_valuation)) /
+		(Number(last_point.market_valuation) -
+			Number(second_last_point.market_valuation)) /
 		Number(second_last_point.market_valuation);
 	const second_last_slope =
-		(Number(second_last_point.market_valuation) - Number(third_last_point.market_valuation)) /
+		(Number(second_last_point.market_valuation) -
+			Number(third_last_point.market_valuation)) /
 		Number(third_last_point.market_valuation);
 	return (last_slope - second_last_slope) / second_last_slope;
 });
 
 stockSchema.virtual("fall_since_peak").get(function (this: any) {
 	if (this.timeline.length < 2) return 0;
-	const latest_market_valuation = this.timeline[this.timeline.length - 1].market_valuation;
+	const latest_market_valuation =
+		this.timeline[this.timeline.length - 1].market_valuation;
 	let k = this.timeline.length - 2;
-	while (k >= 0 && this.timeline[k].market_valuation >= this.timeline[k + 1].market_valuation) k--;
+	while (
+		k >= 0 &&
+		this.timeline[k].market_valuation >= this.timeline[k + 1].market_valuation
+	)
+		k--;
 	return (
-		(Number(this.timeline[k + 1].market_valuation) - Number(latest_market_valuation)) /
+		(Number(this.timeline[k + 1].market_valuation) -
+			Number(latest_market_valuation)) /
 		Number(this.timeline[k + 1].market_valuation)
 	);
 });
 
 stockSchema.virtual("rise_since_trough").get(function (this: any) {
 	if (this.timeline.length < 2) return 0;
-	const latest_market_valuation = this.timeline[this.timeline.length - 1].market_valuation;
+	const latest_market_valuation =
+		this.timeline[this.timeline.length - 1].market_valuation;
 	let k = this.timeline.length - 2;
-	while (k >= 0 && this.timeline[k].market_valuation <= this.timeline[k + 1].market_valuation) k--;
+	while (
+		k >= 0 &&
+		this.timeline[k].market_valuation <= this.timeline[k + 1].market_valuation
+	)
+		k--;
 	return (
-		(Number(latest_market_valuation) - Number(this.timeline[k + 1].market_valuation)) /
+		(Number(latest_market_valuation) -
+			Number(this.timeline[k + 1].market_valuation)) /
 		Number(this.timeline[k + 1].market_valuation)
 	);
 });
 
-const StockModel = mongoose.models["Stock"] ?? mongoose.model("Stock", stockSchema);
+const StockModel =
+	mongoose.models["Stock"] ?? mongoose.model("Stock", stockSchema);
 
 export default StockModel;

@@ -13,6 +13,7 @@ type AgencyInterface = {
 		random_fluctuation: number;
 		market_sentiment_dependence_parameter: number;
 		market_volume_dependence_parameter: number;
+		dividend_ratio: number;
 	};
 };
 

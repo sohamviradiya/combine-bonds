@@ -1,8 +1,9 @@
-enum TRANSACTION_CLASS {
+export enum TRANSACTION_CLASS {
 	"ACCOUNT WITHDRAWAL",
 	"ACCOUNT DEPOSIT",
 	"STOCK PURCHASE",
 	"STOCK SALE",
+	"STOCK DIVIDEND",
 }
 
 export type Investment = {
@@ -13,7 +14,7 @@ export type Investment = {
 export type Transaction = (
 	| { class: "ACCOUNT WITHDRAWAL" | "ACCOUNT DEPOSIT" }
 	| {
-			class: "STOCK PURCHASE" | "STOCK SALE";
+			class: "STOCK PURCHASE" | "STOCK SALE" | "STOCK DIVIDEND";
 			stock: string;
 	  }
 ) & {

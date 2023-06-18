@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { TRANSACTION_CLASS } from "../types/portfolio.interface";
 const PortfolioSchema = new Schema({
 	user: {
 		type: {
@@ -24,7 +25,7 @@ const PortfolioSchema = new Schema({
 				class: {
 					type: Schema.Types.String,
 					required: true,
-					enum: ["Account Withdrawal", "Account Deposit", "Stock Purchase", "Stock Sale"],
+					enum: Object.values(TRANSACTION_CLASS),
 				},
 				stock: {
 					type: Schema.Types.ObjectId,
@@ -75,6 +76,7 @@ const PortfolioSchema = new Schema({
 	},
 });
 
-const PortfolioModel = mongoose.models["Portfolio"] ?? mongoose.model("Portfolio", PortfolioSchema);
+const PortfolioModel =
+	mongoose.models["Portfolio"] ?? mongoose.model("Portfolio", PortfolioSchema);
 
 export default PortfolioModel;

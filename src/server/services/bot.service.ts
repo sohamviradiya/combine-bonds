@@ -11,6 +11,7 @@ import MarketService from "./market.service";
 import { MARKET_BASE } from "@/server/types/market.interface";
 import StockService from "./stock.service";
 import StockModel from "@/server/models/stock.schema";
+import { exit } from "process";
 
 const BotService = (() => {
 	const add = async (bot: BotInterface) => {
@@ -36,11 +37,18 @@ const BotService = (() => {
 	): Promise<Transaction[]> => {
 		const transactions: Transaction[] = [];
 		for (let investment of bundle) {
-			const { fall_since_peak, price, rise_since_trough } = await StockService.getValue(investment.stock);
+			const { fall_since_peak, price, rise_since_trough } =
+				await StockService.getValue(investment.stock);
 			if (
-				fall_since_peak >= loss_aversion_parameter * BOT_LOSS_AVERSION_PARAMETER ||
-				rise_since_trough >= stock_clearance_parameter * BOT_STOCK_CLEARANCE_PARAMETER
+				fall_since_peak >=
+					loss_aversion_parameter * BOT_LOSS_AVERSION_PARAMETER ||
+				rise_since_trough >=
+					stock_clearance_parameter * BOT_STOCK_CLEARANCE_PARAMETER
 			) {
+				if (!investment.stock) {
+					console.log("updateBundle: stock is null");
+					exit(1);
+				}
 				transactions.push({
 					stock: investment.stock,
 					amount: investment.quantity * price,
@@ -60,7 +68,7 @@ const BotService = (() => {
 	): Promise<Transaction[]> => {
 		const transactions: Transaction[] = [];
 		const n = Math.min(weight_distributions.length, bundle.length);
-		const stocks = (
+		const stocks_data = (
 			await Promise.all(
 				bundle.map(async (investment) => {
 					const { slope } = await StockService.getValue(investment.stock);
@@ -72,8 +80,12 @@ const BotService = (() => {
 			.splice(0, n);
 
 		for (let i = 0; i < n; i++) {
+			if (!stocks_data[i].stock) {
+				console.log("fillBundle: stock is null");
+				exit(1);
+			}
 			transactions.push({
-				stock: stocks[i].stock,
+				stock: stocks_data[i].stock,
 				amount: budget * weight_distributions[i],
 				class: "STOCK PURCHASE",
 				date,
@@ -90,8 +102,13 @@ const BotService = (() => {
 	): Promise<Transaction[]> => {
 		const n = weight_distributions.length;
 		const transactions: Transaction[] = [];
-		const stocks = await StockModel.find({}).limit(n).exec();
+		const stocks = await StockService.getRandom(n);
 		for (let i = 0; i < n; i++) {
+			if (!stocks[i]._id) {
+				console.log("randomInvest: stock is null");
+				exit(1);
+			}
+
 			transactions.push({
 				stock: stocks[i]._id,
 				amount: budget * weight_distributions[i],
@@ -111,6 +128,11 @@ const BotService = (() => {
 		const transactions: Transaction[] = [];
 		const stocks = await StockService.getHighSlope(n);
 		for (let i = 0; i < n; i++) {
+			if (!stocks[i]) {
+				console.log("highRaiseInvest: stock is null");
+				exit(1);
+			}
+
 			transactions.push({
 				stock: stocks[i],
 				amount: budget * weight_distributions[i],
@@ -130,7 +152,11 @@ const BotService = (() => {
 		const n = weight_distributions.length;
 		const transactions: Transaction[] = [];
 		const stocks = await StockService.getHighDoubleSlope(n);
-		for (let i = 0; i < n; i++) {
+		for (let i = 0; i < Math.min(n, stocks.length); i++) {
+			if (!stocks[i]) {
+				console.log("lowRiseInvest: stock is null", stocks);
+				exit(1);
+			}
 			transactions.push({
 				stock: stocks[i],
 				amount: budget * weight_distributions[i],
@@ -172,15 +198,19 @@ const BotService = (() => {
 		return transactions.filter((transaction) => {
 			return (
 				transaction.class === "STOCK PURCHASE" &&
-				bundle.findIndex((investment) => String(investment.stock) === String(transaction.stock)) === -1
+				bundle.findIndex(
+					(investment) => String(investment.stock) === String(transaction.stock)
+				) === -1
 			);
 		});
 	};
 
-	const evaluate = async (bot_id: string) => {
-		const { portfolio, parameters }: { portfolio: string; parameters: BotInterface["parameters"] } =
+	const evaluate = async (bot_id: string, date: number) => {
+		const {
+			portfolio,
+			parameters,
+		}: { portfolio: string; parameters: BotInterface["parameters"] } =
 			await BotModel.findById(bot_id, { portfolio: 1, parameters: 1 }).exec();
-		const date = await MarketService.getDate();
 
 		const portfolio_data = await PortfolioModel.findById(portfolio).exec();
 
@@ -196,15 +226,20 @@ const BotService = (() => {
 		);
 
 		const balance_component =
-			parameters.investment_amount_per_slot.balance_dependence_parameter * portfolio_data.currentBalance;
-		const market_market_component =
-			parameters.investment_amount_per_slot.market_sentiment_dependence_parameter *
+			parameters.investment_amount_per_slot.balance_dependence_parameter *
+			portfolio_data.currentBalance;
+		const market_sentience_component =
+			parameters.investment_amount_per_slot
+				.market_sentiment_dependence_parameter *
 			(await MarketService.getRelativeCumulativeMarketCapitalization()) *
 			MARKET_BASE;
 
-		const total_investment_amount = BOT_INVESTMENT_PARAMETER * (balance_component + market_market_component);
+		const total_investment_amount =
+			BOT_INVESTMENT_PARAMETER *
+			(balance_component + market_sentience_component);
 
-		const bundle_filling_amount = total_investment_amount * parameters.bundle_filling_parameter.value;
+		const bundle_filling_amount =
+			total_investment_amount * parameters.bundle_filling_parameter.value;
 
 		transactions.push(
 			...(await fillBundle(
@@ -215,7 +250,8 @@ const BotService = (() => {
 			))
 		);
 
-		const budget_expansion_amount = total_investment_amount * parameters.bundle_expansion_parameter.value;
+		const budget_expansion_amount =
+			total_investment_amount * parameters.bundle_expansion_parameter.value;
 
 		transactions.push(
 			...(await expandBundle(
