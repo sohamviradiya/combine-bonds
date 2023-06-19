@@ -22,6 +22,11 @@ export type Transaction = (
 	date: number;
 };
 
+export type NetWorthPoint = {
+	value: number;
+	date: number;
+};
+
 type PortfolioInterface = {
 	user?: {
 		name: string;
@@ -30,10 +35,7 @@ type PortfolioInterface = {
 	};
 	transactions: Transaction[];
 	currentBalance: number;
-	netWorth: {
-		value: number;
-		date: number;
-	}[];
+	netWorth: NetWorthPoint[];
 	investments: Investment[];
 };
 
