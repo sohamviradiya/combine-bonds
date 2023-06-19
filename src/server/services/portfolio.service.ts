@@ -134,7 +134,7 @@ const PortfolioService = (() => {
 		);
 		await performTransactions(portfolio_id, transactions);
 
-		portfolio.transactions.filter(
+		portfolio.transactions =  portfolio.transactions.filter(
 			(transaction) => transaction.date > date - DATE_LIMIT
 		);
 
