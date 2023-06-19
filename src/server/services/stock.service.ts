@@ -5,7 +5,6 @@ import {
 	StockInterface,
 	StockInterfaceWithID,
 	StockValues,
-	DIVIDEND_FACTOR,
 } from "@/server/types/stock.interface";
 import CompanyModel from "@/server/models/company.schema";
 import { DATE_LIMIT } from "@/server/types/market.interface";

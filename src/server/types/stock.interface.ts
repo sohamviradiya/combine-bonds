@@ -35,6 +35,6 @@ export type StockValues = {
 	last_value_point: ValuePoint;
 };
 
-export const DIVIDEND_FACTOR = 1;
+export const DIVIDEND_FACTOR = 5;
 
 export type createStockDto = Omit<StockInterface, "createdAt" | "traders">;

@@ -28,7 +28,7 @@ export default async function invokeMain() {
 		console.log(`Day ${i + 1}`);
 		await Promise.all(
 			agencies.map(async (agency) => {
-				await AgencyService.evaluate(agency,i);
+				await AgencyService.evaluate(agency, i);
 			})
 		);
 		console.log(`Day ${i + 1} - Agencies Evaluated`);

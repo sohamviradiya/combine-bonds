@@ -19,9 +19,9 @@ const generateStock = async (
 		_id: string;
 	} = await CompanyModel.findById(company_id).exec();
 	const gross_volume = Math.floor(
-		(0.1 + Math.random()) * Math.pow(10, 7 + 3 * Math.random())
+		(0.1 + Math.random()) * Math.pow(10, 5 + 3 * Math.random())
 	);
-	const market_valuation = gross_volume * (0.1 + Math.random()) * 100;
+	const market_valuation = gross_volume * (0.1 + Math.random())* 100;
 	return {
 		name:
 			"$" + String(company.name).toUpperCase().slice(0, 4) + " " + stock_class,

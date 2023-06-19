@@ -155,6 +155,7 @@ const PortfolioService = (() => {
 			{
 				netWorth: portfolio.netWorth,
 				investments: portfolio.investments,
+				transactions: portfolio.transactions,
 			},
 			{ new: true }
 		).exec();
