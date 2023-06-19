@@ -84,8 +84,7 @@ const TransactionService = (() => {
 		transaction: Transaction
 	) => {
 		portfolio.currentBalance += transaction.amount;
-		portfolio.netWorth[portfolio.netWorth.length - 1].value +=
-			transaction.amount;
+		portfolio.netWorth[portfolio.netWorth.length - 1].value += transaction.amount;
 		return portfolio;
 	};
 

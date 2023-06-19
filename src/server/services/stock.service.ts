@@ -70,12 +70,6 @@ const StockService = (() => {
 		}));
 	};
 
-	const getMarketCap = async (_id: string) => {
-		const { timeline }: { timeline: Array<ValuePoint> } =
-			await StockModel.findById(_id, { timeline: 1 }).exec();
-		return timeline[timeline.length - 1].market_valuation;
-	};
-
 	const addPoint = async (_id: string, valuePoint: ValuePoint) => {
 		const stock: StockInterfaceWithID = await StockModel.findById(_id).exec();
 		if (!stock) return null;
@@ -112,7 +106,6 @@ const StockService = (() => {
 		get,
 		getValue,
 		addPoint,
-		getMarketCap,
 		getRandom,
 		getHighSlope,
 		getHighDoubleSlope,
