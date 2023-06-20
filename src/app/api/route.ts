@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import invokeMain from "@/server/tasks/main";
-import connectDb from "@/server/mongoose.main";
-let k = 0;
+import generateMain from "@/server/generator.main";
+import cronMain from "@/server/cron.main";
 export async function GET() {
-	// await invokeMain();
-	await connectDb();
+	//await connectDb();
+	await generateMain();
+	await cronMain();
 	return NextResponse.json({ message: "Done" });
 }

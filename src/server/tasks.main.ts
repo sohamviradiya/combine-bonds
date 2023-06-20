@@ -1,25 +1,14 @@
-import AgencyGenerator from "../generators/agency.generator";
-import BotGenerator from "../generators/bot.generator";
-import CompanyGenerator from "../generators/company.generator";
-import PortfolioGenerator from "../generators/portfolio.generator";
-import StockGenerator from "../generators/stocks.generator";
-import connectDb from "../mongoose.main";
-import AgencyService from "../services/agency.service";
-import BotService from "../services/bot.service";
-import CompanyService from "../services/company.service";
-import PortfolioService from "../services/portfolio.service";
-import StockService from "../services/stock.service";
-import MarketService from "../services/market.service";
+import connectDb from "@/server/mongoose.main";
+import AgencyService from "@/server/services/agency.service";
+import BotService from "@/server/services/bot.service";
+import CompanyService from "@/server/services/company.service";
+import PortfolioService from "@/server/services/portfolio.service";
+import MarketService from "@/server/services/market.service";
 
 const SIMULATION_DURATION = 50;
 
-export default async function invokeMain() {
+export default async function taskMain() {
 	await connectDb();
-	await CompanyGenerator();
-	await StockGenerator();
-	await AgencyGenerator();
-	await PortfolioGenerator();
-	await BotGenerator();
 	const agencies = await AgencyService.getAll();
 	const companies = await CompanyService.getAll();
 	const portfolios = await PortfolioService.getAll();
