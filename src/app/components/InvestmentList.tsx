@@ -4,26 +4,24 @@ import { randomUUID } from "crypto";
 
 export default async function InvestmentListComponent({ investments }: { investments: Investment[] }) {
 
-     const stock_names = new Map<String, String>();
-     for (let investment of investments) {
-          investment.stock = String(investment.stock);
-          if (!stock_names.has(investment.stock)) {
-               const stock_name = (await StockModel.findById(investment.stock).select("name")).name;
-               stock_names.set(investment.stock, stock_name);
-          }
-          investment.stock = stock_names.get(investment.stock) as string
-     }
+     const investment_details = await Promise.all(investments.map(async (investment) => {
+          const stock = (await StockModel.findById(investment.stock, { name: 1 }));
+
+          return { name: stock.name, quantity: investment.quantity };
+     }));
      return (
-          <>
-               {investments.map((investment) => <InvestmentComponent investment={investment} key={randomUUID()} />)}
-          </>
+          <div style={{ height: '100vh', overflow: 'scroll'  , display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap' }}>
+               {investment_details.map((investment) => <InvestmentComponent investment={investment} key={randomUUID()} />)}
+          </div>
      );
 };
 
 
-function InvestmentComponent({ investment }: { investment: Investment }) {
-     return (<>
-          <h3>  {investment.stock}</h3>
-          <p>Quantity: {investment.quantity} shares</p>
-     </>);
+function InvestmentComponent({ investment }: { investment: { name: string, quantity: number } }) {
+     return (
+          <div style={{border: '2px solid yellow', width: '45%', margin: '0.5rem', padding: '0.5rem'}}>
+               <h3>  {investment.name} </h3>
+               <p> {investment.quantity.toFixed(2)} shares</p>
+          </div>
+     );
 };

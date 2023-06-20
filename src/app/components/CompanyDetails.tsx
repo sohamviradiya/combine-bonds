@@ -13,7 +13,7 @@ export function CompanyDetailsComponent({ company }: { company: CompanyInterface
           <div style={{ padding: "1rem", border: "2px solid black", backgroundColor: "white" }}>
                <h2>{company.name} {company.field} {company.form} </h2>
                <hr style={{ border: '4px solid grey', margin: '1rem' }} />
-               <p>Assets: {company.assets / 1000000} Million $</p>
+               <p>Assets: {(company.assets / 1000000).toFixed(3)} Million $</p>
                <p> Established: {(company.established)?.getFullYear() || ""} </p>
                <p> Employees: {company.employees} </p>
                <p> Market Cap: {(company.market_capitalization / 1000000).toFixed(3)} Million $</p>
