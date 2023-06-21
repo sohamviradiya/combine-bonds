@@ -1,6 +1,6 @@
 import CompanyModel from "@/server/models/company.schema";
 import StockService from "@/server/services/stock.service";
-import { createStockDto, STOCK_CLASS } from "@/server/types/stock.interface";
+import { createStockDto, STOCK_CLASS } from "types/stock.interface";
 
 const StockGenerator = async () => {
 	const company_ids = (await CompanyModel.find({}, { _id: 1 }).exec()).map(
@@ -21,7 +21,7 @@ const generateStock = async (
 	const gross_volume = Math.floor(
 		(0.1 + Math.random()) * Math.pow(10, 5 + 3 * Math.random())
 	);
-	const market_valuation = gross_volume * (0.1 + Math.random())* 100;
+	const market_valuation = gross_volume * (0.1 + Math.random()) * 100;
 	return {
 		name:
 			"$" + String(company.name).toUpperCase().slice(0, 4) + " " + stock_class,

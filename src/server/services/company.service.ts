@@ -1,9 +1,12 @@
 import CompanyInterface, {
 	CompanyInterfaceWithId,
 	createCompanyDto,
-} from "@/server/types/company.interface";
+} from "types/company.interface";
 import CompanyModel from "@/server/models/company.schema";
-import { STOCK_CLASS, StockInterfaceWithID } from "../types/stock.interface";
+import {
+	STOCK_CLASS,
+	StockInterfaceWithID,
+} from "../../../types/stock.interface";
 const CompanyService = (() => {
 	const add = async (company: createCompanyDto) => {
 		const newCompany = new CompanyModel({

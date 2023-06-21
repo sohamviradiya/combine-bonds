@@ -1,4 +1,4 @@
-import BotInterface, { BOT_CLASS } from "@/server/types/bot.interface";
+import BotInterface, { BOT_CLASS } from "types/bot.interface";
 import PortfolioModel from "@/server/models/portfolio.schema";
 import BotService from "@/server/services/bot.service";
 const generateWeights = (num: number) => {
@@ -12,7 +12,10 @@ const generateWeights = (num: number) => {
 	return weights;
 };
 
-const generateBot = (portfolio_id: string, trade_period: number): BotInterface => {
+const generateBot = (
+	portfolio_id: string,
+	trade_period: number
+): BotInterface => {
 	const bot_class = Object.values(BOT_CLASS)[Math.floor(Math.random() * 4)];
 	let investment_amount_per_slot = {
 		balance_dependence_parameter: 0,
@@ -161,7 +164,9 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 };
 
 const BotGenerator = async () => {
-	const portfolio_ids = (await PortfolioModel.find({}, { _id: 1 }).exec()).map((portfolio) => portfolio._id);
+	const portfolio_ids = (await PortfolioModel.find({}, { _id: 1 }).exec()).map(
+		(portfolio) => portfolio._id
+	);
 
 	await Promise.all(
 		portfolio_ids.map(async (portfolio_id) => {

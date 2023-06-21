@@ -3,7 +3,7 @@ import {
 	COMPANY_FIELDS,
 	COMPANY_FORMS,
 	createCompanyDto,
-} from "@/server/types/company.interface";
+} from "types/company.interface";
 import { faker } from "@faker-js/faker";
 
 const company_names = [""] as string[];

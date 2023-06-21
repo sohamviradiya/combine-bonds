@@ -4,12 +4,12 @@ import PortfolioInterface, {
 	PortfolioInterfaceWithID,
 	PORTFOLIO_STARTING_BALANCE,
 	STOCK_DUMP_THRESHOLD,
-} from "@/server/types/portfolio.interface";
+} from "types/portfolio.interface";
 import PortfolioModel from "@/server/models/portfolio.schema";
 import TransactionService from "./transaction.service";
 import StockModel from "@/server/models/stock.schema";
 import StockService from "./stock.service";
-import { DATE_LIMIT } from "@/server/types/market.interface";
+import { DATE_LIMIT } from "types/market.interface";
 
 const PortfolioService = (() => {
 	const add = async (
@@ -134,7 +134,7 @@ const PortfolioService = (() => {
 		);
 		await performTransactions(portfolio_id, transactions);
 
-		portfolio.transactions =  portfolio.transactions.filter(
+		portfolio.transactions = portfolio.transactions.filter(
 			(transaction) => transaction.date > date - DATE_LIMIT
 		);
 
@@ -168,8 +168,7 @@ const PortfolioService = (() => {
 		const transactions: Transaction[] = [];
 		await Promise.all(
 			investments.map(async (investment) => {
-				const stock_price = (await StockService.getValue(investment.stock))
-					.price;
+				const stock_price = (await StockService.getValue(investment.stock)).price;
 				transactions.push({
 					class: "STOCK SALE",
 					stock: investment.stock,

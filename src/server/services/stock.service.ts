@@ -5,9 +5,9 @@ import {
 	StockInterface,
 	StockInterfaceWithID,
 	StockValues,
-} from "@/server/types/stock.interface";
+} from "types/stock.interface";
 import CompanyModel from "@/server/models/company.schema";
-import { DATE_LIMIT } from "@/server/types/market.interface";
+import { DATE_LIMIT } from "types/market.interface";
 const StockService = (() => {
 	const add = async (stock: createStockDto) => {
 		const newStock = {

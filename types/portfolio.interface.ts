@@ -48,6 +48,7 @@ export type PortfolioInterfaceWithID = PortfolioInterface & {
 	_id: string;
 };
 
+export const PORTFOLIO_MINIMUM_BALANCE = 10000;
 export const PORTFOLIO_STARTING_BALANCE = 100000;
 export const STOCK_DUMP_THRESHOLD = 10;
 export default PortfolioInterface;

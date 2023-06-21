@@ -1,12 +1,12 @@
 import AgencyInterface, {
 	AgencyInterfaceWithId,
 	AGENCY_PRICE_INCREMENT_PARAMETER,
-} from "@/server/types/agency.interface";
+} from "types/agency.interface";
 import AgencyModel from "@/server/models/agency.schema";
 import StockModel from "@/server/models/stock.schema";
 import MarketService from "./market.service";
 import StockService from "./stock.service";
-import { DIVIDEND_FACTOR } from "../types/stock.interface";
+import { DIVIDEND_FACTOR } from "../../../types/stock.interface";
 
 const AgencyService = (() => {
 	const add = async (agency: AgencyInterface) => {

@@ -1,8 +1,8 @@
 import {
 	PortfolioInterfaceWithID,
 	Transaction,
-} from "@/server/types/portfolio.interface";
-import { StockInterfaceWithID } from "@/server/types/stock.interface";
+} from "types/portfolio.interface";
+import { StockInterfaceWithID } from "types/stock.interface";
 import StockModel from "@/server/models/stock.schema";
 const TransactionService = (() => {
 	const buyStock = async (
@@ -84,7 +84,8 @@ const TransactionService = (() => {
 		transaction: Transaction
 	) => {
 		portfolio.currentBalance += transaction.amount;
-		portfolio.netWorth[portfolio.netWorth.length - 1].value += transaction.amount;
+		portfolio.netWorth[portfolio.netWorth.length - 1].value +=
+			transaction.amount;
 		return portfolio;
 	};
 
@@ -99,13 +100,14 @@ const TransactionService = (() => {
 			transaction.amount;
 		return portfolio;
 	};
-	
+
 	const dividend = async (
 		portfolio: PortfolioInterfaceWithID,
 		transaction: Transaction
 	) => {
 		portfolio.currentBalance += transaction.amount;
-		portfolio.netWorth[portfolio.netWorth.length - 1].value += transaction.amount;
+		portfolio.netWorth[portfolio.netWorth.length - 1].value +=
+			transaction.amount;
 		return portfolio;
 	};
 

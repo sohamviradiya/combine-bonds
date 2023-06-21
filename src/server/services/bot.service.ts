@@ -1,16 +1,13 @@
-import { Investment, Transaction } from "@/server/types/portfolio.interface";
+import { Investment, PORTFOLIO_MINIMUM_BALANCE, PORTFOLIO_STARTING_BALANCE, Transaction } from "types/portfolio.interface";
 import BotModel from "@/server/models/bot.schema";
 import PortfolioService from "./portfolio.service";
 import BotInterface, {
 	BOT_INVESTMENT_PARAMETER,
 	BOT_LOSS_AVERSION_PARAMETER,
 	BOT_STOCK_CLEARANCE_PARAMETER,
-} from "@/server/types/bot.interface";
-import PortfolioModel from "@/server/models/portfolio.schema";
+} from "types/bot.interface";
 import MarketService from "./market.service";
-import { MARKET_BASE } from "@/server/types/market.interface";
 import StockService from "./stock.service";
-import StockModel from "@/server/models/stock.schema";
 import { exit } from "process";
 
 const BotService = (() => {
@@ -214,6 +211,11 @@ const BotService = (() => {
 
 		const portfolio_data = await PortfolioService.get(portfolio);
 
+		if (portfolio_data.currentBalance < PORTFOLIO_MINIMUM_BALANCE) {
+			await PortfolioService.dump(portfolio, date);
+			return 0;
+		}
+		
 		const transactions: Transaction[] = [];
 
 		transactions.push(

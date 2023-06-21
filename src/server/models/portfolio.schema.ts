@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { TRANSACTION_CLASS } from "../types/portfolio.interface";
+import { TRANSACTION_CLASS } from "../../../types/portfolio.interface";
 const PortfolioSchema = new Schema({
 	user: {
 		type: {
