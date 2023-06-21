@@ -1,7 +1,7 @@
 import StockService from "@/server/services/stock.service";
 import { use } from "react";
 import { StockLinkComponent } from "./StockLink";
-import { StockInterfaceWithID } from "@/server/types/stock.interface";
+import { StockInterfaceWithID } from "types/stock.interface";
 
 export default function StockDetailsComponentFromID(props: { stock_id: string }) {
      const stock = use(StockService.get(props.stock_id));

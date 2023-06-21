@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import StockService from "@/server/services/stock.service";
 import StockDetailsComponentFromID from "@/app/components/StockDetails";
 import { CSSProperties } from "react";
+import { SLOT_DURATION } from "types/market.interface";
 
 export default async function Page() {
      const high_slope_stockIds = await StockService.getHighSlope(4);
@@ -41,6 +42,9 @@ const box_style = (): CSSProperties => ({
      justifyContent: "space-around",
      gap: "1rem",
 });
+
+
+export const revalidate = SLOT_DURATION * 60;
 
 export const metadata: Metadata = {
      title: "Stocks",

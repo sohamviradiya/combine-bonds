@@ -3,6 +3,8 @@ import { Metadata } from "next";
 import { CompanyDetailsComponentFromID } from "@/app/components/CompanyDetails";
 import { StockDetailsComponent } from "@/app/components/StockDetails";
 import { StockPriceChartComponent } from "@/app/components/StockChart";
+import { cache } from "react";
+import { SLOT_DURATION } from "types/market.interface";
 
 export default async function Page({ params }: { params: { id: string } }) {
      const stock = await StockService.get(params.id);
@@ -21,6 +23,7 @@ export default async function Page({ params }: { params: { id: string } }) {
      )
 };
 
+export const revalidate = SLOT_DURATION * 60;
 
 export const metadata: Metadata = {
      title: "Stock Details",

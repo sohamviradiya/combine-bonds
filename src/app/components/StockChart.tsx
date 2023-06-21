@@ -1,6 +1,6 @@
 "use client";
 
-import { ValuePoint } from "@/server/types/stock.interface";
+import { ValuePoint } from "types/stock.interface";
 
 import React from "react";
 import dynamic from "next/dynamic";

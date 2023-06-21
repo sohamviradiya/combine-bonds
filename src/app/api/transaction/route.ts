@@ -1,5 +1,5 @@
 import PortfolioService from "@/server/services/portfolio.service";
-import { Transaction } from "@/server/types/portfolio.interface";
+import { Transaction } from "types/portfolio.interface";
 import { NextResponse } from "next/server";
 export async function POST(request: Request) {
 	const body = await request.json();

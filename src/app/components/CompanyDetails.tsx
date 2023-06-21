@@ -1,6 +1,6 @@
 import { StockLinkComponent } from "@/app/components/StockLink";
 import CompanyService from "@/server/services/company.service";
-import { CompanyInterfaceWithId } from "@/server/types/company.interface";
+import { CompanyInterfaceWithId } from "types/company.interface";
 import { use } from "react";
 
 export function CompanyDetailsComponentFromID({ company_id }: { company_id: string; }) {

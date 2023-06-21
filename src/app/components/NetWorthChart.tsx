@@ -1,6 +1,6 @@
 "use client";
 
-import { NetWorthPoint } from "@/server/types/portfolio.interface";
+import { NetWorthPoint } from "types/portfolio.interface";
 import React from "react";
 import dynamic from "next/dynamic";
 import type { Chart as ChartType } from "react-charts";
