@@ -1,4 +1,9 @@
-import { Investment, PORTFOLIO_MINIMUM_BALANCE, PORTFOLIO_STARTING_BALANCE, Transaction } from "types/portfolio.interface";
+import {
+	Investment,
+	PORTFOLIO_MINIMUM_BALANCE,
+	PORTFOLIO_STARTING_BALANCE,
+	Transaction,
+} from "types/portfolio.interface";
 import BotModel from "@/server/models/bot.schema";
 import PortfolioService from "./portfolio.service";
 import BotInterface, {
@@ -204,47 +209,49 @@ const BotService = (() => {
 
 	const evaluate = async (bot_id: string, date: number) => {
 		const {
-			portfolio,
+			portfolio: portfolio_id,
 			parameters,
 		}: { portfolio: string; parameters: BotInterface["parameters"] } =
 			await BotModel.findById(bot_id, { portfolio: 1, parameters: 1 }).exec();
 
-		const portfolio_data = await PortfolioService.get(portfolio);
+		const portfolio = await PortfolioService.get(portfolio_id);
 
-		if (portfolio_data.currentBalance < PORTFOLIO_MINIMUM_BALANCE) {
-			await PortfolioService.dump(portfolio, date);
+		if (portfolio.currentBalance < PORTFOLIO_MINIMUM_BALANCE) {
+			await PortfolioService.dump(portfolio_id, date);
 			return 0;
 		}
-		
+
 		const transactions: Transaction[] = [];
 
 		transactions.push(
 			...(await updateBundle(
-				portfolio_data.investments,
+				portfolio.investments,
 				parameters.loss_aversion_parameter,
 				parameters.stock_clearance_parameter,
 				date
 			))
 		);
 		let relative_netWorth_change = 0;
-		if (portfolio_data.netWorth.length >= 2) {
+		if (portfolio.netWorth.length >= 2) {
 			relative_netWorth_change =
-				(portfolio_data.netWorth[portfolio_data.netWorth.length - 1].value -
-					portfolio_data.netWorth[portfolio_data.netWorth.length - 2].value) /
-				portfolio_data.netWorth[portfolio_data.netWorth.length - 2].value;
+				(portfolio.netWorth[portfolio.netWorth.length - 1].value -
+					portfolio.netWorth[portfolio.netWorth.length - 2].value) /
+				portfolio.netWorth[portfolio.netWorth.length - 2].value;
 		}
 
 		const balance_component =
 			parameters.investment_amount_per_slot.balance_dependence_parameter *
 			relative_netWorth_change;
-		const market_sentience_component =
+
+		const market_sentience_component = Math.max(
 			parameters.investment_amount_per_slot
 				.market_sentiment_dependence_parameter *
-			(await MarketService.getRelativeCumulativeMarketCapitalization());
-
+				(await MarketService.getRelativeCumulativeMarketCapitalization()),
+			0
+		);
 		const total_investment_amount =
 			BOT_INVESTMENT_PARAMETER *
-			portfolio_data.currentBalance *
+			portfolio.currentBalance *
 			(balance_component + market_sentience_component);
 
 		const bundle_filling_amount =
@@ -252,7 +259,7 @@ const BotService = (() => {
 
 		transactions.push(
 			...(await fillBundle(
-				portfolio_data.investments,
+				portfolio.investments,
 				parameters.bundle_filling_parameter.weight_distribution,
 				bundle_filling_amount,
 				date
@@ -264,13 +271,13 @@ const BotService = (() => {
 
 		transactions.push(
 			...(await expandBundle(
-				portfolio_data.investments,
+				portfolio.investments,
 				parameters.bundle_expansion_parameter,
 				budget_expansion_amount,
 				date
 			))
 		);
-		await PortfolioService.performTransactions(portfolio, transactions);
+		await PortfolioService.performTransactions(portfolio_id, transactions);
 		return total_investment_amount;
 	};
 

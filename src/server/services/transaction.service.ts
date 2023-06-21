@@ -66,14 +66,15 @@ const TransactionService = (() => {
 		if (stockIndex === -1) throw new Error("Stock not found in portfolio");
 
 		let stock_quantity = transaction.amount / stock.price;
-		stock.timeline[stock.timeline.length - 1].volume_in_market +=
-			stock_quantity;
 
 		if (portfolio.investments[stockIndex].quantity < stock_quantity)
 			stock_quantity = portfolio.investments[stockIndex].quantity;
 
 		portfolio.currentBalance += transaction.amount;
 		portfolio.investments[stockIndex].quantity -= stock_quantity;
+		
+		stock.timeline[stock.timeline.length - 1].volume_in_market -=
+			stock_quantity;
 
 		await StockModel.findByIdAndUpdate(transaction.stock, stock);
 		return portfolio;

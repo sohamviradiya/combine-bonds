@@ -113,7 +113,7 @@ const PortfolioService = (() => {
 				gross_amount += amount;
 				if (amount < STOCK_DUMP_THRESHOLD) {
 					await StockModel.findByIdAndUpdate(investment.stock, {
-						$pull: { traders: portfolio_id },
+						$pull: { traders: String(portfolio_id) },
 					}).exec();
 					dumped_stocks.push(String(investment.stock));
 					transactions.push({

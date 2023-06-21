@@ -63,9 +63,11 @@ const AgencyService = (() => {
 		market_valuation *=
 			1 + increase_coefficient * AGENCY_PRICE_INCREMENT_PARAMETER;
 
+		if (stock.traders.length == 0)
+			stock.timeline[stock.timeline.length - 1].volume_in_market = 0;
+
 		const volume_in_market =
 			stock.timeline[stock.timeline.length - 1].volume_in_market;
-
 		let dividend = 0;
 		if (stock.timeline.length > 2) {
 			const latest_market_valuation =
