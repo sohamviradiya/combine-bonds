@@ -9,4 +9,6 @@ export const MARKET_BASE = 1000;
 
 export const DATE_LIMIT = 20;
 
+export const SLOT_DURATION = 2;
+
 export default MarketInterface;
