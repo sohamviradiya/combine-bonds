@@ -24,7 +24,7 @@ export default async function cronMain() {
 	companies = await CompanyService.getAll();
 	portfolios = await PortfolioService.getAll();
 	bots = await BotService.getAll();
-	date = await MarketService.getDate();
+	date = await MarketService.getDate() + 1;
 	console.log("Starting cron job");
 	job.start();
 }

@@ -212,7 +212,7 @@ const BotService = (() => {
 		}: { portfolio: string; parameters: BotInterface["parameters"] } =
 			await BotModel.findById(bot_id, { portfolio: 1, parameters: 1 }).exec();
 
-		const portfolio_data = await PortfolioModel.findById(portfolio).exec();
+		const portfolio_data = await PortfolioService.get(portfolio);
 
 		const transactions: Transaction[] = [];
 
@@ -224,18 +224,25 @@ const BotService = (() => {
 				date
 			))
 		);
+		let relative_netWorth_change = 0;
+		if (portfolio_data.netWorth.length >= 2) {
+			relative_netWorth_change =
+				(portfolio_data.netWorth[portfolio_data.netWorth.length - 1].value -
+					portfolio_data.netWorth[portfolio_data.netWorth.length - 2].value) /
+				portfolio_data.netWorth[portfolio_data.netWorth.length - 2].value;
+		}
 
 		const balance_component =
 			parameters.investment_amount_per_slot.balance_dependence_parameter *
-			portfolio_data.currentBalance;
+			relative_netWorth_change;
 		const market_sentience_component =
 			parameters.investment_amount_per_slot
 				.market_sentiment_dependence_parameter *
-			(await MarketService.getRelativeCumulativeMarketCapitalization()) *
-			MARKET_BASE;
+			(await MarketService.getRelativeCumulativeMarketCapitalization());
 
 		const total_investment_amount =
 			BOT_INVESTMENT_PARAMETER *
+			portfolio_data.currentBalance *
 			(balance_component + market_sentience_component);
 
 		const bundle_filling_amount =
