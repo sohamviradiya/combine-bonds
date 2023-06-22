@@ -4,13 +4,14 @@ import { useState } from "react";
 import styles from "src/app/page.module.css";
 
 export default function Page() {
-     const [{ name, password }, setLogin] = useState({ name: "", password: "" });
+     const [{ login_name, login_password }, setLogin] = useState({ login_name: "", login_password: "" });
+     const [{ name, password, bio }, setSignUp] = useState({ name: "", password: "", bio: "" });
      const router = useRouter();
      return (<main className={styles.main} >
           <h1> Login </h1>
           <div style={{
                width: "100vw",
-               height: "100vh",
+               height: "40vh",
                backgroundColor: "black",
                color: "white",
                fontSize: "1.5rem",
@@ -21,17 +22,17 @@ export default function Page() {
                gap: "1rem",
           }}>
                <label style={{ margin: '1rem' }} htmlFor="name">name</label>
-               <input type="text" name="name" id="name" onChange={(e) => { setLogin({ name: e.target.value, password }) }} />
+               <input type="text" name="name" id="name" onChange={(e) => { setLogin({ login_name: e.target.value, login_password }) }} />
                <label style={{ margin: '1rem' }} htmlFor="password">password</label>
-               <input type="password" name="password" id="password" onChange={(e) => { setLogin({ name, password: e.target.value }) }} />
+               <input type="password" name="password" id="password" onChange={(e) => { setLogin({ login_name, login_password: e.target.value }) }} />
                <button style={{ margin: '1rem', padding: '1rem' }} type="submit" onClick={(e) => {
                     e.preventDefault();
                     fetch(`${window.location.host}/api/auth/`
                          , {
                               method: "PUT",
                               body: JSON.stringify({
-                                   "name": name,
-                                   "password": password
+                                   "name": login_name,
+                                   "password": login_password
                               }),
                          }
                     ).then((res) => res.json()).then((res) => {
@@ -46,9 +47,46 @@ export default function Page() {
                }}>
                     <h1>Login</h1> </button>
           </div>
+          <div style={{
+               width: "100vw",
+               height: "40vh",
+               backgroundColor: "black",
+               color: "white",
+               fontSize: "1.5rem",
+               flexDirection: "row",
+               flexWrap: "wrap",
+               justifyContent: "center",
+               alignItems: "center",
+               gap: "1rem",
+          }}>
+               <label style={{ margin: '1rem' }} htmlFor="name">name</label>
+               <input type="text" name="name" id="name" onChange={(e) => { setSignUp({ name: e.target.value, password: password, bio }) }} />
+               <label style={{ margin: '1rem' }} htmlFor="password">password</label>
+               <input type="password" name="password" id="password" onChange={(e) => { setSignUp({ name, password: e.target.value, bio }) }} />
+               <label style={{ margin: '1rem' }} htmlFor="bio">bio</label>
+               <input type="text" name="bio" id="bio" onChange={(e) => { setSignUp({ name: login_name, password, bio: e.target.value }) }} />
+               <button style={{ margin: '1rem', padding: '1rem' }} type="submit" onClick={(e) => {
+                    e.preventDefault();
+                    fetch(`${window.location.host}/api/add/`
+                         , {
+                              method: "POST",
+                              body: JSON.stringify({
+                                   "name": name,
+                                   "password": password,
+                                   "bio": bio,
+                              }),
+                         }
+                    ).then((res) => res.json()).then((res) => {
+                         if (res.id) {
+                              window && window.localStorage.setItem("id", res.id);
+                              router.push(`/portfolio`);
+                         }
+                         else {
+                              alert(`sign up failed ${res.message || res}`);
+                         }
+                    });
+               }}>
+                    <h1>Login</h1> </button>
+          </div>
      </main>);
 };
-
-
-export const revalidate = 0;
-export const dynamic = 'force-dynamic';

@@ -12,9 +12,9 @@ import StockService from "./stock.service";
 import { DATE_LIMIT } from "types/market.interface";
 
 const PortfolioService = (() => {
-	const add = async (
+	const add  = async (
 		portfolio: createPortfolioDTO
-	): Promise<PortfolioInterface> => {
+	): Promise<PortfolioInterfaceWithID> => {
 		return await new PortfolioModel({
 			...portfolio,
 			transactions: [],
