@@ -11,7 +11,7 @@ import { host } from "@/server/tasks.main";
 export default function Page() {
      const [portfolio, setPortfolio] = useState<PortfolioInterfaceWithID>({} as PortfolioInterfaceWithID);
      const router = useRouter();
-     let id = localStorage.getItem("id") ||
+     let id = (localStorage && localStorage.getItem("id")) ||
           router.push("/login");
      useEffect(() => {
 
