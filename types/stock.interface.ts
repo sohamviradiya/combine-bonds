@@ -22,7 +22,7 @@ export type StockInterface = {
 	traders: string[];
 };
 
-export type StockInterfaceWithID = StockInterface &
+export type StockInterfaceWithId = StockInterface &
 	Omit<StockValues, "last_value_point">;
 
 export type StockValues = {

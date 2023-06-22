@@ -32,7 +32,7 @@ export default function Page() {
      }, []);
      
      if (!hasMounted) {
-          return <h1> Page Nyet Mounted </h1>;
+          return <h1> Page Not Mounted </h1>;
      };
      return (
           <main

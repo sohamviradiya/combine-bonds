@@ -3,7 +3,7 @@ import {
 	ValuePoint,
 	createStockDto,
 	StockInterface,
-	StockInterfaceWithID,
+	StockInterfaceWithId,
 	StockValues,
 } from "types/stock.interface";
 import CompanyModel from "@/server/models/company.schema";
@@ -31,7 +31,7 @@ const StockService = (() => {
 		return data.map((stock) => String(stock._id));
 	};
 
-	const get = async (_id: string): Promise<StockInterfaceWithID> => {
+	const get = async (_id: string): Promise<StockInterfaceWithId> => {
 		const data = await StockModel.findById(_id).exec();
 		return {
 			...data._doc,
@@ -70,7 +70,7 @@ const StockService = (() => {
 	};
 
 	const addPoint = async (_id: string, valuePoint: ValuePoint) => {
-		const stock: StockInterfaceWithID = await StockModel.findById(_id).exec();
+		const stock: StockInterfaceWithId = await StockModel.findById(_id).exec();
 		if (!stock) return null;
 		stock.timeline = stock.timeline.filter(
 			(point) => point.date >= valuePoint.date - DATE_LIMIT

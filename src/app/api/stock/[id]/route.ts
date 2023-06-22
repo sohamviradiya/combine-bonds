@@ -6,5 +6,5 @@ export async function GET(
 	{ params }: { params: { id: string } }
 ) { 
 	const stock = await StockService.get(params.id);
-	return NextResponse.json({ name: stock.name,price: stock.price });
+	return NextResponse.json({ ...stock });
 }

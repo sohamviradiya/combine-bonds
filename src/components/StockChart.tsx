@@ -17,6 +17,8 @@ type ValuePointSeries = {
 
 export function StockPriceChartComponent({ timeline }: { timeline: ValuePoint[] }) {
 
+     
+
      const data: ValuePointSeries[] = [
           {
                label: "Stock Price Variations",

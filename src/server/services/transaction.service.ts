@@ -2,7 +2,7 @@ import {
 	PortfolioInterfaceWithID,
 	Transaction,
 } from "types/portfolio.interface";
-import { StockInterfaceWithID } from "types/stock.interface";
+import { StockInterfaceWithId } from "types/stock.interface";
 import StockModel from "@/server/models/stock.schema";
 const TransactionService = (() => {
 	const buyStock = async (
@@ -20,7 +20,7 @@ const TransactionService = (() => {
 		const stock = {
 			...data._doc,
 			price: data.price,
-		} as StockInterfaceWithID;
+		} as StockInterfaceWithId;
 
 		if (portfolio.currentBalance < transaction.amount)
 			throw new Error("Insufficient funds");
@@ -58,7 +58,7 @@ const TransactionService = (() => {
 		const stock = {
 			...data._doc,
 			price: data.price,
-		} as StockInterfaceWithID;
+		} as StockInterfaceWithId;
 		const stockIndex = portfolio.investments.findIndex(
 			(investment) => String(investment.stock) == String(transaction.stock)
 		);
@@ -72,7 +72,7 @@ const TransactionService = (() => {
 
 		portfolio.currentBalance += transaction.amount;
 		portfolio.investments[stockIndex].quantity -= stock_quantity;
-		
+
 		stock.timeline[stock.timeline.length - 1].volume_in_market -=
 			stock_quantity;
 

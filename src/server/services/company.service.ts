@@ -5,7 +5,7 @@ import CompanyInterface, {
 import CompanyModel from "@/server/models/company.schema";
 import {
 	STOCK_CLASS,
-	StockInterfaceWithID,
+	StockInterfaceWithId,
 } from "../../../types/stock.interface";
 const CompanyService = (() => {
 	const add = async (company: createCompanyDto) => {
@@ -18,7 +18,7 @@ const CompanyService = (() => {
 		return newCompanyDoc;
 	};
 	const getAll = async () => {
-		const data = await CompanyModel.find({id: 1 }).exec();
+		const data = await CompanyModel.find({ id: 1 }).exec();
 		return data.map((company) => company._id);
 	};
 	const get = async (_id: string) => {
@@ -34,7 +34,7 @@ const CompanyService = (() => {
 		const market_capitalization = data.stocks.reduce(
 			(
 				acc: number,
-				stock: { class: keyof typeof STOCK_CLASS; ref: StockInterfaceWithID }
+				stock: { class: keyof typeof STOCK_CLASS; ref: StockInterfaceWithId }
 			) => {
 				return (
 					acc +
