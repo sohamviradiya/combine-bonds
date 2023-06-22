@@ -12,25 +12,28 @@ let agencies: string[] = [];
 let companies: string[] = [];
 let portfolios: string[] = [];
 let bots: string[] = [];
+
 let date: number = 0;
-
-const job = new CronJob(
-	`*/${SLOT_DURATION} * * * *`,
-	async () => {
-		console.log("Running cron job", date);
-		await taskMain(agencies, companies, portfolios, bots, date++);
-	},
-	null,
-	true,
-	"America/New_York"
-);
-
 export default async function cronMain() {
 	await connectDb();
 	agencies = await AgencyService.getAll();
 	companies = await CompanyService.getAll();
 	portfolios = await PortfolioService.getAll();
 	bots = await BotService.getAll();
-	await MarketService.getDate().then((d) => (date = d)).then(() => job.start());
+	date = await MarketService.getDate() + 1;
+	const job = new CronJob(
+		`*/${SLOT_DURATION} * * * *`,
+		async () => {
+			console.log("Running cron job", date);
+			await taskMain(agencies, companies, portfolios, bots, date++);
+		},
+		null,
+		true,
+		"America/New_York"
+	);
+	job.start();
 	console.log("Starting cron job");
+	return {
+		message: "Started cron job",
+	};
 }

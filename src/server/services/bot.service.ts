@@ -231,7 +231,7 @@ const BotService = (() => {
 				date
 			))
 		);
-		let relative_netWorth_change = 0;
+		let relative_netWorth_change = 0.01;
 		if (portfolio.netWorth.length >= 2) {
 			relative_netWorth_change =
 				(portfolio.netWorth[portfolio.netWorth.length - 1].value -
@@ -249,6 +249,7 @@ const BotService = (() => {
 				(await MarketService.getRelativeCumulativeMarketCapitalization()),
 			0
 		);
+
 		const total_investment_amount =
 			BOT_INVESTMENT_PARAMETER *
 			portfolio.currentBalance *

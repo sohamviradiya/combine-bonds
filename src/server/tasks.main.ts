@@ -48,3 +48,5 @@ export default async function taskMain(
 		} %`
 	);
 }
+
+export const host = "http://localhost:3000";
