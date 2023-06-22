@@ -1,4 +1,4 @@
-import { StockLinkComponent } from "@/app/components/StockLink";
+import { StockLinkComponent } from "@/components/StockLink";
 import CompanyService from "@/server/services/company.service";
 import { CompanyInterfaceWithId } from "types/company.interface";
 import { use } from "react";

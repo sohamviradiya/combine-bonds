@@ -1,8 +1,9 @@
-import Image from 'next/image'
+import connectDb from '@/server/mongoose.main'
 import styles from './page.module.css'
 import Link from 'next/link'
 
-export default function Home() {
+export default async function Home() {
+  await connectDb();
   return (
     <main
       className={styles.main} style={{ display: 'flex', width: '100%', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', padding: '2rem' }} >

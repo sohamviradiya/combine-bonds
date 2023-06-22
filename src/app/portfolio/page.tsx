@@ -1,12 +1,12 @@
 "use client";
 
-export const host = "http://localhost:3000";
-import InvestmentListComponent from "@/app/components/InvestmentList";
-import { NetWorthChartComponent } from "@/app/components/NetWorthChart";
-import TransactionListComponent from "@/app/components/TransactionList";
+import InvestmentListComponent from "@/components/InvestmentList";
+import { NetWorthChartComponent } from "@/components/NetWorthChart";
+import TransactionListComponent from "@/components/TransactionList";
 import { PortfolioInterfaceWithID } from "types/portfolio.interface";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { host } from "@/server/tasks.main";
 
 export default function Page() {
      const [portfolio, setPortfolio] = useState<PortfolioInterfaceWithID>({} as PortfolioInterfaceWithID);

@@ -1,7 +1,7 @@
 import styles from "src/app/page.module.css";
 import { Metadata } from "next";
 import StockService from "@/server/services/stock.service";
-import StockDetailsComponentFromID from "@/app/components/StockDetails";
+import StockDetailsComponentFromID from "@/components/StockDetails";
 import { CSSProperties } from "react";
 import { SLOT_DURATION } from "types/market.interface";
 
@@ -27,7 +27,7 @@ export default async function Page() {
                          </div>
                     ))}
                </div>
-               
+
           </main>
      );
 }

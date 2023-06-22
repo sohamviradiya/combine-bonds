@@ -1,7 +1,7 @@
 import styles from "src/app/page.module.css";
 import { Metadata } from "next";
 import CompanyService from "@/server/services/company.service";
-import { CompanyDetailsComponentFromID } from "../components/CompanyDetails";
+import { CompanyDetailsComponentFromID } from "../../components/CompanyDetails";
 export default async function Page() {
      const companyIds = await CompanyService.getAll();
      companyIds.sort((a, b) => (a[a.length - 1] > b[b.length - 1] ? 1 : -1));

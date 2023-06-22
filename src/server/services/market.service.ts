@@ -39,7 +39,7 @@ const MarketService = (() => {
 			.sort({ date: -1 })
 			.limit(1)
 			.exec();
-		if (!Market) return 0;
+		if (!Market) return -1;
 		return Market.date;
 	};
 	const evaluate = async (new_date: number) => {

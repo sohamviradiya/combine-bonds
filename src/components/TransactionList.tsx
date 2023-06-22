@@ -3,7 +3,7 @@ import { use } from "react";
 import { Transaction } from "types/portfolio.interface";
 import { randomUUID } from "crypto";
 import { useState, useEffect } from "react";
-import { host } from "../portfolio/page";
+import { host } from "@/server/tasks.main";
 let k = 0;
 export default function TransactionListComponent({ transactions }: { transactions: Transaction[] }) {
 

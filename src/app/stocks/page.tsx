@@ -1,9 +1,10 @@
 import styles from "src/app/page.module.css";
 import { Metadata } from "next";
 import StockService from "@/server/services/stock.service";
-import StockDetailsComponentFromID from "@/app/components/StockDetails";
+import StockDetailsComponentFromID from "@/components/StockDetails";
 import Link from "next/link";
 import { SLOT_DURATION } from "types/market.interface";
+import connectDb from "@/server/mongoose.main";
 
 export default async function Page() {
      const stockIds = await StockService.getAll();
@@ -27,7 +28,7 @@ export default async function Page() {
                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", alignItems: "center", flexWrap: 'wrap' }}>
                     {stockIds.map((stockId) => (
                          <div key={stockId} style={{ padding: "0.1rem", border: "2px solid black", background: "yellow", margin: "2rem" }}>
-                              <StockDetailsComponentFromID  stock_id={stockId} />
+                              <StockDetailsComponentFromID stock_id={stockId} />
                          </div>
                     ))}
                </div>

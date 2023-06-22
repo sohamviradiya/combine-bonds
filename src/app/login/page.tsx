@@ -1,8 +1,9 @@
 "use client";
-export const host = "http://localhost:3000";
+import { host } from "@/server/tasks.main";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "src/app/page.module.css";
+
 export default function Page() {
      const [{ name, password }, setLogin] = useState({ name: "", password: "" });
      const router = useRouter();

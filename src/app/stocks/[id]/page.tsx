@@ -1,8 +1,8 @@
 import StockService from "@/server/services/stock.service";
 import { Metadata } from "next";
-import { CompanyDetailsComponentFromID } from "@/app/components/CompanyDetails";
-import { StockDetailsComponent } from "@/app/components/StockDetails";
-import { StockPriceChartComponent } from "@/app/components/StockChart";
+import { CompanyDetailsComponentFromID } from "@/components/CompanyDetails";
+import { StockDetailsComponent } from "@/components/StockDetails";
+import { StockPriceChartComponent } from "@/components/StockChart";
 import { cache } from "react";
 import { SLOT_DURATION } from "types/market.interface";
 
