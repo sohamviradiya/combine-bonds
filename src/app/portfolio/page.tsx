@@ -17,7 +17,7 @@ export default function Page() {
           if (!hasMounted) return;
           let id = (window && window.localStorage.getItem("id")) ||
           router.push("/login");
-          fetch(`${window.location.host}/api/auth/`
+          fetch(`http://${window.location.host}/api/auth/`
                , {
                     method: "POST",
                     body: JSON.stringify({
@@ -32,7 +32,7 @@ export default function Page() {
      }, []);
      
      if (!hasMounted) {
-          return null;
+          return <h1> Page Nyet Mounted </h1>;
      };
      return (
           <main

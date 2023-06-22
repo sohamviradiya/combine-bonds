@@ -27,7 +27,7 @@ export default function Page() {
                <input type="password" name="password" id="password" onChange={(e) => { setLogin({ login_name, login_password: e.target.value }) }} />
                <button style={{ margin: '1rem', padding: '1rem' }} type="submit" onClick={(e) => {
                     e.preventDefault();
-                    fetch(`${window.location.host}/api/auth/`
+                    fetch(`http://${window.location.host}/api/auth/`
                          , {
                               method: "PUT",
                               body: JSON.stringify({
@@ -68,7 +68,9 @@ export default function Page() {
                <input type="text" name="bio" id="bio" onChange={(e) => { setSignUp({ name: login_name, password, bio: e.target.value }) }} />
                <button style={{ margin: '1rem', padding: '1rem' }} type="submit" onClick={(e) => {
                     e.preventDefault();
-                    fetch(`${window.location.host}/api/add/`
+                    console.log({ name, password, bio });
+
+                    fetch(`http://${window.location.host}/api/add/`
                          , {
                               method: "POST",
                               body: JSON.stringify({
@@ -85,6 +87,8 @@ export default function Page() {
                          else {
                               alert(`sign up failed ${res.message || res}`);
                          }
+                    }).catch((err) => {
+                         alert(`sign up failed ${err}`);
                     });
                }}>
                     <h1>Sign Up</h1> </button>

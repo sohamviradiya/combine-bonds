@@ -11,7 +11,7 @@ export default function InvestmentListComponent({ investments }: { investments: 
      useEffect(() => {
 
           (Promise.all(investments.map(async (investment) => {
-               const stock = await (fetch(`${window.location.host}/api/stock/${investment.stock}`)
+               const stock = await (fetch(`http://${window.location.host}/api/stock/${investment.stock}`)
                     .then((res) => {
                          return res.json()
                     })

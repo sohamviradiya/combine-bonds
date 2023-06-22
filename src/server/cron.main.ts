@@ -12,10 +12,12 @@ let agencies: string[] = [];
 let companies: string[] = [];
 let portfolios: string[] = [];
 let bots: string[] = [];
-
+export let f = false;
 let date: number = 0;
 export default async function cronMain() {
+	if (f) return Promise.resolve({ message: "Cron job already started" });
 	await connectDb();
+	f = true;
 	agencies = await AgencyService.getAll();
 	companies = await CompanyService.getAll();
 	portfolios = await PortfolioService.getAll();
