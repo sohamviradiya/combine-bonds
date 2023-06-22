@@ -17,6 +17,7 @@ export default async function Home() {
           <div style={{ display: 'flex', width: '100%', alignItems: 'center', flexDirection: 'row', justifyContent: 'center', marginBottom: '1rem', gap: '1rem' }} >
             <Link href="/stocks"> <h2 style={{color:'blue'}}> Stocks </h2> </Link>
             <Link href="/companies"> <h2 style={{ color: 'green' }}> Companies </h2> </Link>
+            <Link href="/login"> <h2 style={{ color: 'red' }}> Login or SignUp </h2> </Link>
           </div>
         </section>
         <section className={styles.section}>
