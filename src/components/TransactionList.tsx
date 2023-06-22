@@ -3,7 +3,6 @@ import { use } from "react";
 import { Transaction } from "types/portfolio.interface";
 import { randomUUID } from "crypto";
 import { useState, useEffect } from "react";
-import { host } from "@/server/tasks.main";
 let k = 0;
 export default function TransactionListComponent({ transactions }: { transactions: Transaction[] }) {
 
@@ -15,7 +14,7 @@ export default function TransactionListComponent({ transactions }: { transaction
                if (transaction.class === "STOCK PURCHASE" || transaction.class === "STOCK SALE" || transaction.class === "STOCK DIVIDEND") {
                     transaction.stock = (transaction.stock).toString();
                     if (!stock_names.get(transaction.stock)) {
-                         const stock_name = await (fetch(`${host}/api/stock/${String(transaction.stock)}`)
+                         const stock_name = await (fetch(`${window.location.host}/api/stock/${String(transaction.stock)}`)
                               .then((res) => res.json())
                               .then((res) => res.name));
                          stock_names.set(transaction.stock, stock_name);

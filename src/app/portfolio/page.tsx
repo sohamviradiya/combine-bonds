@@ -6,16 +6,15 @@ import TransactionListComponent from "@/components/TransactionList";
 import { PortfolioInterfaceWithID } from "types/portfolio.interface";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { host } from "@/server/tasks.main";
 
 export default function Page() {
      const [portfolio, setPortfolio] = useState<PortfolioInterfaceWithID>({} as PortfolioInterfaceWithID);
      const router = useRouter();
-     let id = (localStorage && localStorage.getItem("id")) ||
+
+     let id = (window && window.localStorage.getItem("id")) ||
           router.push("/login");
      useEffect(() => {
-
-          fetch(`${host}/api/auth/`
+          fetch(`${window.location.host}/api/auth/`
                , {
                     method: "POST",
                     body: JSON.stringify({
@@ -68,3 +67,6 @@ export default function Page() {
           </main>
      );
 }
+
+
+export const revalidate = 0; export const dynamic = 'force-dynamic';

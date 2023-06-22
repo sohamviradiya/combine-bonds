@@ -3,7 +3,6 @@
 import { Investment } from "types/portfolio.interface";
 import { randomUUID } from "crypto";
 import { use, useEffect, useState } from "react";
-import { host } from "@/server/tasks.main";
 
 export default function InvestmentListComponent({ investments }: { investments: Investment[] }) {
 
@@ -12,15 +11,15 @@ export default function InvestmentListComponent({ investments }: { investments: 
      useEffect(() => {
 
           (Promise.all(investments.map(async (investment) => {
-               const stock = await (fetch(`${host}/api/stock/${investment.stock}`)
+               const stock = await (fetch(`${window.location.host}/api/stock/${investment.stock}`)
                     .then((res) => {
-                       return res.json()
+                         return res.json()
                     })
                     .then((res) => {
                          return res;
                     }));
                console.log(stock);
-               return { name: stock.name, amount: investment.quantity*stock.price };
+               return { name: stock.name, amount: investment.quantity * stock.price };
           }))).then((res) => setInvestmentDetails(res));
      }, [investments]);
      return (
@@ -39,3 +38,4 @@ function InvestmentComponent({ investment }: { investment: { name: string, amoun
           </div>
      );
 };
+

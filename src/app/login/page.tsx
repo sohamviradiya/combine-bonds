@@ -1,5 +1,4 @@
 "use client";
-import { host } from "@/server/tasks.main";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "src/app/page.module.css";
@@ -25,9 +24,9 @@ export default function Page() {
                <input type="text" name="name" id="name" onChange={(e) => { setLogin({ name: e.target.value, password }) }} />
                <label style={{ margin: '1rem' }} htmlFor="password">password</label>
                <input type="password" name="password" id="password" onChange={(e) => { setLogin({ name, password: e.target.value }) }} />
-               <button style={{ margin: '1rem',padding: '1rem' }}  type="submit" onClick={(e) => {
+               <button style={{ margin: '1rem', padding: '1rem' }} type="submit" onClick={(e) => {
                     e.preventDefault();
-                    fetch(`${host}/api/auth/`
+                    fetch(`${window.location.host}/api/auth/`
                          , {
                               method: "PUT",
                               body: JSON.stringify({
@@ -37,7 +36,7 @@ export default function Page() {
                          }
                     ).then((res) => res.json()).then((res) => {
                          if (res.id) {
-                              localStorage.setItem("id", res.id);
+                              window && window.localStorage.setItem("id", res.id);
                               router.push(`/portfolio`);
                          }
                          else {
@@ -49,3 +48,6 @@ export default function Page() {
           </div>
      </main>);
 };
+
+
+export const revalidate = 0; export const dynamic = 'force-dynamic';
