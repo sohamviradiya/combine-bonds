@@ -59,6 +59,7 @@ export default function Page() {
                alignItems: "center",
                gap: "1rem",
           }}>
+               <h1> Sign Up </h1>
                <label style={{ margin: '1rem' }} htmlFor="name">name</label>
                <input type="text" name="name" id="name" onChange={(e) => { setSignUp({ name: e.target.value, password: password, bio }) }} />
                <label style={{ margin: '1rem' }} htmlFor="password">password</label>
@@ -86,7 +87,7 @@ export default function Page() {
                          }
                     });
                }}>
-                    <h1>Login</h1> </button>
+                    <h1>Sign Up</h1> </button>
           </div>
      </main>);
 };
