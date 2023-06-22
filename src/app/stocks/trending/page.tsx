@@ -2,12 +2,14 @@ import styles from "src/app/page.module.css";
 import { Metadata } from "next";
 import StockService from "@/server/services/stock.service";
 import StockDetailsComponentFromID from "@/components/StockDetails";
-import { CSSProperties } from "react";
+import { CSSProperties, use } from "react";
 import { SLOT_DURATION } from "types/market.interface";
+import connectDb from "@/server/mongoose.main";
 
-export default async function Page() {
-     const high_slope_stockIds = await StockService.getHighSlope(4);
-     const high_double_slope_stockIds = await StockService.getHighDoubleSlope(4);
+export default function Page() {
+     use(connectDb());
+     const high_slope_stockIds = use(StockService.getHighSlope(4));
+     const high_double_slope_stockIds = use(StockService.getHighDoubleSlope(4));
 
      return (
           <main className={styles.main}>

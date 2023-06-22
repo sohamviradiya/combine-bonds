@@ -3,7 +3,7 @@ const nextConfig = {
      experimental: {
 
      },
-     staticPageGenerationTimeout: 60 * 5,
+     staticPageGenerationTimeout: 60,
 };
 
 module.exports = nextConfig

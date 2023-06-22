@@ -2,8 +2,11 @@ import styles from "src/app/page.module.css";
 import { Metadata } from "next";
 import CompanyService from "@/server/services/company.service";
 import { CompanyDetailsComponentFromID } from "../../components/CompanyDetails";
-export default async function Page() {
-     const companyIds = await CompanyService.getAll();
+import { use } from "react";
+import connectDb from "@/server/mongoose.main";
+export default function Page() {
+     use(connectDb());
+     const companyIds = use(CompanyService.getAll());
      companyIds.sort((a, b) => (a[a.length - 1] > b[b.length - 1] ? 1 : -1));
      return (
           <main
@@ -16,11 +19,11 @@ export default async function Page() {
                     flexWrap: "wrap",
                     justifyContent: "space-around",
                }}>
-               {await Promise.all(companyIds.map(async (companyId) => (
+               {use(Promise.all(companyIds.map(async (companyId) => (
                     <div key={companyId} style={{ margin: "2rem", border: "4px solid black", width: '80%' }}>
                          <CompanyDetailsComponentFromID company_id={companyId} />
                     </div>
-               )))}
+               ))))}
           </main>
      );
 }

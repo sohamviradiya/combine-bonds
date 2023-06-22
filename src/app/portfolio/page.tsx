@@ -10,10 +10,13 @@ import { useRouter } from "next/navigation";
 export default function Page() {
      const [portfolio, setPortfolio] = useState<PortfolioInterfaceWithID>({} as PortfolioInterfaceWithID);
      const router = useRouter();
+     const [hasMounted, setHasMounted] = useState(false);
 
-     let id = (window && window.localStorage.getItem("id")) ||
-          router.push("/login");
      useEffect(() => {
+          setHasMounted(true);
+          if (!hasMounted) return;
+          let id = (window && window.localStorage.getItem("id")) ||
+          router.push("/login");
           fetch(`${window.location.host}/api/auth/`
                , {
                     method: "POST",
@@ -26,7 +29,11 @@ export default function Page() {
                     setPortfolio(res.portfolio);
                })
                .catch((err) => console.log(err));
-     }, [id]);
+     }, []);
+     
+     if (!hasMounted) {
+          return null;
+     };
      return (
           <main
                style={{
@@ -67,6 +74,3 @@ export default function Page() {
           </main>
      );
 }
-
-
-export const revalidate = 0; export const dynamic = 'force-dynamic';

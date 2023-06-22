@@ -63,7 +63,6 @@ const AgencyService = (() => {
 		market_valuation *=
 			1 + increase_coefficient * AGENCY_PRICE_INCREMENT_PARAMETER;
 
-		
 
 		let volume_in_market =
 			stock.timeline[stock.timeline.length - 1].volume_in_market;

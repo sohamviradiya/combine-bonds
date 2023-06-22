@@ -49,3 +49,7 @@ function TransactionComponent({ transaction }: { transaction: Transaction }) {
           <p>Amount: {transaction.amount.toFixed(2)}$</p>
      </div>);
 };
+
+
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';

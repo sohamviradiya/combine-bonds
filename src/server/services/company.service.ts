@@ -18,8 +18,8 @@ const CompanyService = (() => {
 		return newCompanyDoc;
 	};
 	const getAll = async () => {
-		const data = await CompanyModel.find().exec();
-		return data;
+		const data = await CompanyModel.find({id: 1 }).exec();
+		return data.map((company) => company._id);
 	};
 	const get = async (_id: string) => {
 		return {

@@ -8,3 +8,5 @@ export async function GET() {
 	
 	return NextResponse.json({  ...(await cronMain()) });
 }
+
+export const dynamic = 'force-dynamic';

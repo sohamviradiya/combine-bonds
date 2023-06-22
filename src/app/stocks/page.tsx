@@ -4,10 +4,12 @@ import StockService from "@/server/services/stock.service";
 import StockDetailsComponentFromID from "@/components/StockDetails";
 import Link from "next/link";
 import { SLOT_DURATION } from "types/market.interface";
+import { use } from "react";
 import connectDb from "@/server/mongoose.main";
 
-export default async function Page() {
-     const stockIds = await StockService.getAll();
+export default function Page() {
+     use(connectDb());
+     const stockIds = use(StockService.getAll());
      stockIds.sort((a, b) => (a[a.length - 1] > b[b.length - 1] ? 1 : -1));
      return (
           <main

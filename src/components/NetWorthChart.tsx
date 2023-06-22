@@ -2,9 +2,9 @@
 
 import { NetWorthPoint } from "types/portfolio.interface";
 import React from "react";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import type { Chart as ChartType } from "react-charts";
-const Chart = dynamic(() => import('react-charts').then((mod) => mod.Chart), {
+const Chart = nextDynamic(() => import('react-charts').then((mod) => mod.Chart), {
      ssr: false,
 }) as typeof ChartType;
 
@@ -42,4 +42,7 @@ export function NetWorthChartComponent({ netWorth }: { netWorth: NetWorthPoint[]
      );
 };
 
+
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 
