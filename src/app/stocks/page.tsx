@@ -1,7 +1,7 @@
 import styles from "src/app/page.module.css";
 import { Metadata } from "next";
 import StockService from "@/server/services/stock.service";
-import StockDetailsComponentFromID from "@/components/StockDetails";
+import { StockDetailsComponent } from "@/components/StockDetails";
 import Link from "next/link";
 import { SLOT_DURATION } from "types/market.interface";
 import { use } from "react";
@@ -36,6 +36,11 @@ export default function Page() {
                </div>
           </main>
      );
+}
+
+ function StockDetailsComponentFromID(props: { stock_id: string }) {
+     const stock = use(StockService.get(props.stock_id));
+     return <StockDetailsComponent stock={stock} />;
 }
 
 export const revalidate = SLOT_DURATION * 60;

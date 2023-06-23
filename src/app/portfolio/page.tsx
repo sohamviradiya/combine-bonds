@@ -14,21 +14,23 @@ export default function Page() {
 
      useEffect(() => {
           setHasMounted(true);
-          if (!hasMounted) return;
-          let id = (window && window.localStorage.getItem("id")) ||
-          router.push("/login");
-          fetch(`http://${window.location.host}/api/auth/`
-               , {
-                    method: "POST",
-                    body: JSON.stringify({
-                         "id": id
-                    }),
-               }
-          ).then((res) => res.json())
-               .then((res) => {
-                    setPortfolio(res.portfolio);
-               })
-               .catch((err) => console.log(err));
+          if (hasMounted) {
+               let id = (window && window.localStorage.getItem("id")) ||
+                    router.push("/login");
+               console.log(id);
+               fetch(`http://${window.location.host}/api/auth/`
+                    , {
+                         method: "POST",
+                         body: JSON.stringify({
+                              "id": id
+                         }),
+                    }
+               ).then((res) => res.json())
+                    .then((res) => {
+                         setPortfolio(res.portfolio);
+                    })
+                    .catch((err) => console.log(err));
+          }
      }, []);
      
      if (!hasMounted) {
@@ -69,7 +71,7 @@ export default function Page() {
                               <h2> Net Worth: </h2>
                               <NetWorthChartComponent netWorth={portfolio.netWorth} />
                          </div>
-                    </> : <h1> Loading </h1>
+                    </> : <h1 style={{ position: "absolute", left: "50%", top: "50%", color: "white" }}> Loading </h1>
                }
           </main>
      );

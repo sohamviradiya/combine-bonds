@@ -1,3 +1,4 @@
+import connectDb from "@/server/mongoose.main";
 import PortfolioService from "@/server/services/portfolio.service";
 import { NextResponse } from "next/server";
 export async function PUT(request: Request) {
@@ -10,10 +11,10 @@ export async function PUT(request: Request) {
 }
 
 export async function POST(request: Request) {
+	await connectDb();
 	const body = await request.json();
-	console.log(body);
 	const { id } = body;
-	console.log(body);
 	const portfolio = await PortfolioService.get(id);
+	
 	return NextResponse.json({ portfolio: portfolio });
 }

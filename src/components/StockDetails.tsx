@@ -3,11 +3,6 @@ import { use } from "react";
 import { StockLinkComponent } from "./StockLink";
 import { StockInterfaceWithId } from "types/stock.interface";
 
-export default function StockDetailsComponentFromID(props: { stock_id: string }) {
-     const stock = use(StockService.get(props.stock_id));
-     return <StockDetailsComponent stock={stock} />;
-}
-
 export function StockDetailsComponent({ stock }: { stock: StockInterfaceWithId }) {
      const last_value = stock.timeline[stock.timeline.length - 1];
      return (

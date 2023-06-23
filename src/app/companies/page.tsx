@@ -1,7 +1,7 @@
 import styles from "src/app/page.module.css";
 import { Metadata } from "next";
 import CompanyService from "@/server/services/company.service";
-import { CompanyDetailsComponentFromID } from "../../components/CompanyDetails";
+import { CompanyDetailsComponent } from "../../components/CompanyDetails";
 import { use } from "react";
 import connectDb from "@/server/mongoose.main";
 export default function Page() {
@@ -28,6 +28,11 @@ export default function Page() {
      );
 }
 
+
+function CompanyDetailsComponentFromID({ company_id }: { company_id: string; }) {
+     const company = use(CompanyService.get(company_id));
+     return (<CompanyDetailsComponent company={company} />)
+}
 
 export const metadata: Metadata = {
      title: "Companies",

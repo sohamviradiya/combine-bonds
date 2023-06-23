@@ -1,12 +1,8 @@
 import { StockLinkComponent } from "@/components/StockLink";
+
 import CompanyService from "@/server/services/company.service";
 import { CompanyInterfaceWithId } from "types/company.interface";
 import { use } from "react";
-
-export function CompanyDetailsComponentFromID({ company_id }: { company_id: string; }) {
-     const company = use(CompanyService.get(company_id));
-     return (<CompanyDetailsComponent company={company} />)
-}
 
 export function CompanyDetailsComponent({ company }: { company: CompanyInterfaceWithId; }) {
      return (
