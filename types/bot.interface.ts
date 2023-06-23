@@ -38,7 +38,7 @@ type BotInterface = {
 	};
 };
 
-export const BOT_INVESTMENT_PARAMETER = 10;
+export const BOT_INVESTMENT_PARAMETER = 0.1;
 export const BOT_LOSS_AVERSION_PARAMETER = 0.1;
 export const BOT_STOCK_CLEARANCE_PARAMETER = 0.5;
 export type BotInterfaceWithID = BotInterface & {
