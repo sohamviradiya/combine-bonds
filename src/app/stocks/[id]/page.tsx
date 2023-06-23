@@ -5,8 +5,9 @@ import { StockDetailsComponent } from "@/components/StockDetails";
 import { use } from "react";
 import { SLOT_DURATION } from "types/market.interface";
 import CompanyService from "@/server/services/company.service";
-
+import connectDb from "@/server/mongoose.main";
 export default async function Page({ params }: { params: { id: string } }) {
+     use(connectDb());
      const stock = await StockService.get(params.id);
      return (
           <main style={{ backgroundColor: 'black', color: 'black', fontSize: '2rem', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
