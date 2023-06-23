@@ -38,12 +38,12 @@ export default function Page() {
      );
 }
 
- function StockDetailsComponentFromID(props: { stock_id: string }) {
+function StockDetailsComponentFromID(props: { stock_id: string }) {
      const stock = use(StockService.get(props.stock_id));
      return <StockDetailsComponent stock={stock} />;
 }
 
-export const revalidate = SLOT_DURATION * 60;
+export const revalidate = 900;
 
 
 export const metadata: Metadata = {

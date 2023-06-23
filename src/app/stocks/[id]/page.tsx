@@ -29,7 +29,7 @@ function CompanyDetailsComponentFromID({ company_id }: { company_id: string; }) 
 }
 
 
-export const revalidate = SLOT_DURATION * 60;
+export const revalidate = 900;
 
 export const metadata: Metadata = {
      title: "Stock Details",
