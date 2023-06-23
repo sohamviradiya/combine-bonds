@@ -11,10 +11,10 @@ const TransactionService = (() => {
 		transaction: Transaction
 	) => {
 		if (transaction.class != "STOCK PURCHASE")
-			throw new Error("Invalid transaction class");
+			return portfolio;
 		if (!transaction.stock) {
 			console.log(transaction);
-			throw new Error("Stock not found");
+			return portfolio;
 		}
 		const data = await StockModel.findById(transaction.stock).exec();
 		const stock = {
@@ -23,7 +23,7 @@ const TransactionService = (() => {
 		} as StockInterfaceWithId;
 
 		if (portfolio.currentBalance < transaction.amount)
-			throw new Error("Insufficient funds");
+			return portfolio;
 
 		const stockIndex = portfolio.investments.findIndex(
 			(investment) => String(investment.stock) == String(transaction.stock)
@@ -52,8 +52,8 @@ const TransactionService = (() => {
 		transaction: Transaction
 	) => {
 		if (transaction.class != "STOCK SALE")
-			throw new Error("Invalid transaction class");
-		if (!transaction.stock) throw new Error("Stock not found");
+			return portfolio;
+		if (!transaction.stock)return portfolio;
 		const data = await StockModel.findById(transaction.stock).exec();
 		const stock = {
 			...data._doc,
@@ -63,7 +63,7 @@ const TransactionService = (() => {
 			(investment) => String(investment.stock) == String(transaction.stock)
 		);
 
-		if (stockIndex === -1) throw new Error("Stock not found in portfolio");
+		if (stockIndex === -1) return portfolio;
 
 		let stock_quantity = transaction.amount / stock.price;
 
@@ -95,7 +95,7 @@ const TransactionService = (() => {
 		transaction: Transaction
 	) => {
 		if (portfolio.currentBalance < transaction.amount)
-			throw new Error("Insufficient funds");
+			return portfolio;
 		portfolio.currentBalance -= transaction.amount;
 		portfolio.netWorth[portfolio.netWorth.length - 1].value -=
 			transaction.amount;
