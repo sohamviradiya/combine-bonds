@@ -1,11 +1,7 @@
-import connectDb from '@/server/mongoose.main'
 import styles from './page.module.css'
-import Link from 'next/link'
-import cronMain from '@/server/cron.main'
-import { use } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
-  use(cronMain());
   return (
     <main
       className={styles.main} style={{ display: 'flex', width: '100%', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', padding: '2rem' }} >

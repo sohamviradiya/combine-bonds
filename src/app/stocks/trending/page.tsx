@@ -46,7 +46,7 @@ const box_style = (): CSSProperties => ({
 });
 
 
-export const revalidate = SLOT_DURATION * 60;
+export const revalidate = 300;
 
 function StockDetailsComponentFromID(props: { stock_id: string }) {
      const stock = use(StockService.get(props.stock_id));

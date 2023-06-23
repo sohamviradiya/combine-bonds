@@ -4,7 +4,7 @@ import cronMain from "@/server/cron.main";
 import connectDb from "@/server/mongoose.main";
 export async function GET() {
 	await connectDb();
-	await generateMain();
+	// await generateMain();
 	return NextResponse.json({  ...(await cronMain()) });
 }
 
