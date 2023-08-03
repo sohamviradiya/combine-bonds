@@ -1,8 +1,8 @@
 export enum BOT_CLASS {
-    "Safe",
-    "Aggressive",
-    "Speculative",
-    "Random",
+    "Safe" = "Safe",
+    "Aggressive" = "Aggressive",
+    "Speculative" = "Speculative",
+    "Random" = "Random",
 }
 
 type BotInterface = {
