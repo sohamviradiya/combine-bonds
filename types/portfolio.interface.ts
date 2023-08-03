@@ -1,54 +1,51 @@
 export enum TRANSACTION_CLASS {
-	"ACCOUNT WITHDRAWAL",
-	"ACCOUNT DEPOSIT",
-	"STOCK PURCHASE",
-	"STOCK SALE",
-	"STOCK DIVIDEND",
+    "ACCOUNT WITHDRAWAL",
+    "ACCOUNT DEPOSIT",
+    "STOCK PURCHASE",
+    "STOCK SALE",
+    "STOCK DIVIDEND",
 }
 
 export type Investment = {
-	stock: string;
-	quantity: number;
+    stock: string;
+    quantity: number;
 };
 
 export type Transaction = (
-	| { class: "ACCOUNT WITHDRAWAL" | "ACCOUNT DEPOSIT" }
-	| {
-			class: "STOCK PURCHASE" | "STOCK SALE" | "STOCK DIVIDEND";
-			stock: string;
-	  }
+    { class: "ACCOUNT WITHDRAWAL" | "ACCOUNT DEPOSIT" }
+    | {
+        class: "STOCK PURCHASE" | "STOCK SALE" | "STOCK DIVIDEND";
+        stock: string;
+    }
 ) & {
-	amount: number;
-	date: number;
+    amount: number;
+    date: number;
 };
 
 export type NetWorthPoint = {
-	value: number;
-	date: number;
+    value: number;
+    date: number;
 };
 
 type PortfolioInterface = {
-	user?: {
-		name: string;
-		bio?: string;
-		password: string;
-	};
-	transactions: Transaction[];
-	currentBalance: number;
-	netWorth: NetWorthPoint[];
-	investments: Investment[];
+    user?: {
+        name: string;
+        bio?: string;
+        password: string;
+    };
+    transactions: Transaction[];
+    currentBalance: number;
+    netWorth: NetWorthPoint[];
+    investments: Investment[];
 };
 
 export type createPortfolioDTO = Omit<
-	PortfolioInterface,
-	"transactions" | "netWorth" | "investments" | "currentBalance"
+    PortfolioInterface,
+    "transactions" | "netWorth" | "investments" | "currentBalance"
 >;
 
 export type PortfolioInterfaceWithID = PortfolioInterface & {
-	_id: string;
+    _id: string;
 };
 
-export const PORTFOLIO_MINIMUM_BALANCE = 10000;
-export const PORTFOLIO_STARTING_BALANCE = 100000;
-export const STOCK_DUMP_THRESHOLD = 10;
 export default PortfolioInterface;

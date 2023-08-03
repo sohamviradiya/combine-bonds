@@ -1,5 +1,6 @@
 import {
-	DIVIDEND_FACTOR,
+    COMPANY_FIELDS,
+	COMPANY_FORMS,
 	STOCK_CLASS,
 	ValuePoint,
 } from "types/stock.interface";
@@ -46,10 +47,41 @@ const stockSchema = new Schema(
 			type: Schema.Types.Date,
 			required: false,
 		},
-		company: {
-			type: Schema.Types.ObjectId,
-			ref: "Company",
-			required: true,
+        company: {
+            name: {
+                type: Schema.Types.String,
+                required: true,
+            },
+            field: {
+                type: Schema.Types.String,
+                required: true,
+                enum: Object.values(COMPANY_FIELDS),
+            },
+            form: {
+                type: Schema.Types.String,
+                required: true,
+                enum: Object.values(COMPANY_FORMS),
+            },
+            established: {
+                type: Schema.Types.Date,
+                required: false,
+            },
+            description: {
+                type: Schema.Types.String,
+                required: false,
+            },
+            assets: {
+                type: Schema.Types.Number,
+                required: false,
+            },
+            headquarters: {
+                type: Schema.Types.String,
+                required: false,
+            },
+            employees: {
+                type: Schema.Types.Number,
+                required: false,
+            }
 		},
 		traders: {
 			type: [
