@@ -1,6 +1,6 @@
 import AgencyInterface, {
     AgencyInterfaceWithId,
-} from "types/agency.interface";
+} from "@/types/agency.interface";
 import { AGENCY_PRICE_INCREMENT_PARAMETER } from "@/server/global.config";
 import AgencyModel from "@/server/models/agency.schema";
 import StockModel from "@/server/models/stock.schema";

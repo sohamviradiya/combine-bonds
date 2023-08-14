@@ -1,7 +1,7 @@
-import { StockInterface } from "types/stock.interface";
+import { StockInterface } from "@/types/stock.interface";
 import MarketModel from "@/server/models/market.schema";
 import StockModel from "@/server/models/stock.schema";
-import PortfolioInterface from "types/portfolio.interface";
+import PortfolioInterface from "@/types/portfolio.interface";
 import PortfolioModel from "@/server/models/portfolio.schema";
 import { DATE_LIMIT } from "@/server/global.config";
 

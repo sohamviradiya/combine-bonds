@@ -2,7 +2,7 @@ import {
     createPortfolioDTO,
     Transaction,
     PortfolioInterfaceWithID,
-} from "types/portfolio.interface";
+} from "@/types/portfolio.interface";
 import PortfolioModel from "@/server/models/portfolio.schema";
 import TransactionService from "./transaction.service";
 import StockModel from "@/server/models/stock.schema";

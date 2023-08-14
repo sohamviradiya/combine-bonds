@@ -1,5 +1,5 @@
 import { addStock } from "@/server/services/stock.service";
-import { createStockDto, StockInterface, COMPANY_FORMS, COMPANY_FIELDS, STOCK_CLASS_VALUES } from "types/stock.interface";
+import { createStockDto, StockInterface, COMPANY_FORMS, COMPANY_FIELDS, STOCK_CLASS_VALUES } from "@/types/stock.interface";
 import { ChemicalElement, faker } from "@faker-js/faker";
 
 const NUM_OF_STOCKS = 40;

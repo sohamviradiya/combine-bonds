@@ -1,20 +1,20 @@
 import {
     Investment,
     Transaction,
-} from "types/portfolio.interface";
+} from "@/types/portfolio.interface";
 import {
     PORTFOLIO_MINIMUM_BALANCE,
 } from "@/server/global.config";
 import BotModel from "@/server/models/bot.schema";
 import { dumpPortfolio, performTransactions, getPortfolioById } from "@/server/services/portfolio.service";
-import BotInterface from "types/bot.interface";
+import BotInterface from "@/types/bot.interface";
 import {
     BOT_INVESTMENT_PARAMETER,
     BOT_LOSS_AVERSION_PARAMETER,
     BOT_STOCK_CLEARANCE_PARAMETER
 } from "@/server/global.config";
 import { getRelativeCumulativeMarketCapitalization } from "@/server/services/market.service";
-import { getStockValue, getRandomStocks, getHighDoubleSlopeStocks,getHighSlopeStocks } from "@/server/services/stock.service";
+import { getStockValue, getRandomStocks, getHighDoubleSlopeStocks, getHighSlopeStocks } from "@/server/services/stock.service";
 
 const addBot = async (bot: BotInterface) => {
     const newBot = new BotModel({

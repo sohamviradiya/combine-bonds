@@ -1,4 +1,4 @@
-import BotInterface, { BOT_CLASS } from "types/bot.interface";
+import BotInterface, { BOT_CLASS } from "@/types/bot.interface";
 import PortfolioModel from "@/server/models/portfolio.schema";
 import { addBot } from "@/server/services/bot.service";
 const generateWeights = (num: number) => {

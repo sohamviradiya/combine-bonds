@@ -5,7 +5,7 @@ import {
     StockInterface,
     StockInterfaceWithId,
     StockValues,
-} from "types/stock.interface";
+} from "@/types/stock.interface";
 import { DATE_LIMIT } from "@/server/global.config";
 
 const addStock = async (stock: createStockDto) => {
@@ -48,9 +48,20 @@ const getStockValue = async (_id: string): Promise<StockValues> => {
     };
 };
 
+export const getBasicInfo = async (_id: string) => {
+    const data: StockInterfaceWithId = await StockModel.findById(_id).exec();
+    return {
+        _id: data._id,
+        name: data.company.name,
+        price: data.price,
+        slope: data.slope,
+        symbol: data.symbol,
+    }
+};
+
 const getAllValues = async (): Promise<StockValues[]> => {
     const data = await StockModel.find().exec();
-    return data.map((stock: any) => ({
+    return data.map((stock: StockInterfaceWithId) => ({
         _id: stock._id,
         price: stock.price,
         slope: stock.slope,

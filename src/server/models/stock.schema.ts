@@ -3,7 +3,7 @@ import {
     COMPANY_FORMS,
     STOCK_CLASS,
     ValuePoint,
-} from "types/stock.interface";
+} from "@/types/stock.interface";
 import mongoose, { Schema } from "mongoose";
 
 const stockSchema = new Schema(
