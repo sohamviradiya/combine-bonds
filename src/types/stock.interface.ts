@@ -45,10 +45,10 @@ export type STOCK_CLASS_TYPE = keyof typeof STOCK_CLASS;
 export type COMPANY_FIELDS_TYPE = keyof typeof COMPANY_FIELDS;
 export type COMPANY_FORMS_TYPE = keyof typeof COMPANY_FORMS;
 export type StockInterface = {
-    gross_volume: number;
-    class: STOCK_CLASS_TYPE;
-    timeline: ValuePoint[];
     symbol: string;
+    class: STOCK_CLASS_TYPE;
+    gross_volume: number;
+    timeline: ValuePoint[];
     createdAt: Date;
     traders: string[];
     company: {

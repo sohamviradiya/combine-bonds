@@ -11,7 +11,7 @@ export const STOCK_DUMP_THRESHOLD = 10;
 
 export const MARKET_BASE = 1000;
 export const DATE_LIMIT = 20;
-export const SLOT_DURATION = 15;
+export const SLOT_DURATION = 1;
 
 export const DIVIDEND_FACTOR = 5;
 

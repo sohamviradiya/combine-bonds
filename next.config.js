@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-     experimental: {
-
+    experimental: {
+        instrumentationHook: true,
      },
      staticPageGenerationTimeout: 60,
 };

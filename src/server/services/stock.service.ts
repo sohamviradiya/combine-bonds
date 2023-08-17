@@ -35,6 +35,17 @@ const getStockById = async (_id: string): Promise<StockInterfaceWithId> => {
     };
 };
 
+const getStockBasicInfo = async (_id: string) => {
+    const data = await StockModel.findById(_id).exec();
+    return {
+        _id: data._id,
+        price: data.price,
+        slope: data.slope,
+        symbol: data.symbol,
+        company: data.company.name,
+    };
+};
+
 const getStockValue = async (_id: string): Promise<StockValues> => {
     const data = await StockModel.findById(_id).exec();
     return {
@@ -75,13 +86,9 @@ const getAllValues = async (): Promise<StockValues[]> => {
 const addStockValuePoint = async (_id: string, valuePoint: ValuePoint) => {
     const stock: StockInterfaceWithId = await StockModel.findById(_id).exec();
     if (!stock) return null;
-    stock.timeline = stock.timeline.filter(
-        (point) => point.date >= valuePoint.date - DATE_LIMIT
-    );
+    stock.timeline = stock.timeline.filter((point) => point.date >= valuePoint.date - DATE_LIMIT);
     stock.timeline.push({ ...valuePoint });
-    return await StockModel.findByIdAndUpdate(_id, {
-        timeline: stock.timeline,
-    }).exec();
+    return await StockModel.findByIdAndUpdate(_id, { timeline: stock.timeline }, { new: true }).exec();
 };
 
 const getRandomStocks = async (count: number) => {
@@ -107,6 +114,7 @@ export {
     getAllStocks,
     getStockById,
     getStockValue,
+    getStockBasicInfo,
     addStockValuePoint,
     getRandomStocks,
     getHighSlopeStocks,

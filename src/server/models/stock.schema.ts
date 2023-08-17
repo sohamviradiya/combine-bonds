@@ -8,9 +8,14 @@ import mongoose, { Schema } from "mongoose";
 
 const stockSchema = new Schema(
     {
-        name: {
+        symbol: {
             type: Schema.Types.String,
             required: true,
+        },
+        class: {
+            type: Schema.Types.String,
+            required: true,
+            enum: Object.values(STOCK_CLASS),
         },
         gross_volume: {
             type: Schema.Types.Number,
@@ -37,11 +42,6 @@ const stockSchema = new Schema(
                     },
                 },
             ],
-        },
-        class: {
-            type: Schema.Types.String,
-            required: true,
-            enum: Object.values(STOCK_CLASS),
         },
         createdAt: {
             type: Schema.Types.Date,

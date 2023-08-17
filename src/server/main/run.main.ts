@@ -3,7 +3,7 @@ import { evaluateBot } from "@/server/services/bot.service";
 import { evaluatePortfolio } from "@/server/services/portfolio.service";
 import { evaluateMarket, getRelativeCumulativeMarketCapitalization, getRelativeCumulativeNetWorth } from "@/server/services/market.service";
 
-export default async function taskMain(
+export default async function MainRun(
     agencies: string[],
     portfolios: string[],
     bots: string[],
