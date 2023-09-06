@@ -2,11 +2,13 @@ import { evaluateAgencies } from "@/server/services/agency.service";
 import { evaluateBot } from "@/server/services/bot.service";
 import { evaluatePortfolio } from "@/server/services/portfolio.service";
 import { evaluateMarket, getRelativeCumulativeMarketCapitalization, getRelativeCumulativeNetWorth } from "@/server/services/market.service";
+import { evaluateStock } from "../services/stock.service";
 
 export default async function MainRun(
     agencies: string[],
     portfolios: string[],
     bots: string[],
+    stocks: string[],
     date: number
 ) {
     console.log(`Day ${date + 1}`);
@@ -30,6 +32,12 @@ export default async function MainRun(
         })
     );
     console.log(`Day ${date + 1} - Portfolios Evaluated`);
+
+    await Promise.all(
+        stocks.map(async (stock) => {
+            await evaluateStock(stock, date);
+        })
+    );
 
     await evaluateMarket(date);
     console.log(`Relative Net Worth Change: ${(await getRelativeCumulativeNetWorth()) * 100} %`);

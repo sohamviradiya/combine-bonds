@@ -3,7 +3,7 @@ import { createStockDto, StockInterface, COMPANY_FORMS, COMPANY_FIELDS } from "@
 import { ChemicalElement, faker } from "@faker-js/faker";
 
 const NUM_OF_STOCKS = 40;
-const StockDataGenerator = async () => {
+const StockGenerator = async () => {
     for (let i = 0; i < NUM_OF_STOCKS; i++) {
         const stock = await createRandomStock();
         await addStock(stock);
@@ -62,4 +62,4 @@ const generateCompany = (element: { symbol: string, name: string }) => {
     } as StockInterface["company"];
 };
 
-export default StockDataGenerator;
+export default StockGenerator;
