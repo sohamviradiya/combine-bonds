@@ -13,6 +13,22 @@ const MarketSchema = new Schema({
         type: Schema.Types.Number,
         required: true,
     },
+    trending_stocks: {
+        type: [{
+            type: Schema.Types.ObjectId,
+            ref: "Stock",
+            required: true,
+        }],
+        default: [],
+    },
+    predicted_stocks: {
+        type: [{
+            type: Schema.Types.ObjectId,
+            ref: "Stock",
+            required: true,
+        }],
+        default: [],
+    },
 }, { toJSON: { virtuals: true } });
 
 const MarketModel = mongoose.models["Market"] ?? mongoose.model("Market", MarketSchema);

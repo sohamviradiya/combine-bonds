@@ -22,7 +22,7 @@ const PortfolioSchema = new Schema({
     transactions: {
         type: [
             {
-                class: {
+                type: {
                     type: Schema.Types.String,
                     required: true,
                     enum: Object.values(TRANSACTION_CLASS),
@@ -43,11 +43,11 @@ const PortfolioSchema = new Schema({
             },
         ],
     },
-    currentBalance: {
+    balance: {
         type: Schema.Types.Number,
         required: true,
     },
-    netWorth: {
+    timeline: {
         type: [
             {
                 value: {

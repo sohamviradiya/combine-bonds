@@ -1,7 +1,6 @@
 import {
     COMPANY_FIELDS,
     COMPANY_FORMS,
-    STOCK_CLASS,
     ValuePoint,
 } from "@/types/stock.interface";
 import mongoose, { Schema } from "mongoose";
@@ -11,11 +10,6 @@ const stockSchema = new Schema(
         symbol: {
             type: Schema.Types.String,
             required: true,
-        },
-        class: {
-            type: Schema.Types.String,
-            required: true,
-            enum: Object.values(STOCK_CLASS),
         },
         gross_volume: {
             type: Schema.Types.Number,
@@ -28,11 +22,11 @@ const stockSchema = new Schema(
                         type: Schema.Types.Number,
                         required: true,
                     },
-                    market_valuation: {
+                    price: {
                         type: Schema.Types.Number,
                         required: true,
                     },
-                    volume_in_market: {
+                    volume: {
                         type: Schema.Types.Number,
                         required: true,
                     },
@@ -43,7 +37,7 @@ const stockSchema = new Schema(
                 },
             ],
         },
-        createdAt: {
+        issued: {
             type: Schema.Types.Date,
             required: false,
         },
@@ -96,31 +90,31 @@ const stockSchema = new Schema(
     { toJSON: { virtuals: true } }
 );
 
-stockSchema.virtual("price").get(function (this: any) {
+stockSchema.virtual("market_valuation").get(function (this: any) {
     if (this.timeline.length < 1) return 0;
     const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
-    return last_point.market_valuation / this.gross_volume;
+    return last_point.price * this.gross_volume;
 });
 
 stockSchema.virtual("slope").get(function (this: any) {
     if (this.timeline.length < 2) return 0;
     const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
     const second_last_point: ValuePoint = this.timeline[this.timeline.length - 2];
-    const diff = last_point.market_valuation - second_last_point.market_valuation;
-    return diff / second_last_point.market_valuation;
+    const diff = last_point.price - second_last_point.price;
+    return diff / second_last_point.price;
 });
 
 stockSchema.virtual("double_slope").get(function (this: any) {
     if (this.timeline.length < 3) return 0;
     const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
     const second_last_point: ValuePoint = this.timeline[this.timeline.length - 2];
-    const last_diff = last_point.market_valuation - second_last_point.market_valuation;
+    const last_diff = last_point.price - second_last_point.price;
 
-    const last_slope = last_diff / second_last_point.market_valuation;
+    const last_slope = last_diff / second_last_point.price;
 
     const third_last_point: ValuePoint = this.timeline[this.timeline.length - 3];
-    const second_last_diff = second_last_point.market_valuation - third_last_point.market_valuation;
-    const second_last_slope = second_last_diff / third_last_point.market_valuation;
+    const second_last_diff = second_last_point.price - third_last_point.price;
+    const second_last_slope = second_last_diff / third_last_point.price;
     const slope_diff = last_slope - second_last_slope;
     return slope_diff / second_last_slope;
 });
