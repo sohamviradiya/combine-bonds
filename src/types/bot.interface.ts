@@ -1,40 +1,39 @@
-export enum BOT_CLASS {
+export enum BOT_STRATEGY {
     "Safe" = "Safe",
     "Aggressive" = "Aggressive",
     "Speculative" = "Speculative",
     "Random" = "Random",
 }
 
-type BotInterface = {
-    bot_class: keyof typeof BOT_CLASS;
+export type BOT_STRATEGY_TYPE = keyof typeof BOT_STRATEGY;
+
+
+interface BotInterface {
+    strategy: BOT_STRATEGY_TYPE;
     trade_period: number;
     portfolio: string;
     parameters: {
         investment_amount_per_slot: {
-            balance_dependence_parameter: number;
-            market_sentiment_dependence_parameter: number;
+            balance: number;
+            market_sentiment: number;
         };
-        bundle_expansion_parameter: {
+        bundle_expansion: {
             value: number;
-            high_raise_investment_parameters: {
+            trending: {
                 value: number;
-                weight_distribution: number[];
+                weights: number[];
             };
-            lows_rising_investment_parameters: {
+            predicted: {
                 value: number;
-                weight_distribution: number[];
+                weights: number[];
             };
-            random_investment_parameters: {
+            random: {
                 value: number;
-                weight_distribution: number[];
+                weights: number[];
             };
         };
-        bundle_filling_parameter: {
-            value: number;
-            weight_distribution: number[];
-        };
-        loss_aversion_parameter: number;
-        stock_clearance_parameter: number;
+        loss_aversion: number;
+        stock_clearance: number;
     };
 };
 

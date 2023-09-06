@@ -12,9 +12,9 @@ export type Investment = {
 };
 
 export type Transaction = (
-    { class: "ACCOUNT WITHDRAWAL" | "ACCOUNT DEPOSIT" }
+    { type: "ACCOUNT WITHDRAWAL" | "ACCOUNT DEPOSIT" }
     | {
-        class: "STOCK PURCHASE" | "STOCK SALE" | "STOCK DIVIDEND";
+        type: "STOCK PURCHASE" | "STOCK SALE" | "STOCK DIVIDEND";
         stock: string;
     }
 ) & {
@@ -22,27 +22,24 @@ export type Transaction = (
     date: number;
 };
 
-export type NetWorthPoint = {
+export type NetWorth = {
     value: number;
     date: number;
 };
 
-type PortfolioInterface = {
-    user?: {
-        name: string;
-        bio?: string;
-        password: string;
-    };
-    transactions: Transaction[];
-    currentBalance: number;
-    netWorth: NetWorthPoint[];
-    investments: Investment[];
+export type User = {
+    name: string;
+    bio?: string;
+    password: string;
 };
 
-export type createPortfolioDTO = Omit<
-    PortfolioInterface,
-    "transactions" | "netWorth" | "investments" | "currentBalance"
->;
+interface PortfolioInterface {
+    user?: User;
+    transactions: Transaction[];
+    balance: number;
+    timeline: NetWorth[];
+    investments: Investment[];
+};
 
 export type PortfolioInterfaceWithID = PortfolioInterface & {
     _id: string;

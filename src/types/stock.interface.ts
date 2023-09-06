@@ -1,18 +1,9 @@
 export type ValuePoint = {
     date: number;
-    market_valuation: number;
+    price: number;
     volume_in_market: number;
     dividend: number;
 };
-
-export enum STOCK_CLASS {
-    "Voting" = "Voting",
-    "Non-Voting" = "Non-Voting",
-    "Bond" = "Bond",
-    "Debenture" = "Debenture",
-}
-
-export const STOCK_CLASS_VALUES = Object.values(STOCK_CLASS);
 
 export enum COMPANY_FIELDS {
     "Agriculture" = "Agriculture",
@@ -41,15 +32,13 @@ export enum COMPANY_FORMS {
     "Other" = "Other",
 }
 
-export type STOCK_CLASS_TYPE = keyof typeof STOCK_CLASS;
 export type COMPANY_FIELDS_TYPE = keyof typeof COMPANY_FIELDS;
 export type COMPANY_FORMS_TYPE = keyof typeof COMPANY_FORMS;
-export type StockInterface = {
+export interface StockInterface {
     symbol: string;
-    class: STOCK_CLASS_TYPE;
     gross_volume: number;
     timeline: ValuePoint[];
-    createdAt: Date;
+    issued: Date;
     traders: string[];
     company: {
         name: string;
@@ -64,12 +53,14 @@ export type StockInterface = {
 };
 
 export type StockInterfaceWithId = StockInterface &
-    Omit<StockValues, "last_value_point">;
+{
+    _id: string;
+};
 
 export type StockValues = {
     _id: string;
     slope: number;
-    price: number;
+    market_valuation: number;
     double_slope: number;
     fall_since_peak: number;
     rise_since_trough: number;

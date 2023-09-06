@@ -5,15 +5,17 @@ export enum AGENCY_CLASS {
     "Aggressive" = "Aggressive",
 }
 
-type AgencyInterface = {
-    agency_class: keyof typeof AGENCY_CLASS;
+export type AGENCY_CLASS_TYPE = keyof typeof AGENCY_CLASS;
+
+interface AgencyInterface {
+    type: AGENCY_CLASS_TYPE;
     stock: string;
-    market_valuation_parameter: {
+    parameters: {
         steady_increase: number;
         random_fluctuation: number;
-        market_sentiment_dependence_parameter: number;
-        market_volume_dependence_parameter: number;
-        dividend_ratio: number;
+        market_sentiment: number;
+        market_volume: number;
+        dividend: number;
     };
 };
 
