@@ -1,15 +1,15 @@
-export enum BOT_STRATEGY {
+export enum BOT_STRATEGIES {
     "Safe" = "Safe",
     "Aggressive" = "Aggressive",
     "Speculative" = "Speculative",
     "Random" = "Random",
 }
 
-export type BOT_STRATEGY_TYPE = keyof typeof BOT_STRATEGY;
+export type BOT_STRATEGY = keyof typeof BOT_STRATEGIES;
 
 
 interface BotInterface {
-    strategy: BOT_STRATEGY_TYPE;
+    strategy: BOT_STRATEGY;
     trade_period: number;
     portfolio: string;
     parameters: {

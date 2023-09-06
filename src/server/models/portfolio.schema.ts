@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { TRANSACTION_CLASS } from "../../types/portfolio.interface";
+import { TRANSACTION_TYPES } from "../../types/portfolio.interface";
 const PortfolioSchema = new Schema({
     user: {
         type: {
@@ -25,7 +25,7 @@ const PortfolioSchema = new Schema({
                 type: {
                     type: Schema.Types.String,
                     required: true,
-                    enum: Object.values(TRANSACTION_CLASS),
+                    enum: Object.values(TRANSACTION_TYPES),
                 },
                 stock: {
                     type: Schema.Types.ObjectId,

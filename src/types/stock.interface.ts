@@ -1,7 +1,7 @@
 export type ValuePoint = {
     date: number;
     price: number;
-    volume_in_market: number;
+    volume: number;
     dividend: number;
 };
 
@@ -32,8 +32,8 @@ export enum COMPANY_FORMS {
     "Other" = "Other",
 }
 
-export type COMPANY_FIELDS_TYPE = keyof typeof COMPANY_FIELDS;
-export type COMPANY_FORMS_TYPE = keyof typeof COMPANY_FORMS;
+export type COMPANY_FIELD = keyof typeof COMPANY_FIELDS;
+export type COMPANY_FORM = keyof typeof COMPANY_FORMS;
 export interface StockInterface {
     symbol: string;
     gross_volume: number;
@@ -42,8 +42,8 @@ export interface StockInterface {
     traders: string[];
     company: {
         name: string;
-        field: COMPANY_FIELDS_TYPE;
-        form: COMPANY_FORMS_TYPE;
+        field: COMPANY_FIELD;
+        form: COMPANY_FORM;
         established?: Date;
         description?: string;
         assets?: number;
@@ -60,6 +60,7 @@ export type StockInterfaceWithId = StockInterface &
 export type StockValues = {
     _id: string;
     slope: number;
+    timeline: ValuePoint[];
     market_valuation: number;
     double_slope: number;
     fall_since_peak: number;

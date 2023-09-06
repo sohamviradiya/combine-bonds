@@ -1,14 +1,14 @@
-export enum AGENCY_CLASS {
+export enum AGENCY_TYPES {
     "Steady" = "Steady",
     "Trendy" = "Trendy",
     "Random" = "Random",
     "Aggressive" = "Aggressive",
 }
 
-export type AGENCY_CLASS_TYPE = keyof typeof AGENCY_CLASS;
+export type AGENCY_TYPE = keyof typeof AGENCY_TYPES;
 
 interface AgencyInterface {
-    type: AGENCY_CLASS_TYPE;
+    type: AGENCY_TYPE;
     stock: string;
     parameters: {
         steady_increase: number;

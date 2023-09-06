@@ -1,21 +1,21 @@
 import {
-    createPortfolioDTO,
+    User,
     Transaction,
     PortfolioInterfaceWithID,
 } from "@/types/portfolio.interface";
 import PortfolioModel from "@/server/models/portfolio.schema";
-import TransactionService from "./transaction.service";
+import { buyStock, sellStock, deposit, withdraw, dividend } from "./transaction.service";
 import StockModel from "@/server/models/stock.schema";
-import { getStockValue } from "@/server/services/stock.service";
+import { getStockAnalytics } from "@/server/services/stock.service";
 import {
     DATE_LIMIT, PORTFOLIO_STARTING_BALANCE, STOCK_DUMP_THRESHOLD
 } from "@/server/global.config";
 
-const addPortfolio = async (
-    portfolio: createPortfolioDTO
+export const addPortfolio = async (
+    user: User,
 ): Promise<PortfolioInterfaceWithID> => {
     return await new PortfolioModel({
-        ...portfolio,
+        user,
         transactions: [],
         currentBalance: PORTFOLIO_STARTING_BALANCE,
         netWorth: [
@@ -28,7 +28,7 @@ const addPortfolio = async (
     }).save();
 };
 
-const verifyIDPassWord = async (name: string, password: string) => {
+export const verifyIDPassWord = async (name: string, password: string) => {
     const portfolio: PortfolioInterfaceWithID = await PortfolioModel.findOne({
         "user.name": name,
     }).exec();
@@ -46,47 +46,44 @@ const verifyIDPassWord = async (name: string, password: string) => {
     };
 };
 
-const getAllPortfolios = async () => {
+export const getAllPortfolios = async () => {
     return (await PortfolioModel.find({}, { _id: 1 }).exec()).map(
         (portfolio) => portfolio._id
     ) as string[];
 };
 
-const getPortfolioById = async (
+export const getPortfolioById = async (
     portfolio_id: string
 ): Promise<PortfolioInterfaceWithID> => {
     return await PortfolioModel.findById(portfolio_id).exec();
 };
 
-const performTransactions = async (
+export const performTransactions = async (
     id: string,
     transactions: Transaction[]
 ): Promise<PortfolioInterfaceWithID> => {
     let portfolio = await getPortfolioById(id);
     for (let transaction of transactions) {
-        try {
-            if (transaction.class === "ACCOUNT DEPOSIT")
-                portfolio = TransactionService.deposit(portfolio, transaction);
-            else if (transaction.class === "ACCOUNT WITHDRAWAL")
-                portfolio = TransactionService.withdraw(portfolio, transaction);
-            else if (transaction.class === "STOCK PURCHASE")
-                portfolio = await TransactionService.buyStock(id, portfolio, transaction);
-            else if (transaction.class === "STOCK SALE")
-                portfolio = await TransactionService.sellStock(
-                    portfolio,
-                    transaction
-                );
-            else if (transaction.class === "STOCK DIVIDEND")
-                portfolio = await TransactionService.dividend(portfolio, transaction);
-            else throw new Error("Invalid transaction class");
-        } catch (err) {
-            throw err;
-        }
+        if (transaction.type === "ACCOUNT DEPOSIT")
+            portfolio = deposit(portfolio, transaction);
+        else if (transaction.type === "ACCOUNT WITHDRAWAL")
+            portfolio = withdraw(portfolio, transaction);
+        else if (transaction.type === "STOCK PURCHASE")
+            portfolio = await buyStock(id, portfolio, transaction);
+        else if (transaction.type === "STOCK SALE")
+            portfolio = await sellStock(
+                portfolio,
+                transaction
+            );
+        else if (transaction.type === "STOCK DIVIDEND")
+            portfolio = await dividend(portfolio, transaction);
+        else throw new Error("Invalid transaction class");
+
         portfolio.transactions.push(transaction);
     }
     return await PortfolioModel.findByIdAndUpdate(
         id, {
-        currentBalance: portfolio.currentBalance,
+        currentBalance: portfolio.balance,
         investments: portfolio.investments,
         transactions: portfolio.transactions,
     },
@@ -94,7 +91,7 @@ const performTransactions = async (
     ).exec();
 };
 
-const evaluatePortfolio = async (portfolio_id: string, date: number) => {
+export const evaluatePortfolio = async (portfolio_id: string, date: number) => {
     const portfolio = await getPortfolioById(portfolio_id);
     const investments = portfolio.investments;
     let gross_amount = 0;
@@ -102,7 +99,7 @@ const evaluatePortfolio = async (portfolio_id: string, date: number) => {
     const transactions: Transaction[] = [];
     await Promise.all(
         investments.map(async (investment) => {
-            const stock = await getStockValue(investment.stock);
+            const stock = await getStockAnalytics(investment.stock);
             const amount = investment.quantity * stock.price;
             gross_amount += amount;
             if (amount < STOCK_DUMP_THRESHOLD) {
@@ -111,16 +108,16 @@ const evaluatePortfolio = async (portfolio_id: string, date: number) => {
                 }).exec();
                 dumped_stocks.push(String(investment.stock));
                 transactions.push({
-                    class: "STOCK SALE",
+                    type: "STOCK SALE",
                     stock: investment.stock,
                     amount,
                     date,
                 });
             } else {
                 transactions.push({
-                    class: "STOCK DIVIDEND",
+                    type: "STOCK DIVIDEND",
                     stock: investment.stock,
-                    amount: investment.quantity * stock.last_value_point.dividend,
+                    amount: investment.quantity * stock.dividend,
                     date,
                 });
             }
@@ -132,11 +129,11 @@ const evaluatePortfolio = async (portfolio_id: string, date: number) => {
         (transaction) => transaction.date > date - DATE_LIMIT
     );
 
-    portfolio.netWorth = portfolio.netWorth.filter(
+    portfolio.timeline = portfolio.timeline.filter(
         (value) => value.date > date - DATE_LIMIT
     );
-    portfolio.netWorth.push({
-        value: portfolio.currentBalance + gross_amount,
+    portfolio.timeline.push({
+        value: portfolio.balance + gross_amount,
         date,
     });
 
@@ -147,24 +144,24 @@ const evaluatePortfolio = async (portfolio_id: string, date: number) => {
     await PortfolioModel.findByIdAndUpdate(
         portfolio_id,
         {
-            netWorth: portfolio.netWorth,
+            netWorth: portfolio.timeline,
             investments: portfolio.investments,
             transactions: portfolio.transactions,
         },
         { new: true }
     ).exec();
-    return portfolio.netWorth[portfolio.netWorth.length - 1];
+    return portfolio.timeline[portfolio.timeline.length - 1];
 };
 
-const dumpPortfolio = async (portfolio_id: string, date: number) => {
+export const dumpPortfolio = async (portfolio_id: string, date: number) => {
     const portfolio = await getPortfolioById(portfolio_id);
     const investments = portfolio.investments;
     const transactions: Transaction[] = [];
     await Promise.all(
         investments.map(async (investment) => {
-            const stock_price = (await getStockValue(investment.stock)).price;
+            const stock_price = (await getStockAnalytics(investment.stock)).price;
             transactions.push({
-                class: "STOCK SALE",
+                type: "STOCK SALE",
                 stock: investment.stock,
                 amount: investment.quantity * stock_price,
                 date,
@@ -173,14 +170,3 @@ const dumpPortfolio = async (portfolio_id: string, date: number) => {
     );
     return await performTransactions(portfolio_id, transactions);
 };
-
-export {
-    evaluatePortfolio,
-    addPortfolio,
-    getAllPortfolios,
-    getPortfolioById,
-    performTransactions,
-    dumpPortfolio,
-    verifyIDPassWord
-};
-

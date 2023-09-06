@@ -1,5 +1,5 @@
 import AgencyInterface, { AgencyInterfaceWithId, } from "@/types/agency.interface";
-import { AGENCY_PRICE_INCREMENT_PARAMETER } from "@/server/global.config";
+import { AGENCY_PRICE_INCREMENT } from "@/server/global.config";
 import AgencyModel from "@/server/models/agency.schema";
 import StockModel from "@/server/models/stock.schema";
 import { getRelativeCumulativeNetWorth } from "@/server/services/market.service";
@@ -7,34 +7,31 @@ import { addStockValuePoint } from "@/server/services/stock.service";
 import { DIVIDEND_FACTOR } from "@/server/global.config";
 
 
-const addAgency = async (agency: AgencyInterface) => {
+export const addAgency = async (agency: AgencyInterface) => {
     const newAgency = new AgencyModel({
         ...agency,
     });
     return await newAgency.save();
 };
-const getAllAgencies = async () => {
+
+export const getAllAgencies = async () => {
     return (await AgencyModel.find({}, { _id: 1 }).exec()).map((agency) =>
         String(agency._id)
     );
 };
 
-const getAgencyById = async (agency_id: string) => {
+export const getAgencyById = async (agency_id: string) => {
     return await AgencyModel.findById(agency_id).exec();
 };
 
-const evaluateAgencies = async (agency_id: string, date: number) => {
+export const evaluateAgencies = async (agency_id: string, date: number) => {
     const agency: AgencyInterfaceWithId = await getAgencyById(agency_id);
-    const parameters = agency.market_valuation_parameter;
+    const parameters = agency.parameters;
     const stock = await StockModel.findById(agency.stock).exec();
-    let increase_coefficient = 0;
-    increase_coefficient += parameters.steady_increase;
 
     const random_num = 2 * (Math.random() - 0.5);
-    increase_coefficient = parameters.random_fluctuation * random_num;
 
     const market_sentiment = await getRelativeCumulativeNetWorth();
-    increase_coefficient += parameters.market_sentiment_dependence_parameter * market_sentiment;
 
     let volume_change_ratio = 0;
     if (stock.timeline.length < 2) volume_change_ratio = 1;
@@ -46,38 +43,31 @@ const evaluateAgencies = async (agency_id: string, date: number) => {
         else
             volume_change_ratio = (current_volume - previous_volume) / previous_volume;
     }
-    increase_coefficient += parameters.market_volume_dependence_parameter * volume_change_ratio;
+    let increase_coefficient = parameters.market_sentiment * market_sentiment + parameters.steady_increase + parameters.random_fluctuation * random_num + parameters.market_volume * volume_change_ratio;
 
-    let market_valuation = stock.timeline[stock.timeline.length - 1].market_valuation;
-    market_valuation *= 1 + increase_coefficient * AGENCY_PRICE_INCREMENT_PARAMETER;
+    let price = stock.timeline[stock.timeline.length - 1].price;
+    price *= 1 + increase_coefficient * AGENCY_PRICE_INCREMENT;
 
-    let volume_in_market = stock.timeline[stock.timeline.length - 1].volume_in_market;
+    let volume = stock.timeline[stock.timeline.length - 1].volume_in_market;
 
-    if (stock.traders.length == 0) volume_in_market = 0;
+    if (stock.traders.length == 0) volume = 0;
     let dividend = 0;
     if (stock.timeline.length > 2) {
-        const latest_market_valuation = stock.timeline[stock.timeline.length - 1].market_valuation;
-        const prev_market_valuation = stock.timeline[stock.timeline.length - 2].market_valuation;
-        const change_in_market_cap = Number(latest_market_valuation) - Number(prev_market_valuation);
+        const latest_price = stock.timeline[stock.timeline.length - 1].price;
+        const prev_price = stock.timeline[stock.timeline.length - 2].price;
+        const change_in_price = Number(latest_price) - Number(prev_price);
         let gross_dividend = 0;
-        if (change_in_market_cap > 0)
-            gross_dividend = change_in_market_cap * parameters.dividend_ratio * DIVIDEND_FACTOR;
+        if (change_in_price > 0)
+            gross_dividend = change_in_price * parameters.dividend * DIVIDEND_FACTOR;
         dividend = gross_dividend / stock.gross_volume;
     }
 
     await addStockValuePoint(agency.stock, {
         date,
-        market_valuation,
-        volume_in_market,
+        price,
+        volume,
         dividend,
     });
 
-    return market_valuation;
-};
-
-export {
-    addAgency,
-    getAllAgencies,
-    getAgencyById,
-    evaluateAgencies
+    return price;
 };
