@@ -1,4 +1,4 @@
-import BotInterface, { BOT_CLASS } from "@/types/bot.interface";
+import BotInterface, { BOT_STRATEGIES } from "@/types/bot.interface";
 import PortfolioModel from "@/server/models/portfolio.schema";
 import { addBot } from "@/server/services/bot.service";
 const generateWeights = (num: number) => {
@@ -13,149 +13,117 @@ const generateWeights = (num: number) => {
 };
 
 const generateBot = (portfolio_id: string, trade_period: number): BotInterface => {
-    const bot_class = Object.values(BOT_CLASS)[Math.floor(Math.random() * 4)];
-    let investment_amount_per_slot = {
-        balance_dependence_parameter: 0,
-        market_sentiment_dependence_parameter: 0,
-    };
-    let bundle_expansion_parameter = {
-        value: 0,
-        high_raise_investment_parameters: {
-            value: 0,
-            weight_distribution: Array<number>(),
-        },
-        lows_rising_investment_parameters: {
-            value: 0,
-            weight_distribution: Array<number>(),
-        },
-        random_investment_parameters: {
-            value: 0,
-            weight_distribution: Array<number>(),
-        },
-    };
-    let bundle_filling_parameter = {
-        value: 0,
-        weight_distribution: Array<number>(),
-    };
-    let loss_aversion_parameter = 0;
-    let stock_clearance_parameter = 0;
+    const bot_class = Object.values(BOT_STRATEGIES)[Math.floor(Math.random() * 4)];
+    let investment_amount_per_slot = {} as BotInterface["parameters"]["investment_amount_per_slot"];
+    let bundle_expansion = {} as BotInterface["parameters"]["bundle_expansion"];
+    let loss_aversion = 0;
+    let stock_clearance = 0;
 
     if (bot_class == "Safe") {
         investment_amount_per_slot = {
-            balance_dependence_parameter: 0.3 + Math.random() * 0.1,
-            market_sentiment_dependence_parameter: 0,
+            balance: 0.3 + Math.random() * 0.1,
+            market_sentiment: 0,
         };
-        bundle_expansion_parameter = {
+        bundle_expansion = {
             value: 0.2 + Math.random() * 0.1,
-            high_raise_investment_parameters: {
+            trending: {
                 value: 0.3 + Math.random() * 0.1,
-                weight_distribution: generateWeights(1),
+                weights: generateWeights(1),
             },
-            lows_rising_investment_parameters: {
+            predicted: {
                 value: 0.3 + Math.random() * 0.1,
-                weight_distribution: generateWeights(1),
+                weights: generateWeights(1),
             },
-            random_investment_parameters: {
+            random: {
                 value: 0,
-                weight_distribution: generateWeights(0),
+                weights: generateWeights(0),
             },
         };
-        loss_aversion_parameter = 0.05 + Math.random() * 0.1;
-        stock_clearance_parameter = 0.3 + Math.random() * 0.1;
-
-        bundle_filling_parameter.weight_distribution = generateWeights(3);
+        loss_aversion = 0.05 + Math.random() * 0.1;
+        stock_clearance = 0.3 + Math.random() * 0.1;
     } else if (bot_class == "Aggressive") {
         investment_amount_per_slot = {
-            balance_dependence_parameter: 0.5 + Math.random() * 0.1,
-            market_sentiment_dependence_parameter: 0,
+            balance: 0.5 + Math.random() * 0.1,
+            market_sentiment: 0,
         };
-        bundle_expansion_parameter = {
+        bundle_expansion = {
             value: 0.4 + Math.random() * 0.1,
-            high_raise_investment_parameters: {
+            trending: {
                 value: 0.3 + Math.random() * 0.1,
-                weight_distribution: generateWeights(3),
+                weights: generateWeights(3),
             },
-            lows_rising_investment_parameters: {
+            predicted: {
                 value: 0.3 + Math.random() * 0.1,
-                weight_distribution: generateWeights(3),
+                weights: generateWeights(3),
             },
-            random_investment_parameters: {
+            random: {
                 value: 0,
-                weight_distribution: generateWeights(2),
+                weights: generateWeights(2),
             },
         };
-        loss_aversion_parameter = 0.1 + Math.random() * 0.1;
-        stock_clearance_parameter = 0.35 + Math.random() * 0.1;
-
-        bundle_filling_parameter.weight_distribution = generateWeights(4);
+        loss_aversion = 0.1 + Math.random() * 0.1;
+        stock_clearance = 0.35 + Math.random() * 0.1;
     } else if (bot_class == "Speculative") {
         investment_amount_per_slot = {
-            balance_dependence_parameter: 0.4 + Math.random() * 0.1,
-            market_sentiment_dependence_parameter: 0.6 + Math.random() * 0.1,
+            balance: 0.4 + Math.random() * 0.1,
+            market_sentiment: 0.6 + Math.random() * 0.1,
         };
-        bundle_expansion_parameter = {
+        bundle_expansion = {
             value: 0.2 + Math.random() * 0.1,
-            high_raise_investment_parameters: {
+            trending: {
                 value: 0.4 + Math.random() * 0.1,
-                weight_distribution: generateWeights(2),
+                weights: generateWeights(2),
             },
-            lows_rising_investment_parameters: {
+            predicted: {
                 value: 0.4 + Math.random() * 0.1,
-                weight_distribution: generateWeights(2),
+                weights: generateWeights(2),
             },
-            random_investment_parameters: {
+            random: {
                 value: 0.2 + Math.random() * 0.1,
-                weight_distribution: generateWeights(1),
+                weights: generateWeights(1),
             },
         };
-        loss_aversion_parameter = 0.15 + Math.random() * 0.1;
-        stock_clearance_parameter = 0.25 + Math.random() * 0.1;
-
-        bundle_filling_parameter.weight_distribution = generateWeights(3);
+        loss_aversion = 0.15 + Math.random() * 0.1;
+        stock_clearance = 0.25 + Math.random() * 0.1;
     } else if (bot_class == "Random") {
         investment_amount_per_slot = {
-            balance_dependence_parameter: 0.5 + Math.random() * 0.1,
-            market_sentiment_dependence_parameter: 0.5 + Math.random() * 0.1,
+            balance: 0.5 + Math.random() * 0.1,
+            market_sentiment: 0.5 + Math.random() * 0.1,
         };
-        bundle_expansion_parameter = {
+        bundle_expansion = {
             value: 0.5 + Math.random() * 0.1,
-            high_raise_investment_parameters: {
+            trending: {
                 value: 0,
-                weight_distribution: generateWeights(0),
+                weights: generateWeights(0),
             },
-            lows_rising_investment_parameters: {
+            predicted: {
                 value: 0,
-                weight_distribution: generateWeights(0),
+                weights: generateWeights(0),
             },
-            random_investment_parameters: {
+            random: {
                 value: 1,
-                weight_distribution: generateWeights(5),
+                weights: generateWeights(5),
             },
         };
-        loss_aversion_parameter = 0.2 + Math.random() * 0.1;
-        stock_clearance_parameter = 0.1 + Math.random() * 0.1;
-
-        bundle_filling_parameter.weight_distribution = [];
+        loss_aversion = 0.2 + Math.random() * 0.1;
+        stock_clearance = 0.1 + Math.random() * 0.1;
     } else throw new Error("Bot class not found");
 
-    investment_amount_per_slot.market_sentiment_dependence_parameter =
-        1 - investment_amount_per_slot.balance_dependence_parameter;
-    bundle_filling_parameter.value = 1 - bundle_expansion_parameter.value;
-    bundle_expansion_parameter.random_investment_parameters.value =
+    investment_amount_per_slot.market_sentiment = 1 - investment_amount_per_slot.balance;
+    bundle_expansion.random.value =
         1 -
-        bundle_expansion_parameter.high_raise_investment_parameters.value -
-        bundle_expansion_parameter.lows_rising_investment_parameters.value;
+        bundle_expansion.trending.value -
+        bundle_expansion.predicted.value;
 
     return {
         portfolio: portfolio_id,
         trade_period: trade_period,
-        bot_class,
+        strategy: bot_class,
         parameters: {
             investment_amount_per_slot: investment_amount_per_slot,
-            bundle_expansion_parameter: bundle_expansion_parameter,
-            bundle_filling_parameter: bundle_filling_parameter,
-            loss_aversion_parameter,
-            stock_clearance_parameter,
+            bundle_expansion,
+            loss_aversion,
+            stock_clearance,
         },
     };
 };

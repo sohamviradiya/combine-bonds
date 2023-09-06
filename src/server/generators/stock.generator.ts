@@ -1,5 +1,5 @@
 import { addStock } from "@/server/services/stock.service";
-import { createStockDto, StockInterface, COMPANY_FORMS, COMPANY_FIELDS, STOCK_CLASS_VALUES } from "@/types/stock.interface";
+import { createStockDto, StockInterface, COMPANY_FORMS, COMPANY_FIELDS } from "@/types/stock.interface";
 import { ChemicalElement, faker } from "@faker-js/faker";
 
 const NUM_OF_STOCKS = 40;
@@ -11,24 +11,21 @@ const StockDataGenerator = async () => {
 };
 
 const createRandomStock = async (): Promise<createStockDto> => {
-    const company = generateCompany();
+    const element = getElement();
     const gross_volume = Math.floor((0.1 + Math.random()) * Math.pow(10, 5 + 3 * Math.random()));
     const market_valuation = gross_volume * (0.1 + Math.random()) * 100;
-    const stock_class = STOCK_CLASS_VALUES[Math.floor(Math.random() * STOCK_CLASS_VALUES.length)];
     return {
-        symbol: "$" + company.name,
-        class: stock_class,
+        symbol: "$" + element.name.toLocaleUpperCase().slice(0, 3),
         gross_volume,
         timeline: [
             {
                 date: 0,
-                market_valuation,
-                volume_in_market: 0,
+                price: market_valuation,
+                volume: 0,
                 dividend: 0,
             },
         ],
-        market_capitalization: market_valuation * gross_volume,
-        company: generateCompany(),
+        company: generateCompany(element),
     } as createStockDto;
 };
 
@@ -45,14 +42,13 @@ const getElement = () => {
 };
 
 
-const generateCompany = () => {
+const generateCompany = (element: { symbol: string, name: string }) => {
     const field = Object.values(COMPANY_FIELDS)[Math.floor(Math.random() * 14)];
     const form = Object.values(COMPANY_FORMS)[Math.floor(Math.random() * 7)];
     const established = faker.date.past();
     const employees = Math.floor(1 + Math.random() * 100000);
     const headquarters = faker.location.street() + ", " + faker.location.city();
     const assets = Math.floor((0.1 + Math.random()) * 100000000);
-    const element = getElement();
     return {
         symbol: element.symbol,
         name: element.name,

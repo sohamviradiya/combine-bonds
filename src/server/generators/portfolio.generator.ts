@@ -1,22 +1,20 @@
 import { faker } from "@faker-js/faker";
-import { createPortfolioDTO } from "@/types/portfolio.interface";
+import { User } from "@/types/portfolio.interface";
 import { addPortfolio } from "@/server/services/portfolio.service";
 
 const NUM_OF_PORTFOLIOS = 20;
 
-const generatePortfolio = (): createPortfolioDTO => {
+const generateUser = (): User => {
     return {
-        user: {
             name: faker.internet.userName(),
             bio: faker.lorem.paragraph(),
             password: faker.internet.password({ length: 12 }),
-        },
     };
 };
 
 const PortfolioGenerator = async () => {
     for (let i = 0; i < NUM_OF_PORTFOLIOS; i++) {
-        const portfolio = generatePortfolio();
+        const portfolio = generateUser();
         await addPortfolio(portfolio);
     }
 };
