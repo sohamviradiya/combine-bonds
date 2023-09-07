@@ -15,14 +15,14 @@ const StockGenerator = async () => {
 const createRandomStock = async (): Promise<createStockDto> => {
     const element = getElement();
     const gross_volume = Math.floor((0.1 + Math.random()) * Math.pow(10, 5 + 3 * Math.random()));
-    const market_valuation = gross_volume * (0.1 + Math.random()) * 100;
+    const price = (0.1 + Math.random()) * 100;
     return {
         symbol: "$" + element.name.toLocaleUpperCase().slice(0, 3),
         gross_volume,
         timeline: [
             {
                 date: 0,
-                price: market_valuation,
+                price,
                 volume: 0,
                 dividend: 0,
             },
