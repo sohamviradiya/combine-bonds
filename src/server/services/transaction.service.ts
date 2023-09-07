@@ -50,25 +50,20 @@ export const sellStock = async (portfolio: PortfolioInterfaceWithID, transaction
 };
 
 export const deposit = (portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
-
     portfolio.balance += transaction.amount;
-    portfolio.timeline[portfolio.timeline.length - 1].value += transaction.amount;
     return portfolio;
 };
 
 export const withdraw = (portfolio: PortfolioInterfaceWithID,transaction: Transaction) => {
     if (portfolio.balance < transaction.amount)
         return portfolio;
-
     portfolio.balance -= transaction.amount;
-    portfolio.timeline[portfolio.timeline.length - 1].value -= transaction.amount;
     return portfolio;
 
 };
 
 export const dividend = async ( portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
     portfolio.balance += transaction.amount;
-    portfolio.timeline[portfolio.timeline.length - 1].value += transaction.amount;
     return portfolio;
 
 };

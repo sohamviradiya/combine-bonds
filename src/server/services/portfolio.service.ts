@@ -89,11 +89,10 @@ export const evaluatePortfolio = async (portfolio_id: string, date: number) => {
             const stock = await getStockAnalytics(investment.stock);
             const amount = investment.quantity * stock.price;
             gross_amount += amount;
+
             if (amount < STOCK_DUMP_THRESHOLD) {
                 await eraseTrader(investment.stock, portfolio_id);
-
                 dumped_stocks.push(String(investment.stock));
-
                 transactions.push({
                     type: "STOCK_SALE",
                     stock: investment.stock,
@@ -116,8 +115,7 @@ export const evaluatePortfolio = async (portfolio_id: string, date: number) => {
     portfolio.transactions = portfolio.transactions.filter((transaction) => transaction.date > date - DATE_LIMIT);
 
     portfolio.timeline = portfolio.timeline.filter((value) => value.date > date - DATE_LIMIT);
-
-    portfolio.timeline.push({ value: portfolio.balance + gross_amount, date, });
+    portfolio.timeline.push({ value: portfolio.balance + gross_amount, date });
 
     portfolio.investments = portfolio.investments.filter((investment) => !dumped_stocks.includes(String(investment.stock)));
 
