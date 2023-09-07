@@ -2,8 +2,8 @@
 const nextConfig = {
     experimental: {
         instrumentationHook: true,
-     },
-     staticPageGenerationTimeout: 60,
+        serverActions: true,
+    },
 };
 
 module.exports = nextConfig
