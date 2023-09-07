@@ -17,7 +17,7 @@ interface BotInterface {
             balance: number;
             market_sentiment: number;
         };
-        bundle_expansion: {
+        bundle: {
             value: number;
             trending: {
                 value: number;

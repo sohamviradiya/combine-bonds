@@ -2,7 +2,7 @@ import { evaluateAgencies } from "@/server/services/agency.service";
 import { evaluateBot } from "@/server/services/bot.service";
 import { evaluatePortfolio } from "@/server/services/portfolio.service";
 import { evaluateMarket, getRelativeCumulativeMarketCapitalization, getRelativeCumulativeNetWorth } from "@/server/services/market.service";
-import { evaluateStock } from "../services/stock.service";
+import { evaluateStock } from "@/server/services/stock.service";
 
 export default async function MainRun(
     agencies: string[],

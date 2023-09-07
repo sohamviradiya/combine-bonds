@@ -1,10 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 
+import { BOT_STRATEGIES } from "@/types/bot.interface";
+
+
 const BotSchema = new Schema({
     strategy: {
         type: Schema.Types.String,
         required: true,
-        enum: ["Safe", "Aggressive", "Speculative", "Random"],
+        enum: Object.values(BOT_STRATEGIES),
     },
     trade_period: {
         type: Schema.Types.Number,
@@ -26,7 +29,7 @@ const BotSchema = new Schema({
                 required: true,
             },
         },
-        bundle_expansion: {
+        bundle: {
             value: {
                 type: Schema.Types.Number,
                 required: true,

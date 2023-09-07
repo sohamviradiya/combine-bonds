@@ -1,13 +1,17 @@
 import { CronJob } from "cron";
-import MainRun from "./run.main";
+
+import MainRun from "@/server/main/run.main";
 import connectDb from "@/server/main/mongoose.main";
+import generateMain from "@/server/main/seed.main";
+
 import { getAllAgencies } from "@/server/services/agency.service";
 import { getAllBots } from "@/server/services/bot.service";
 import { getAllPortfolios } from "@/server/services/portfolio.service";
 import { getDate } from "@/server/services/market.service";
+import { getAllStocks } from "@/server/services/stock.service";
+
 import { SLOT_DURATION } from "@/server/global.config";
-import generateMain from "@/server/main/generator.main";
-import { getAllStocks } from "../services/stock.service";
+
 
 let agencies: string[] = [];
 let portfolios: string[] = [];

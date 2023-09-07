@@ -1,9 +1,7 @@
-import {
-    COMPANY_FIELDS,
-    COMPANY_FORMS,
-    ValuePoint,
-} from "@/types/stock.interface";
 import mongoose, { Schema } from "mongoose";
+
+import { COMPANY_FIELDS, COMPANY_FORMS, ValuePoint, } from "@/types/stock.interface";
+
 
 const stockSchema = new Schema(
     {
@@ -121,8 +119,7 @@ stockSchema.virtual("double_slope").get(function (this: any) {
 
 stockSchema.virtual("fall_since_peak").get(function (this: any) {
     if (this.timeline.length < 2) return 0;
-    const latest_market_valuation =
-        this.timeline[this.timeline.length - 1].market_valuation;
+    const latest_market_valuation = this.timeline[this.timeline.length - 1].market_valuation;
     let k = this.timeline.length - 2;
     while (
         k >= 0 &&
@@ -134,8 +131,7 @@ stockSchema.virtual("fall_since_peak").get(function (this: any) {
 
 stockSchema.virtual("rise_since_trough").get(function (this: any) {
     if (this.timeline.length < 2) return 0;
-    const latest_market_valuation =
-        this.timeline[this.timeline.length - 1].market_valuation;
+    const latest_market_valuation = this.timeline[this.timeline.length - 1].market_valuation;
     let k = this.timeline.length - 2;
     while (
         k >= 0 &&

@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-import { TRANSACTION_TYPES } from "../../types/portfolio.interface";
+import { TRANSACTION_TYPES } from "@/types/portfolio.interface";
+
 const PortfolioSchema = new Schema({
     user: {
         type: {

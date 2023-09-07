@@ -1,10 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 
+import { AGENCY_TYPES } from "@/types/agency.interface";
+
+
 const AgencySchema = new Schema({
     type: {
         type: Schema.Types.String,
         required: true,
-        enum: ["Steady", "Trendy", "Random", "Aggressive"],
+        enum: Object.values(AGENCY_TYPES),
     },
     stock: {
         type: Schema.Types.ObjectId,

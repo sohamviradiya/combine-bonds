@@ -15,20 +15,20 @@ export enum COMPANY_FIELDS {
     "Entertainment" = "Entertainment",
     "Utilities" = "Utilities",
     "Finance" = "Finance",
-    "Real Estate" = "Real Estate",
+    "Real_Estate" = "Real_Estate",
     "Insurance" = "Insurance",
     "Wholesale" = "Wholesale",
     "Retail" = "Retail",
-    "Public Administration" = "Public Administration",
+    "Public_Administration" = "Public_Administration",
 }
 
 export enum COMPANY_FORMS {
-    "Sole Proprietorship" = "Sole Proprietorship",
+    "Sole_Proprietorship" = "Sole_Proprietorship",
     "Partnership" = "Partnership",
     "Corporation" = "Corporation",
     "Cooperative" = "Cooperative",
     "Franchise" = "Franchise",
-    "Joint Venture" = "Joint Venture",
+    "Joint_Venture" = "Joint_Venture",
     "Other" = "Other",
 }
 
@@ -69,4 +69,4 @@ export type StockValues = {
 };
 
 
-export type createStockDto = Omit<StockInterface, "createdAt" | "traders">;
+export type createStockDto = Omit<StockInterface, "issued" | "traders">;

@@ -1,23 +1,22 @@
 import AgencyInterface, { AgencyInterfaceWithId, } from "@/types/agency.interface";
-import { AGENCY_PRICE_INCREMENT } from "@/server/global.config";
 import AgencyModel from "@/server/models/agency.schema";
+import { AGENCY_PRICE_INCREMENT } from "@/server/global.config";
+
 import StockModel from "@/server/models/stock.schema";
-import { getRelativeCumulativeNetWorth } from "@/server/services/market.service";
 import { addStockValuePoint } from "@/server/services/stock.service";
+
+import { getRelativeCumulativeNetWorth } from "@/server/services/market.service";
+
 import { DIVIDEND_FACTOR } from "@/server/global.config";
 
 
 export const addAgency = async (agency: AgencyInterface) => {
-    const newAgency = new AgencyModel({
-        ...agency,
-    });
+    const newAgency = new AgencyModel({ ...agency, });
     return await newAgency.save();
 };
 
 export const getAllAgencies = async () => {
-    return (await AgencyModel.find({}, { _id: 1 }).exec()).map((agency) =>
-        String(agency._id)
-    );
+    return (await AgencyModel.find({}, { _id: 1 }).exec()).map((agency) => String(agency._id));
 };
 
 export const getAgencyById = async (agency_id: string) => {
@@ -57,8 +56,7 @@ export const evaluateAgencies = async (agency_id: string, date: number) => {
         const prev_price = stock.timeline[stock.timeline.length - 2].price;
         const change_in_price = Number(latest_price) - Number(prev_price);
         let gross_dividend = 0;
-        if (change_in_price > 0)
-            gross_dividend = change_in_price * parameters.dividend * DIVIDEND_FACTOR;
+        if (change_in_price > 0) gross_dividend = change_in_price * parameters.dividend * DIVIDEND_FACTOR;
         dividend = gross_dividend / stock.gross_volume;
     }
 

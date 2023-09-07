@@ -13,6 +13,10 @@ const MarketSchema = new Schema({
         type: Schema.Types.Number,
         required: true,
     },
+    market_sentience_index: {
+        type: Schema.Types.Number,
+        required: true,
+    },
     trending_stocks: {
         type: [{
             type: Schema.Types.ObjectId,
@@ -34,3 +38,4 @@ const MarketSchema = new Schema({
 const MarketModel = mongoose.models["Market"] ?? mongoose.model("Market", MarketSchema);
 
 export default MarketModel;
+

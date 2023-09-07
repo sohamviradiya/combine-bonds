@@ -1,6 +1,9 @@
 import { faker } from "@faker-js/faker";
+
 import { User } from "@/types/portfolio.interface";
+
 import { addPortfolio } from "@/server/services/portfolio.service";
+
 
 const NUM_OF_PORTFOLIOS = 20;
 

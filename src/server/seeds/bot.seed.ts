@@ -1,10 +1,13 @@
-import BotInterface, { BOT_STRATEGIES } from "@/types/bot.interface";
 import PortfolioModel from "@/server/models/portfolio.schema";
+
+import BotInterface, { BOT_STRATEGIES } from "@/types/bot.interface";
 import { addBot } from "@/server/services/bot.service";
+
+
 const generateWeights = (num: number) => {
     let weights = [];
     for (let i = 0; i < num; i++) {
-        weights.push(Math.random());
+        weights.push((0.9 * Math.random() + 0.1));
     }
     weights.sort((a, b) => b - a);
     let sum = weights.reduce((a, b) => a + b, 0);
@@ -15,7 +18,7 @@ const generateWeights = (num: number) => {
 const generateBot = (portfolio_id: string, trade_period: number): BotInterface => {
     const bot_class = Object.values(BOT_STRATEGIES)[Math.floor(Math.random() * 4)];
     let investment_amount_per_slot = {} as BotInterface["parameters"]["investment_amount_per_slot"];
-    let bundle_expansion = {} as BotInterface["parameters"]["bundle_expansion"];
+    let bundle = {} as BotInterface["parameters"]["bundle"];
     let loss_aversion = 0;
     let stock_clearance = 0;
 
@@ -24,7 +27,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
             balance: 0.3 + Math.random() * 0.1,
             market_sentiment: 0,
         };
-        bundle_expansion = {
+        bundle = {
             value: 0.2 + Math.random() * 0.1,
             trending: {
                 value: 0.3 + Math.random() * 0.1,
@@ -46,7 +49,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
             balance: 0.5 + Math.random() * 0.1,
             market_sentiment: 0,
         };
-        bundle_expansion = {
+        bundle = {
             value: 0.4 + Math.random() * 0.1,
             trending: {
                 value: 0.3 + Math.random() * 0.1,
@@ -68,7 +71,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
             balance: 0.4 + Math.random() * 0.1,
             market_sentiment: 0.6 + Math.random() * 0.1,
         };
-        bundle_expansion = {
+        bundle = {
             value: 0.2 + Math.random() * 0.1,
             trending: {
                 value: 0.4 + Math.random() * 0.1,
@@ -90,7 +93,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
             balance: 0.5 + Math.random() * 0.1,
             market_sentiment: 0.5 + Math.random() * 0.1,
         };
-        bundle_expansion = {
+        bundle = {
             value: 0.5 + Math.random() * 0.1,
             trending: {
                 value: 0,
@@ -110,10 +113,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
     } else throw new Error("Bot class not found");
 
     investment_amount_per_slot.market_sentiment = 1 - investment_amount_per_slot.balance;
-    bundle_expansion.random.value =
-        1 -
-        bundle_expansion.trending.value -
-        bundle_expansion.predicted.value;
+    bundle.random.value = 1 - bundle.trending.value - bundle.predicted.value;
 
     return {
         portfolio: portfolio_id,
@@ -121,7 +121,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
         strategy: bot_class,
         parameters: {
             investment_amount_per_slot: investment_amount_per_slot,
-            bundle_expansion,
+            bundle,
             loss_aversion,
             stock_clearance,
         },

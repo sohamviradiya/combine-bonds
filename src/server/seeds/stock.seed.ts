@@ -1,8 +1,10 @@
-import { addStock } from "@/server/services/stock.service";
-import { createStockDto, StockInterface, COMPANY_FORMS, COMPANY_FIELDS } from "@/types/stock.interface";
 import { ChemicalElement, faker } from "@faker-js/faker";
 
-const NUM_OF_STOCKS = 40;
+import { addStock } from "@/server/services/stock.service";
+import { createStockDto, StockInterface, COMPANY_FORMS, COMPANY_FIELDS } from "@/types/stock.interface";
+
+
+const NUM_OF_STOCKS = 50;
 const StockGenerator = async () => {
     for (let i = 0; i < NUM_OF_STOCKS; i++) {
         const stock = await createRandomStock();

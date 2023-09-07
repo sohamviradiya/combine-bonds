@@ -1,13 +1,10 @@
+import { ValuePoint, createStockDto, StockInterface, StockInterfaceWithId, StockValues, } from "@/types/stock.interface";
 import StockModel from "@/server/models/stock.schema";
-import {
-    ValuePoint,
-    createStockDto,
-    StockInterface,
-    StockInterfaceWithId,
-    StockValues,
-} from "@/types/stock.interface";
+
+import { getPortfolioById } from "@/server/services/portfolio.service";
+
 import { DATE_LIMIT } from "@/server/global.config";
-import { getPortfolioById } from "./portfolio.service";
+
 
 export const addStock = async (stock: createStockDto) => {
     const newStock = {
@@ -69,23 +66,6 @@ export const addStockValuePoint = async (_id: string, valuePoint: ValuePoint) =>
 export const getRandomStocks = async (count: number) => {
     const stocks = await StockModel.find({}, { _id: 1 }).limit(count).exec();
     return stocks.map((stock) => stock._id);
-};
-
-export const getHighSlopeStocks = async (count?: number) => {
-    const stocks = await StockModel.find({}, { _id: 1, slope: 1 }).exec() as StockValues[];
-    stocks.sort((a, b) => b.slope - a.slope);
-    
-    if (!count) return stocks.map((stock) => stock._id);
-    return stocks.slice(0, count).map((stock) => stock._id);
-};
-
-export const getHighDoubleSlopeStocks = async (count?: number) => {
-    var stocks = await StockModel.find({}, { _id: 1, slope: 1 }).exec() as StockValues[];
-    stocks = stocks.filter((stock) => stock.slope > 0);
-    stocks.sort((a, b) => b.double_slope - a.double_slope);
-
-    if (!count) return stocks.map((stock) => stock._id);
-    return stocks.slice(0, count).map((stock) => stock._id);
 };
 
 export const evaluateStock = async (_id: string, date: number) => {
