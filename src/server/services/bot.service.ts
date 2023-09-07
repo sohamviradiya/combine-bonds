@@ -2,13 +2,13 @@ import { Investment, Transaction, } from "@/types/portfolio.interface";
 import { dumpPortfolio, performTransactions, getPortfolioById } from "@/server/services/portfolio.service";
 
 import BotModel from "@/server/models/bot.schema";
-import BotInterface from "@/types/bot.interface";
+import BotInterface, { BotInterfaceWithID } from "@/types/bot.interface";
 
-import { getRelativeCumulativeMarketCapitalization, getTrendingStocks, getPredictedStocks } from "@/server/services/market.service";
+import { getTrendingStocks, getPredictedStocks, getMarket } from "@/server/services/market.service";
 
 import { getStockAnalytics, getRandomStocks } from "@/server/services/stock.service";
 
-import { PORTFOLIO_MINIMUM_BALANCE, BOT_INVESTMENT, BOT_LOSS_AVERSION, BOT_STOCK_CLEARANCE } from "@/server/global.config";
+import { PORTFOLIO_MINIMUM_BALANCE, BOT_INVESTMENT_MULTIPLIER, BOT_LOSS_AVERSION, BOT_STOCK_CLEARANCE, BOT_MIN_INVESTMENT } from "@/server/global.config";
 
 
 export const addBot = async (bot: BotInterface) => {
@@ -17,11 +17,11 @@ export const addBot = async (bot: BotInterface) => {
 };
 
 export const getAllBots = async () => {
-    return (await BotModel.find({}, { _id: 1 }).exec()).map((bot) => bot._id);
+    return (await BotModel.find({}, { _id: 1 }).exec()).map((bot: { _id: string }) => bot._id);
 };
 
 export const getBotById = async (bot_id: string) => {
-    return await BotModel.findById(bot_id).exec();
+    return await BotModel.findById(bot_id).exec() as BotInterfaceWithID;
 };
 
 const updateBundle = async (bundle: Investment[], loss_aversion: number, stock_clearance: number, date: number): Promise<Transaction[]> => {
@@ -116,9 +116,11 @@ export const evaluateBot = async (bot_id: string, date: number) => {
 
     const balance_component = parameters.investment_amount_per_slot.balance * relative_net_worth_change;
 
-    const market_sentience_component = Math.max(parameters.investment_amount_per_slot.market_sentiment * (await getRelativeCumulativeMarketCapitalization()), 0);
+    const market = await getMarket();
 
-    const total_investment_amount = BOT_INVESTMENT * portfolio.balance * (balance_component + market_sentience_component);
+    const market_sentience_component = parameters.investment_amount_per_slot.market_sentiment * market.market_sentience_index;
+
+    const total_investment_amount = BOT_INVESTMENT_MULTIPLIER * portfolio.balance * Math.min((balance_component + market_sentience_component), BOT_MIN_INVESTMENT);
 
     const budget_expansion_amount = total_investment_amount * parameters.bundle.value;
 
