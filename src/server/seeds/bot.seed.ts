@@ -1,7 +1,7 @@
-import PortfolioModel from "@/server/models/portfolio.schema";
-
 import BotInterface, { BOT_STRATEGIES } from "@/types/bot.interface";
 import { addBot } from "@/server/services/bot.service";
+
+import { getAllPortfolios } from "../services/portfolio.service";
 
 
 const generateWeights = (num: number) => {
@@ -129,9 +129,7 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
 };
 
 const BotGenerator = async () => {
-    const portfolio_ids = (await PortfolioModel.find({}, { _id: 1 }).exec()).map(
-        (portfolio) => portfolio._id
-    );
+    const portfolio_ids = await getAllPortfolios();
 
     await Promise.all(
         portfolio_ids.map(async (portfolio_id) => {

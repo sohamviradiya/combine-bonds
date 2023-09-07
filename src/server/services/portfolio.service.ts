@@ -1,10 +1,9 @@
-import { User, Transaction, PortfolioInterfaceWithID, } from "@/types/portfolio.interface";
+import PortfolioInterface, { User, Transaction, PortfolioInterfaceWithID, NetWorth, } from "@/types/portfolio.interface";
 import PortfolioModel from "@/server/models/portfolio.schema";
 
 import { buyStock, sellStock, deposit, withdraw, dividend } from "@/server/services/transaction.service";
 
-import StockModel from "@/server/models/stock.schema";
-import { getStockAnalytics } from "@/server/services/stock.service";
+import { getStockAnalytics, eraseTrader } from "@/server/services/stock.service";
 
 import { DATE_LIMIT, PORTFOLIO_STARTING_BALANCE, STOCK_DUMP_THRESHOLD } from "@/server/global.config";
 
@@ -13,20 +12,19 @@ export const addPortfolio = async (user: User,): Promise<PortfolioInterfaceWithI
     return await new PortfolioModel({
         user,
         transactions: [],
-        currentBalance: PORTFOLIO_STARTING_BALANCE,
-        netWorth: [
+        balance: PORTFOLIO_STARTING_BALANCE,
+        timeline: [
             {
                 value: PORTFOLIO_STARTING_BALANCE,
                 date: 0,
             },
         ],
         investments: [],
-    }).save();
+    } as PortfolioInterface).save();
 };
 
 export const verifyIDPassWord = async (name: string, password: string) => {
-    const portfolio: PortfolioInterfaceWithID = await PortfolioModel.findOne({ "user.name": name, }).exec();
-
+    const portfolio: PortfolioInterfaceWithID = await PortfolioModel.findOne({ "user.name": name }, { user: true }).exec();
     if (!portfolio.user)
         return {
             message: "User not found",
@@ -71,7 +69,7 @@ export const performTransactions = async (id: string, transactions: Transaction[
 
     return await PortfolioModel.findByIdAndUpdate(id,
         {
-            currentBalance: portfolio.balance,
+            balance: portfolio.balance,
             investments: portfolio.investments,
             transactions: portfolio.transactions,
         },
@@ -92,9 +90,7 @@ export const evaluatePortfolio = async (portfolio_id: string, date: number) => {
             const amount = investment.quantity * stock.price;
             gross_amount += amount;
             if (amount < STOCK_DUMP_THRESHOLD) {
-                await StockModel.findByIdAndUpdate(investment.stock, {
-                    $pull: { traders: String(portfolio_id) },
-                }).exec();
+                await eraseTrader(investment.stock, portfolio_id);
 
                 dumped_stocks.push(String(investment.stock));
 
@@ -155,3 +151,8 @@ export const dumpPortfolio = async (portfolio_id: string, date: number) => {
     );
     return await performTransactions(portfolio_id, transactions);
 };
+export async function getPortfolioTimelines(): Promise<{ timeline: NetWorth[]; }[]> {
+    return await PortfolioModel.find({}, { timeline: 1 }).exec();
+}
+
+

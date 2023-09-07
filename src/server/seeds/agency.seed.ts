@@ -1,8 +1,6 @@
 import AgencyInterface, { AGENCY_TYPES } from "@/types/agency.interface";
 import { addAgency } from "@/server/services/agency.service";
-
-import StockModel from "@/server/models/stock.schema";
-
+import { getAllStocks } from "../services/stock.service";
 
 const generateAgency = async (stock_id: string): Promise<AgencyInterface> => {
     const agency_type = Object.values(AGENCY_TYPES)[Math.floor(Math.random() * 4)];
@@ -49,7 +47,7 @@ const generateAgency = async (stock_id: string): Promise<AgencyInterface> => {
 };
 
 const AgencyGenerator = async () => {
-    const stock_ids = (await StockModel.find({}, { _id: 1 }).exec()).map((stock) => stock._id);
+    const stock_ids = await getAllStocks();
 
     await Promise.all(
         stock_ids.map(async (stock_id) => {

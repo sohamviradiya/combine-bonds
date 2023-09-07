@@ -47,7 +47,7 @@ const investRandom = async (budget: number, weights: BotInterface["parameters"][
     const stocks = await getRandomStocks(n);
     for (let i = 0; i < stocks.length; i++) {
         transactions.push({
-            stock: stocks[i]._id,
+            stock: stocks[i],
             amount: budget * weights[i],
             type: "STOCK_PURCHASE", date,
         });

@@ -39,7 +39,7 @@ const BotSchema = new Schema({
                     type: Schema.Types.Number,
                     required: true,
                 },
-                weight_distribution: {
+                weights: {
                     type: [
                         {
                             type: Schema.Types.Number,
