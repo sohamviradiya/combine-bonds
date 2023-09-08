@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import { COMPANY_FIELDS, COMPANY_FORMS, ValuePoint, } from "@/types/stock.interface";
+import { COMPANY_FIELDS, COMPANY_FORMS, StockInterfaceWithId, ValuePoint, } from "@/types/stock.interface";
 
 
 const stockSchema = new Schema(
@@ -88,13 +88,13 @@ const stockSchema = new Schema(
     { toJSON: { virtuals: true } }
 );
 
-stockSchema.virtual("market_valuation").get(function (this: any) {
+stockSchema.virtual("market_valuation").get(function (this: StockInterfaceWithId) {
     if (this.timeline.length < 1) return 0;
     const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
     return last_point.price * this.gross_volume;
 });
 
-stockSchema.virtual("slope").get(function (this: any) {
+stockSchema.virtual("slope").get(function (this: StockInterfaceWithId) {
     if (this.timeline.length < 2) return 0;
     const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
     const second_last_point: ValuePoint = this.timeline[this.timeline.length - 2];
@@ -102,7 +102,7 @@ stockSchema.virtual("slope").get(function (this: any) {
     return diff / second_last_point.price;
 });
 
-stockSchema.virtual("double_slope").get(function (this: any) {
+stockSchema.virtual("double_slope").get(function (this: StockInterfaceWithId) {
     if (this.timeline.length < 3) return 0;
     const last_point: ValuePoint = this.timeline[this.timeline.length - 1];
     const second_last_point: ValuePoint = this.timeline[this.timeline.length - 2];
@@ -117,29 +117,29 @@ stockSchema.virtual("double_slope").get(function (this: any) {
     return slope_diff / second_last_slope;
 });
 
-stockSchema.virtual("fall_since_peak").get(function (this: any) {
+stockSchema.virtual("fall_since_peak").get(function (this: StockInterfaceWithId) {
     if (this.timeline.length < 2) return 0;
-    const latest_market_valuation = this.timeline[this.timeline.length - 1].market_valuation;
+    const latest_price = this.timeline[this.timeline.length - 1].price;
     let k = this.timeline.length - 2;
     while (
         k >= 0 &&
-        this.timeline[k].market_valuation >= this.timeline[k + 1].market_valuation
+        this.timeline[k].price >= this.timeline[k + 1].price
     ) k--;
-    const diff = latest_market_valuation - this.timeline[k + 1].market_valuation;
-    return -diff / this.timeline[k + 1].market_valuation;
+    const diff = latest_price - this.timeline[k + 1].price;
+    return -diff / this.timeline[k + 1].price;
 });
 
-stockSchema.virtual("rise_since_trough").get(function (this: any) {
+stockSchema.virtual("rise_since_trough").get(function (this: StockInterfaceWithId) {
     if (this.timeline.length < 2) return 0;
-    const latest_market_valuation = this.timeline[this.timeline.length - 1].market_valuation;
+    const latest_price = this.timeline[this.timeline.length - 1].price;
     let k = this.timeline.length - 2;
     while (
         k >= 0 &&
-        this.timeline[k].market_valuation <= this.timeline[k + 1].market_valuation
+        this.timeline[k].price <= this.timeline[k + 1].price
     )
         k--;
-    const diff = latest_market_valuation - this.timeline[k + 1].market_valuation;
-    return diff / this.timeline[k + 1].market_valuation;
+    const diff = latest_price - this.timeline[k + 1].price;
+    return diff / this.timeline[k + 1].price;
 });
 
 const StockModel = mongoose.models["Stock"] ?? mongoose.model("Stock", stockSchema);
