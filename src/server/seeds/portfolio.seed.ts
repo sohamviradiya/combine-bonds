@@ -7,6 +7,18 @@ import { addPortfolio } from "@/server/services/portfolio.service";
 
 const NUM_OF_PORTFOLIOS = 60;
 
+const PortfolioGenerator = async () => {
+    const portfolioPromises = [];
+
+    for (let i = 0; i < NUM_OF_PORTFOLIOS; i++) {
+        const portfolio = generateUser();
+        const portfolioPromise = addPortfolio(portfolio);
+        portfolioPromises.push(portfolioPromise);
+    }
+
+    await Promise.all(portfolioPromises);
+};
+
 const generateUser = (): User => {
     return {
         name: faker.internet.userName(),
@@ -15,11 +27,6 @@ const generateUser = (): User => {
     };
 };
 
-const PortfolioGenerator = async () => {
-    for (let i = 0; i < NUM_OF_PORTFOLIOS; i++) {
-        const portfolio = generateUser();
-        await addPortfolio(portfolio);
-    }
-};
+
 
 export default PortfolioGenerator;

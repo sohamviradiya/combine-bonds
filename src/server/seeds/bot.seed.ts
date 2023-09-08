@@ -3,6 +3,15 @@ import { addBot } from "@/server/services/bot.service";
 
 import { getAllPortfolios } from "../services/portfolio.service";
 
+const BotGenerator = async () => {
+    const portfolio_ids = await getAllPortfolios();
+
+    await Promise.all(portfolio_ids.map(async (portfolio_id) => {
+        const bot = generateBot(portfolio_id, 1);
+        await addBot(bot);
+    })
+    );
+};
 
 const generateWeights = (num: number) => {
     let weights = [];
@@ -126,17 +135,6 @@ const generateBot = (portfolio_id: string, trade_period: number): BotInterface =
             stock_clearance,
         },
     };
-};
-
-const BotGenerator = async () => {
-    const portfolio_ids = await getAllPortfolios();
-
-    await Promise.all(
-        portfolio_ids.map(async (portfolio_id) => {
-            const bot = generateBot(portfolio_id, 1);
-            await addBot(bot);
-        })
-    );
 };
 
 export default BotGenerator;

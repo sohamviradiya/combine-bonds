@@ -2,6 +2,17 @@ import AgencyInterface, { AGENCY_TYPES } from "@/types/agency.interface";
 import { addAgency } from "@/server/services/agency.service";
 import { getAllStocks } from "../services/stock.service";
 
+const AgencyGenerator = async () => {
+    const stock_ids = await getAllStocks();
+
+    await Promise.all(
+        stock_ids.map(async (stock_id) => {
+            const agency = await generateAgency(stock_id);
+            await addAgency(agency);
+        })
+    );
+};
+
 const generateAgency = async (stock_id: string): Promise<AgencyInterface> => {
     const agency_type = Object.values(AGENCY_TYPES)[Math.floor(Math.random() * 4)];
     let steady_increase = 0;
@@ -46,15 +57,6 @@ const generateAgency = async (stock_id: string): Promise<AgencyInterface> => {
     } as AgencyInterface;
 };
 
-const AgencyGenerator = async () => {
-    const stock_ids = await getAllStocks();
 
-    await Promise.all(
-        stock_ids.map(async (stock_id) => {
-            const agency = await generateAgency(stock_id);
-            await addAgency(agency);
-        })
-    );
-};
 
 export default AgencyGenerator;

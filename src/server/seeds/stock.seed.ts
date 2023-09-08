@@ -5,12 +5,16 @@ import { createStockDto, StockInterface, COMPANY_FORMS, COMPANY_FIELDS } from "@
 
 
 const NUM_OF_STOCKS = 50;
+
 const StockGenerator = async () => {
+    const stockPromises = [];
     for (let i = 0; i < NUM_OF_STOCKS; i++) {
-        const stock = await createRandomStock();
-        await addStock(stock);
+        const stockPromise = createRandomStock().then((stock) => addStock(stock));
+        stockPromises.push(stockPromise);
     }
+    await Promise.all(stockPromises);
 };
+
 
 const createRandomStock = async (): Promise<createStockDto> => {
     const element = getElement();
