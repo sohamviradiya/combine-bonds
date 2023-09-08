@@ -5,13 +5,13 @@ import { User } from "@/types/portfolio.interface";
 import { addPortfolio } from "@/server/services/portfolio.service";
 
 
-const NUM_OF_PORTFOLIOS = 20;
+const NUM_OF_PORTFOLIOS = 60;
 
 const generateUser = (): User => {
     return {
-            name: faker.internet.userName(),
-            bio: faker.lorem.paragraph(),
-            password: faker.internet.password({ length: 12 }),
+        name: faker.internet.userName(),
+        bio: faker.lorem.paragraph(),
+        password: faker.internet.password({ length: 12 }),
     };
 };
 
