@@ -88,7 +88,8 @@ export const evaluateStock = async (_id: string, date: number) => {
 
     const new_timeline = timeline.filter((point) => point.date >= date - DATE_LIMIT);
     new_timeline.sort((a, b) => a.date - b.date);
-    new_timeline[timeline.length - 1].volume = volume;
+    
+    new_timeline[new_timeline.length - 1].volume = volume;
     await StockModel.findByIdAndUpdate(_id, { timeline: new_timeline, traders: new_traders }, { new: true }).exec();
 
 };

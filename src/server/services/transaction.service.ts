@@ -5,7 +5,6 @@ import { getStockById, pushTrader } from "@/server/services/stock.service";
 export const buyStock = async (portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
     if (transaction.type != "STOCK_PURCHASE" || transaction.amount < 0 || transaction.amount > portfolio.balance)
         return portfolio;
-    console.log(transaction);
 
     const stock = await getStockById(transaction.stock);
     const price = stock.timeline[stock.timeline.length - 1].price;
@@ -33,7 +32,6 @@ export const buyStock = async (portfolio: PortfolioInterfaceWithID, transaction:
 export const sellStock = async (portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
     if (transaction.type != "STOCK_SALE")
         return portfolio;
-    console.log(transaction);
     const stock = await getStockById(transaction.stock);
     const price = stock.timeline[stock.timeline.length - 1].price;
 
