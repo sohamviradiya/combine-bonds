@@ -32,7 +32,7 @@ const generateAgency = async (stock_id: string): Promise<AgencyInterface> => {
     steady_increase += Math.random() * 0.1;
     random_fluctuation += Math.random() * 0.1;
     market_sentiment += Math.random() * 0.1;
-    let market_volume = market_sentiment - random_fluctuation - steady_increase;
+    let market_volume = 1 - market_sentiment - random_fluctuation - steady_increase;
     return {
         type: agency_type,
         stock: stock_id,
