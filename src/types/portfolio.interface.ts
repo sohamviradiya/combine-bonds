@@ -1,6 +1,4 @@
 export enum TRANSACTION_TYPES {
-    "ACCOUNT_WITHDRAWAL" = "ACCOUNT_WITHDRAWAL",
-    "ACCOUNT_DEPOSIT" = "ACCOUNT_DEPOSIT",
     "STOCK_PURCHASE" = "STOCK_PURCHASE",
     "STOCK_SALE" = "STOCK_SALE",
     "STOCK_DIVIDEND" = "STOCK_DIVIDEND",
@@ -11,13 +9,9 @@ export type Investment = {
     quantity: number;
 };
 
-export type Transaction = (
-    { type: "ACCOUNT_WITHDRAWAL" | "ACCOUNT_DEPOSIT" }
-    | {
-        type: "STOCK_PURCHASE" | "STOCK_SALE" | "STOCK_DIVIDEND";
-        stock: string;
-    }
-) & {
+export type Transaction = {
+    type: keyof typeof TRANSACTION_TYPES;
+    stock: string;
     amount: number;
     date: number;
 };

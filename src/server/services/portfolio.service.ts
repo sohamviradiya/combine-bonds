@@ -1,9 +1,9 @@
 import PortfolioInterface, { User, Transaction, PortfolioInterfaceWithID, NetWorth, } from "@/types/portfolio.interface";
 import PortfolioModel from "@/server/models/portfolio.schema";
 
-import { buyStock, sellStock, deposit, withdraw, dividend } from "@/server/services/transaction.service";
+import { buyStock, sellStock, dividend } from "@/server/services/transaction.service";
 
-import { getStockAnalytics, eraseTrader } from "@/server/services/stock.service";
+import { getStockAnalytics, pullTrader } from "@/server/services/stock.service";
 
 import { DATE_LIMIT, PORTFOLIO_STARTING_BALANCE, STOCK_DUMP_THRESHOLD } from "@/server/global.config";
 
@@ -52,18 +52,13 @@ export const getPortfolioById = async (portfolio_id: string): Promise<PortfolioI
 export const performTransactions = async (id: string, transactions: Transaction[]): Promise<PortfolioInterfaceWithID> => {
     let portfolio = await getPortfolioById(id);
     for (let transaction of transactions) {
-        if (transaction.type === "ACCOUNT_DEPOSIT")
-            portfolio = deposit(portfolio, transaction);
-        else if (transaction.type === "ACCOUNT_WITHDRAWAL")
-            portfolio = withdraw(portfolio, transaction);
-        else if (transaction.type === "STOCK_PURCHASE")
+        if (transaction.type === "STOCK_PURCHASE")
             portfolio = await buyStock(portfolio, transaction);
         else if (transaction.type === "STOCK_SALE")
             portfolio = await sellStock(portfolio, transaction);
         else if (transaction.type === "STOCK_DIVIDEND")
             portfolio = await dividend(portfolio, transaction);
         else throw new Error("Invalid transaction class");
-
         portfolio.transactions.push(transaction);
     }
 
@@ -87,11 +82,13 @@ export const evaluatePortfolio = async (portfolio_id: string, date: number) => {
     await Promise.all(
         investments.map(async (investment) => {
             const stock = await getStockAnalytics(investment.stock);
+
             const amount = investment.quantity * stock.price;
             gross_amount += amount;
 
+
             if (amount < STOCK_DUMP_THRESHOLD) {
-                await eraseTrader(investment.stock, portfolio_id);
+                await pullTrader(investment.stock, portfolio_id);
                 dumped_stocks.push(String(investment.stock));
                 transactions.push({
                     type: "STOCK_SALE",
@@ -115,6 +112,8 @@ export const evaluatePortfolio = async (portfolio_id: string, date: number) => {
     portfolio.transactions = portfolio.transactions.filter((transaction) => transaction.date > date - DATE_LIMIT);
 
     portfolio.timeline = portfolio.timeline.filter((value) => value.date > date - DATE_LIMIT);
+    portfolio.timeline.sort((a, b) => a.date - b.date);
+    
     portfolio.timeline.push({ value: portfolio.balance + gross_amount, date });
 
     portfolio.investments = portfolio.investments.filter((investment) => !dumped_stocks.includes(String(investment.stock)));

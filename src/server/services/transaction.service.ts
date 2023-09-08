@@ -3,18 +3,20 @@ import { getStockById, pushTrader } from "@/server/services/stock.service";
 
 
 export const buyStock = async (portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
-    if (transaction.type != "STOCK_PURCHASE")
+    if (transaction.type != "STOCK_PURCHASE" || transaction.amount < 0 || transaction.amount > portfolio.balance)
         return portfolio;
+    console.log(transaction);
 
     const stock = await getStockById(transaction.stock);
     const price = stock.timeline[stock.timeline.length - 1].price;
+
+    const stock_quantity = transaction.amount / price;
 
     if (portfolio.balance < transaction.amount)
         return portfolio;
 
     const stockIndex = portfolio.investments.findIndex((investment) => String(investment.stock) == String(transaction.stock));
 
-    const stock_quantity = transaction.amount / price;
 
     if (stockIndex === -1) {
         portfolio.investments.push({
@@ -22,9 +24,8 @@ export const buyStock = async (portfolio: PortfolioInterfaceWithID, transaction:
             quantity: stock_quantity,
         });
         await pushTrader(transaction.stock, portfolio._id);
-    } else {
+    } else 
         portfolio.investments[stockIndex].quantity += stock_quantity;
-    }
     portfolio.balance -= transaction.amount;
     return portfolio;
 };
@@ -32,6 +33,7 @@ export const buyStock = async (portfolio: PortfolioInterfaceWithID, transaction:
 export const sellStock = async (portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
     if (transaction.type != "STOCK_SALE")
         return portfolio;
+    console.log(transaction);
     const stock = await getStockById(transaction.stock);
     const price = stock.timeline[stock.timeline.length - 1].price;
 
@@ -50,22 +52,8 @@ export const sellStock = async (portfolio: PortfolioInterfaceWithID, transaction
     return portfolio;
 };
 
-export const deposit = (portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
-    portfolio.balance += transaction.amount;
-    return portfolio;
-};
-
-export const withdraw = (portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
-    if (portfolio.balance < transaction.amount)
-        return portfolio;
-    portfolio.balance -= transaction.amount;
-    return portfolio;
-
-};
-
 export const dividend = async (portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
     portfolio.balance += transaction.amount;
     return portfolio;
-
 };
 
