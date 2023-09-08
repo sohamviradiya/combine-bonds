@@ -38,8 +38,11 @@ export default async function MainRun(
             await evaluateStock(stock, date);
         })
     );
+    console.log(`Day ${date + 1} - Stocks Evaluated`);
 
     await evaluateMarket(date);
+    console.log(`Day ${date + 1} - Market Evaluated`);
+    
     console.log(`Relative Net Worth Change: ${(await getRelativeCumulativeNetWorth()) * 100} %`);
     console.log(`Relative Market Cap Change: ${(await getRelativeCumulativeMarketCapitalization()) * 100} %`);
 }
