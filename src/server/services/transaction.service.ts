@@ -1,5 +1,5 @@
 import { PortfolioInterfaceWithID, Transaction, } from "@/types/portfolio.interface";
-import { getStockById } from "@/server/services/stock.service";
+import { getStockById, pushTrader } from "@/server/services/stock.service";
 
 
 export const buyStock = async (portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
@@ -14,12 +14,14 @@ export const buyStock = async (portfolio: PortfolioInterfaceWithID, transaction:
 
     const stockIndex = portfolio.investments.findIndex((investment) => String(investment.stock) == String(transaction.stock));
 
-    const stock_quantity: number = transaction.amount / price;
+    const stock_quantity = transaction.amount / price;
+
     if (stockIndex === -1) {
         portfolio.investments.push({
             stock: transaction.stock,
             quantity: stock_quantity,
         });
+        await pushTrader(transaction.stock, portfolio._id);
     } else {
         portfolio.investments[stockIndex].quantity += stock_quantity;
     }
@@ -30,7 +32,6 @@ export const buyStock = async (portfolio: PortfolioInterfaceWithID, transaction:
 export const sellStock = async (portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
     if (transaction.type != "STOCK_SALE")
         return portfolio;
-
     const stock = await getStockById(transaction.stock);
     const price = stock.timeline[stock.timeline.length - 1].price;
 
@@ -54,7 +55,7 @@ export const deposit = (portfolio: PortfolioInterfaceWithID, transaction: Transa
     return portfolio;
 };
 
-export const withdraw = (portfolio: PortfolioInterfaceWithID,transaction: Transaction) => {
+export const withdraw = (portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
     if (portfolio.balance < transaction.amount)
         return portfolio;
     portfolio.balance -= transaction.amount;
@@ -62,7 +63,7 @@ export const withdraw = (portfolio: PortfolioInterfaceWithID,transaction: Transa
 
 };
 
-export const dividend = async ( portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
+export const dividend = async (portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
     portfolio.balance += transaction.amount;
     return portfolio;
 

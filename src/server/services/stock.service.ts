@@ -29,7 +29,7 @@ export const getStockById = async (_id: string) => {
         double_slope: data.double_slope,
         fall_since_peak: data.fall_since_peak,
         rise_since_trough: data.rise_since_trough,
-    };
+    } as StockInterfaceWithId & StockValues;
 };
 
 export const getStockBasicInfo = async (_id: string) => {
@@ -78,25 +78,30 @@ export const evaluateStock = async (_id: string, date: number) => {
     await Promise.all(
         traders.map(async (trader) => {
             const portfolio = await getPortfolioById(trader);
-            if (portfolio) {
-                const investment = portfolio.investments.find((investment) => investment.stock == _id);
-                if (investment) {
-                    volume += investment.quantity;
-                    new_traders.push(trader);
-                }
+            const investment = portfolio.investments.find((investment) => investment.stock == _id);
+            if (investment) {
+                volume += investment.quantity;
+                new_traders.push(trader);
             }
         })
     );
 
     const new_timeline = timeline.filter((point) => point.date >= date - DATE_LIMIT);
+    new_timeline.sort((a, b) => a.date - b.date);
     new_timeline[timeline.length - 1].volume = volume;
     await StockModel.findByIdAndUpdate(_id, { timeline: new_timeline, traders: new_traders }, { new: true }).exec();
 
 };
 
-export async function eraseTrader(_id: string, portfolio_id: string) {
+export async function pullTrader(_id: string, portfolio_id: string) {
     await StockModel.findByIdAndUpdate(_id, {
         $pull: { traders: String(portfolio_id) },
+    }).exec();
+};
+
+export async function pushTrader(_id: string, portfolio_id: string) {
+    await StockModel.findByIdAndUpdate(_id, {
+        $push: { traders: String(portfolio_id) },
     }).exec();
 };
 
