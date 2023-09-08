@@ -4,7 +4,7 @@ import { dumpPortfolio, performTransactions, getPortfolioById } from "@/server/s
 import BotModel from "@/server/models/bot.schema";
 import BotInterface, { BotInterfaceWithID } from "@/types/bot.interface";
 
-import { getTrendingStocks, getPredictedStocks, getMarket } from "@/server/services/market.service";
+import { getTrendingStocks, getPredictedStocks, getRelativeCumulativeMarketCapitalization } from "@/server/services/market.service";
 
 import { getStockAnalytics, getRandomStocks } from "@/server/services/stock.service";
 
@@ -28,11 +28,13 @@ const updateBundle = async (bundle: Investment[], loss_aversion: number, stock_c
     const transactions: Transaction[] = [];
     for (let investment of bundle) {
         const { fall_since_peak, price, rise_since_trough } = await getStockAnalytics(investment.stock);
+
+
         if (fall_since_peak >= loss_aversion * BOT_LOSS_AVERSION || rise_since_trough >= stock_clearance * BOT_STOCK_CLEARANCE) {
             transactions.push({
+                type: "STOCK_SALE",
                 stock: investment.stock,
                 amount: investment.quantity * price,
-                type: "STOCK_SALE",
                 date,
             });
         }
@@ -45,11 +47,12 @@ const investRandom = async (budget: number, weights: BotInterface["parameters"][
     const n = weights.length;
     const transactions: Transaction[] = [];
     const stocks = await getRandomStocks(n);
-    for (let i = 0; i < stocks.length; i++) {
+    for (let i = 0; i < Math.min(stocks.length,n); i++) {
         transactions.push({
             stock: stocks[i],
             amount: budget * weights[i],
-            type: "STOCK_PURCHASE", date,
+            type: "STOCK_PURCHASE",
+            date,
         });
     }
     return transactions;
@@ -59,7 +62,7 @@ const investTrending = async (budget: number, weights: BotInterface["parameters"
     const n = weights.length;
     const transactions: Transaction[] = [];
     const stocks = await getTrendingStocks(n);
-    for (let i = 0; i < stocks.length; i++) {
+    for (let i = 0; i < Math.min(stocks.length, n); i++) {
         transactions.push({
             stock: stocks[i],
             amount: budget * weights[i],
@@ -74,7 +77,7 @@ const investPredicted = async (budget: number, weights: BotInterface["parameters
     const n = weights.length;
     const transactions: Transaction[] = [];
     const stocks = await getPredictedStocks(n);
-    for (let i = 0; i < stocks.length; i++) {
+    for (let i = 0; i < Math.min(stocks.length, n); i++) {
         transactions.push({
             stock: stocks[i],
             amount: budget * weights[i],
@@ -110,21 +113,21 @@ export const evaluateBot = async (bot_id: string, date: number) => {
 
     transactions.push(...(await updateBundle(portfolio.investments, parameters.loss_aversion, parameters.stock_clearance, date)));
 
-    let relative_net_worth_change = 0.01;
-    if (portfolio.timeline.length >= 2)
-        relative_net_worth_change = (portfolio.timeline[portfolio.timeline.length - 1].value - portfolio.timeline[portfolio.timeline.length - 2].value) / portfolio.timeline[portfolio.timeline.length - 2].value;
+    let relative_net_worth_change = 0.1;
+    if (portfolio.timeline.length >= 2) relative_net_worth_change = (portfolio.timeline[portfolio.timeline.length - 1].value - portfolio.timeline[portfolio.timeline.length - 2].value) / portfolio.timeline[portfolio.timeline.length - 2].value;
 
     const balance_component = parameters.investment_amount_per_slot.balance * relative_net_worth_change;
 
-    const market = await getMarket();
+    const relative_cap = await getRelativeCumulativeMarketCapitalization();
 
-    const market_sentience_component = parameters.investment_amount_per_slot.market_sentiment * market.market_sentience_index;
+    const market_sentience_component = parameters.investment_amount_per_slot.market_sentiment * relative_cap;
 
-    const total_investment_amount = BOT_INVESTMENT_MULTIPLIER * portfolio.balance * Math.min((balance_component + market_sentience_component), BOT_MIN_INVESTMENT);
+    const total_investment_amount = BOT_INVESTMENT_MULTIPLIER * portfolio.balance * Math.max((balance_component + market_sentience_component), BOT_MIN_INVESTMENT);
 
     const budget_expansion_amount = total_investment_amount * parameters.bundle.value;
 
     transactions.push(...(await expandBundle(parameters.bundle, budget_expansion_amount, date)));
+
     await performTransactions(portfolio_id, transactions);
     return total_investment_amount;
 };

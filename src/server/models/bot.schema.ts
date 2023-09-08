@@ -62,7 +62,7 @@ const BotSchema = new Schema({
                     ],
                 },
             },
-            random_investments: {
+            random: {
                 value: {
                     type: Schema.Types.Number,
                     required: true,

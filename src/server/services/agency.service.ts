@@ -37,14 +37,14 @@ export const evaluateAgencies = async (agency_id: string, date: number) => {
         const current_volume = Number(stock.timeline[stock.timeline.length - 1].volume);
         const previous_volume = Number(stock.timeline[stock.timeline.length - 2].volume);
         if (previous_volume === 0)
-            volume_change_ratio = current_volume !== 0 ? 1 : 0;
+            volume_change_ratio = current_volume == 0 ? 0 : 1;
         else
             volume_change_ratio = (current_volume - previous_volume) / previous_volume;
     }
     let increase_coefficient = parameters.market_sentiment * market_sentiment + parameters.steady_increase + parameters.random_fluctuation * random_num + parameters.market_volume * volume_change_ratio;
 
     let price = stock.timeline[stock.timeline.length - 1].price;
-    price *= 1 + increase_coefficient * AGENCY_PRICE_INCREMENT;
+    price *= (1 + increase_coefficient * AGENCY_PRICE_INCREMENT);
 
     let volume = stock.timeline[stock.timeline.length - 1].volume;
 
@@ -54,9 +54,7 @@ export const evaluateAgencies = async (agency_id: string, date: number) => {
         const latest_price = stock.timeline[stock.timeline.length - 1].price;
         const prev_price = stock.timeline[stock.timeline.length - 2].price;
         const change_in_price = Number(latest_price) - Number(prev_price);
-        let gross_dividend = 0;
-        if (change_in_price > 0) gross_dividend = change_in_price * parameters.dividend * DIVIDEND_FACTOR;
-        dividend = gross_dividend / stock.gross_volume;
+        dividend = Math.max(change_in_price, 0) * parameters.dividend * DIVIDEND_FACTOR;
     }
 
     await addStockValuePoint(agency.stock, {

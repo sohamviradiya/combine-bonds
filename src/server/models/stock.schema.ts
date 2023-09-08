@@ -119,18 +119,20 @@ stockSchema.virtual("double_slope").get(function (this: StockInterfaceWithId) {
 
 stockSchema.virtual("fall_since_peak").get(function (this: StockInterfaceWithId) {
     if (this.timeline.length < 2) return 0;
+    this.timeline.sort((a, b) => a.date - b.date);
     const latest_price = this.timeline[this.timeline.length - 1].price;
     let k = this.timeline.length - 2;
     while (
         k >= 0 &&
         this.timeline[k].price >= this.timeline[k + 1].price
     ) k--;
-    const diff = latest_price - this.timeline[k + 1].price;
-    return -diff / this.timeline[k + 1].price;
+    const diff = this.timeline[k + 1].price - latest_price;
+    return diff / this.timeline[k + 1].price;
 });
 
 stockSchema.virtual("rise_since_trough").get(function (this: StockInterfaceWithId) {
     if (this.timeline.length < 2) return 0;
+    this.timeline.sort((a, b) => a.date - b.date);
     const latest_price = this.timeline[this.timeline.length - 1].price;
     let k = this.timeline.length - 2;
     while (
