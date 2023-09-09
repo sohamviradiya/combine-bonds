@@ -3,9 +3,8 @@ import { faker } from "@faker-js/faker";
 import { User } from "@/types/portfolio.interface";
 
 import { addPortfolio } from "@/server/services/portfolio.service";
+import { NUM_OF_PORTFOLIOS } from "../global.config";
 
-
-const NUM_OF_PORTFOLIOS = 60;
 
 const PortfolioGenerator = async () => {
     const portfolioPromises = [];
