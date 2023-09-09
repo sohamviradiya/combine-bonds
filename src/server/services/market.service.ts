@@ -20,7 +20,7 @@ export const getMarketAnalytics = async () => {
     if (!prevMarket) return {
         relative_cumulative_market_capitalization: 0,
         relative_cumulative_net_worth: 0,
-        market_index: Market.market_sentience_index,
+        market_sentience_index: Market.market_sentience_index,
         market_index_change: 0,
     };
 
@@ -29,13 +29,13 @@ export const getMarketAnalytics = async () => {
     return {
         relative_cumulative_market_capitalization,
         relative_cumulative_net_worth,
-        market_index: Market.market_sentience_index,
+        market_sentience_index: Market.market_sentience_index,
         market_index_change: Market.market_sentience_index - prevMarket.market_sentience_index,
     };
 };
 
-export const getTimeline = async () => {
-    return await MarketModel.find({}, { date: 1, cumulative_market_capitalization: 1, cumulative_net_worth: 1 }).sort({ date: 1 }).exec();
+export const getMarketTimeline = async () => {
+    return await MarketModel.find({}, { date: 1, cumulative_market_capitalization: 1, cumulative_net_worth: 1, market_sentience_index: 1 }).sort({ date: 1 }).exec();
 };
 
 export const getDate = async () => {
