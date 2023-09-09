@@ -34,7 +34,7 @@ export default async function MainStart() {
     stocks = await getAllStocks();
     const job = new CronJob(`*/${SLOT_DURATION} * * * *`, async () => {
         console.log("Running cron job", date);
-        await MainRun(agencies, portfolios, bots, stocks, date);
+        await MainRun({ agencies, portfolios, bots, stocks, date });
         date++;
     }, null, true, "America/New_York");
     job.start();

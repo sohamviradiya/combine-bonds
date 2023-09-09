@@ -4,12 +4,13 @@ import { evaluatePortfolio } from "@/server/services/portfolio.service";
 import { evaluateMarket, getMarketAnalytics, } from "@/server/services/market.service";
 import { evaluateStock } from "@/server/services/stock.service";
 
-export default async function MainRun(
+export default async function MainRun({ agencies, portfolios, bots, stocks, date }: {
     agencies: string[],
     portfolios: string[],
     bots: string[],
     stocks: string[],
     date: number
+}
 ) {
     console.log(`Day ${date + 1}`);
     await Promise.all(
