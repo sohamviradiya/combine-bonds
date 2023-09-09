@@ -2,7 +2,7 @@ import AgencyInterface, { AgencyInterfaceWithId, } from "@/types/agency.interfac
 import AgencyModel from "@/server/models/agency.schema";
 import { AGENCY_PRICE_INCREMENT } from "@/server/global.config";
 
-import { addStockValuePoint, getStockById } from "@/server/services/stock.service";
+import { addStockValuePoint, getStockDataById } from "@/server/services/stock.service";
 
 import { getMarketAnalytics } from "@/server/services/market.service";
 
@@ -25,7 +25,7 @@ export const getAgencyById = async (agency_id: string) => {
 export const evaluateAgencies = async (agency_id: string, date: number) => {
     const agency: AgencyInterfaceWithId = await getAgencyById(agency_id);
     const parameters = agency.parameters;
-    const stock = await getStockById(agency.stock);
+    const stock = await getStockDataById(agency.stock);
 
     const random_num = 2 * (Math.random() - 0.5);
 

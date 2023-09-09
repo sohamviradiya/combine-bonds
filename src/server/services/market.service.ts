@@ -2,7 +2,7 @@
 import MarketInterface from "@/types/market.interface";
 import MarketModel from "@/server/models/market.schema";
 
-import { getAllStocks, getStockAnalytics, getStockById } from "./stock.service";
+import { getAllStocks, getStockAnalytics, getStockDataById } from "./stock.service";
 
 import { getPortfolioTimelines } from "./portfolio.service";
 
@@ -35,7 +35,7 @@ export const getMarketAnalytics = async () => {
 };
 
 export const getMarketTimeline = async () => {
-    return await MarketModel.find({}, { date: 1, cumulative_market_capitalization: 1, cumulative_net_worth: 1, market_sentience_index: 1 }).sort({ date: 1 }).exec();
+    return await MarketModel.find({}, { date: 1, cumulative_market_capitalization: 1, cumulative_net_worth: 1, market_sentience_index: 1 }).sort({ date: 1 }).exec() as MarketInterface[];
 };
 
 export const getDate = async () => {
@@ -46,7 +46,7 @@ export const getDate = async () => {
 const analyzeTrendingStocks = async () => {
     const stock_ids = await getAllStocks();
     const all_stocks = await Promise.all(stock_ids.map(async (stock_id) => {
-        return await getStockById(stock_id);
+        return await getStockDataById(stock_id);
     })) as StockValues[];
     const filtered_stocks = all_stocks.filter((stock) => stock.slope > 0);
     filtered_stocks.sort((a, b) => b.slope - a.slope);
@@ -56,7 +56,7 @@ const analyzeTrendingStocks = async () => {
 const analyzePredictedStocks = async () => {
     const stock_ids = await getAllStocks();
     const all_stocks = await Promise.all(stock_ids.map(async (stock_id) => {
-        return await getStockById(stock_id);
+        return await getStockDataById(stock_id);
     })) as StockValues[];
     const filtered_stocks = all_stocks.filter((stock) => stock.slope > 0);
     filtered_stocks.sort((a, b) => b.double_slope - a.double_slope);

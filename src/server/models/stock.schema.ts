@@ -2,7 +2,6 @@ import mongoose, { Schema } from "mongoose";
 
 import { COMPANY_FIELDS, COMPANY_FORMS, StockInterfaceWithId, ValuePoint, } from "@/types/stock.interface";
 
-
 const stockSchema = new Schema(
     {
         symbol: {

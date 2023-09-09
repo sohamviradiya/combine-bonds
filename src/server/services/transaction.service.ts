@@ -1,12 +1,12 @@
 import { PortfolioInterfaceWithID, Transaction, } from "@/types/portfolio.interface";
-import { getStockById, pushTrader } from "@/server/services/stock.service";
+import { getStockDataById, pushTrader } from "@/server/services/stock.service";
 
 
 export const buyStock = async (portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
     if (transaction.type != "STOCK_PURCHASE" || transaction.amount < 0 || transaction.amount > portfolio.balance)
         return portfolio;
 
-    const stock = await getStockById(transaction.stock);
+    const stock = await getStockDataById(transaction.stock);
     const price = stock.timeline[stock.timeline.length - 1].price;
 
     const stock_quantity = transaction.amount / price;
@@ -32,7 +32,7 @@ export const buyStock = async (portfolio: PortfolioInterfaceWithID, transaction:
 export const sellStock = async (portfolio: PortfolioInterfaceWithID, transaction: Transaction) => {
     if (transaction.type != "STOCK_SALE")
         return portfolio;
-    const stock = await getStockById(transaction.stock);
+    const stock = await getStockDataById(transaction.stock);
     const price = stock.timeline[stock.timeline.length - 1].price;
 
     const stockIndex = portfolio.investments.findIndex((investment) => String(investment.stock) == String(transaction.stock));
