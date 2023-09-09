@@ -6,7 +6,7 @@ export default function QueryContext({ children }: { children: React.ReactNode }
 
     return (
         <QueryClientProvider client={queryClient}>
-        {children}
+            {children}
         </QueryClientProvider>
     );
 };

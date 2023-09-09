@@ -6,12 +6,12 @@ import ThemeContext from "./theme";
 
 export default function MainContext({ children, }: { children: React.ReactNode }) {
     return (
-        <MaskContext>
-            <ThemeContext>
+        <ThemeContext>
+            <MaskContext>
                 <QueryContext>
                     {children}
                 </QueryContext>
-            </ThemeContext>
-        </MaskContext >
+            </MaskContext >
+        </ThemeContext>
     )
 }
