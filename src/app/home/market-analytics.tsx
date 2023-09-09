@@ -18,7 +18,7 @@ export default function MarketAnalyticsComponent() {
     }
 
     const {
-        market_index,
+        market_sentience_index,
         relative_cumulative_net_worth,
         relative_cumulative_market_capitalization,
         market_index_change,
@@ -28,7 +28,7 @@ export default function MarketAnalyticsComponent() {
         <Grid container spacing={2}>
             <Grid item xs={3}>
                 <Typography variant="h5">Market Index</Typography>
-                <DataTypography value={market_index} unit="points" />
+                <DataTypography value={market_sentience_index} unit="points" />
             </Grid>
             <Grid item xs={3}>
                 <Typography variant="h5">Net Worth</Typography>
