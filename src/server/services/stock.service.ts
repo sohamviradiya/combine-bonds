@@ -6,7 +6,7 @@ import { getPortfolioById } from "@/server/services/portfolio.service";
 
 import { DATE_LIMIT } from "@/server/global.config";
 
-export const addStock = async (stock: createStockDto) => {
+export async function addStock(stock: createStockDto) {
     const newStockDoc = await new StockModel({
         ...stock,
         issued: new Date(),
@@ -15,24 +15,37 @@ export const addStock = async (stock: createStockDto) => {
     return newStockDoc;
 };
 
-export const getAllStocks = async (): Promise<string[]> => {
+export async function getAllStocks() {
     const data = await StockModel.find({}, { _id: 1 }).exec();
     return data.map((stock) => String(stock._id));
 };
 
-export const getStockById = async (_id: string) => {
-    const data = await StockModel.findById(_id).exec();
+export async function getStockDataById(_id: string) {
+    const data = await StockModel.findById(_id).exec() as StockInterfaceWithId & StockValues;
+    const timeline = data.timeline.map((point) => {
+        return {
+            date: point.date,
+            price: point.price,
+            dividend: point.dividend,
+            volume: point.volume,
+        }
+    });
     return {
-        ...data._doc,
-        price: data.timeline[data.timeline.length - 1].price,
+        company: { ...data.company },
+        symbol: data.symbol,
+        issued: data.issued,
+        market_valuation: data.market_valuation,
         slope: data.slope,
+        gross_volume: data.gross_volume,
         double_slope: data.double_slope,
         fall_since_peak: data.fall_since_peak,
         rise_since_trough: data.rise_since_trough,
-    } as StockInterfaceWithId & StockValues;
+        timeline: timeline,
+        last_value_point: timeline[timeline.length - 1],
+    }
 };
 
-export const getStockBasicInfo = async (_id: string) => {
+export async function getStockBasicInfo(_id: string) {
     const data = await StockModel.findById(_id).exec() as StockInterfaceWithId & StockValues;
     return {
         _id: String(data._id),
@@ -43,14 +56,13 @@ export const getStockBasicInfo = async (_id: string) => {
     };
 };
 
-// get stocks by search query and page no. (6 per page)
-export const getStocksByQuery = async (query: string, page: number) => {
+export async function getStocksByQuery(query: string, page: number) {
     const data = await StockModel.find({ $text: { $search: query } }, { score: { $meta: "textScore" }, _id: 1 }).sort({ score: { $meta: "textScore" } }).skip((page - 1) * 6).limit(6).exec();
     return data.map((stock) => String(stock._id));
 };
 
 
-export const getStockAnalytics = async (_id: string) => {
+export async function getStockAnalytics(_id: string) {
     const data = await StockModel.findById(_id).exec() as StockValues;
     return {
         dividend: data.timeline[data.timeline.length - 1].dividend,
@@ -63,11 +75,11 @@ export const getStockAnalytics = async (_id: string) => {
     };
 };
 
-export const addStockValuePoint = async (_id: string, valuePoint: ValuePoint) => {
+export async function addStockValuePoint(_id: string, valuePoint: ValuePoint) {
     return await StockModel.findByIdAndUpdate(_id, { $push: { timeline: { ...valuePoint } } }, { new: true }).exec();
 };
 
-export const getRandomStocks = async (count: number) => {
+export async function getRandomStocks(count: number) {
     const stocks = await getAllStocks();
     const random_stocks = [] as string[];
     for (let i = 0; i < count; i++) {
@@ -79,7 +91,7 @@ export const getRandomStocks = async (count: number) => {
     return random_stocks;
 };
 
-export const evaluateStock = async (_id: string, date: number) => {
+export async function evaluateStock(_id: string, date: number) {
     const { traders, timeline } = await StockModel.findById(_id, { traders: 1, timeline: 1 }).exec() as StockInterfaceWithId;
     var volume = 0;
     const new_traders = [] as string[];
