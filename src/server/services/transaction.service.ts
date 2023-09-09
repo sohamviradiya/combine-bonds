@@ -23,7 +23,7 @@ export const buyStock = async (portfolio: PortfolioInterfaceWithID, transaction:
             quantity: stock_quantity,
         });
         await pushTrader(transaction.stock, portfolio._id);
-    } else 
+    } else
         portfolio.investments[stockIndex].quantity += stock_quantity;
     portfolio.balance -= transaction.amount;
     return portfolio;
