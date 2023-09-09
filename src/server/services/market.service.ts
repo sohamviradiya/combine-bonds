@@ -40,7 +40,7 @@ export const getTimeline = async () => {
 
 export const getDate = async () => {
     const [Market]: MarketInterface[] = await MarketModel.find({}, { date: 1 }).sort({ date: -1 }).limit(1).exec();
-    return Market.date;
+    return Market?.date || -1;
 };
 
 const analyzeTrendingStocks = async () => {
