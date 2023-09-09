@@ -33,14 +33,22 @@ export const getStockById = async (_id: string) => {
 };
 
 export const getStockBasicInfo = async (_id: string) => {
-    const data = await StockModel.findById(_id).exec() as StockInterfaceWithId;
+    const data = await StockModel.findById(_id).exec() as StockInterfaceWithId & StockValues;
     return {
-        _id: data._id,
+        _id: String(data._id),
         price: data.timeline[data.timeline.length - 1].price,
         symbol: data.symbol,
         company: data.company.name,
+        slope: data.slope,
     };
 };
+
+// get stocks by search query and page no. (6 per page)
+export const getStocksByQuery = async (query: string, page: number) => {
+    const data = await StockModel.find({ $text: { $search: query } }, { score: { $meta: "textScore" }, _id: 1 }).sort({ score: { $meta: "textScore" } }).skip((page - 1) * 6).limit(6).exec();
+    return data.map((stock) => String(stock._id));
+};
+
 
 export const getStockAnalytics = async (_id: string) => {
     const data = await StockModel.findById(_id).exec() as StockValues;
@@ -88,7 +96,7 @@ export const evaluateStock = async (_id: string, date: number) => {
 
     const new_timeline = timeline.filter((point) => point.date >= date - DATE_LIMIT);
     new_timeline.sort((a, b) => a.date - b.date);
-    
+
     new_timeline[new_timeline.length - 1].volume = volume;
     await StockModel.findByIdAndUpdate(_id, { timeline: new_timeline, traders: new_traders }, { new: true }).exec();
 

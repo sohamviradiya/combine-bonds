@@ -43,6 +43,7 @@ const stockSchema = new Schema(
             name: {
                 type: Schema.Types.String,
                 required: true,
+                index: true,
             },
             field: {
                 type: Schema.Types.String,
@@ -145,5 +146,7 @@ stockSchema.virtual("rise_since_trough").get(function (this: StockInterfaceWithI
 });
 
 const StockModel = mongoose.models["Stock"] ?? mongoose.model("Stock", stockSchema);
+
+
 
 export default StockModel;
