@@ -11,6 +11,7 @@ export default function Home() {
             <Container maxWidth="xl" sx={{
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
+                position: 'relative',
             }}>
                 <Background src={background} />
                 <section>
