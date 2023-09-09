@@ -4,7 +4,7 @@ import { dumpPortfolio, performTransactions, getPortfolioById } from "@/server/s
 import BotModel from "@/server/models/bot.schema";
 import BotInterface, { BotInterfaceWithID } from "@/types/bot.interface";
 
-import { getTrendingStocks, getPredictedStocks, getRelativeCumulativeMarketCapitalization } from "@/server/services/market.service";
+import { getTrendingStocks, getPredictedStocks, getMarketAnalytics } from "@/server/services/market.service";
 
 import { getStockAnalytics, getRandomStocks } from "@/server/services/stock.service";
 
@@ -47,7 +47,7 @@ const investRandom = async (budget: number, weights: BotInterface["parameters"][
     const n = weights.length;
     const transactions: Transaction[] = [];
     const stocks = await getRandomStocks(n);
-    for (let i = 0; i < Math.min(stocks.length,n); i++) {
+    for (let i = 0; i < Math.min(stocks.length, n); i++) {
         transactions.push({
             stock: stocks[i],
             amount: budget * weights[i],
@@ -118,7 +118,8 @@ export const evaluateBot = async (bot_id: string, date: number) => {
 
     const balance_component = parameters.investment_amount_per_slot.balance * relative_net_worth_change;
 
-    const relative_cap = await getRelativeCumulativeMarketCapitalization();
+    const analytics = await getMarketAnalytics();
+    const relative_cap = analytics.relative_cumulative_market_capitalization;
 
     const market_sentience_component = parameters.investment_amount_per_slot.market_sentiment * relative_cap;
 

@@ -1,3 +1,4 @@
+
 import MarketInterface from "@/types/market.interface";
 import MarketModel from "@/server/models/market.schema";
 
@@ -14,20 +15,27 @@ export const getMarket = async () => {
     return Market as MarketInterface;
 };
 
+export const getMarketAnalytics = async () => {
+    const [Market, prevMarket] = await MarketModel.find({}).sort({ date: -1 }).limit(2).exec();
+    if (!prevMarket) return {
+        relative_cumulative_market_capitalization: 0,
+        relative_cumulative_net_worth: 0,
+        market_index: Market.market_sentience_index,
+        market_index_change: 0,
+    };
+
+    const relative_cumulative_market_capitalization = ((Market.cumulative_market_capitalization - prevMarket.cumulative_market_capitalization) / prevMarket.cumulative_market_capitalization);
+    const relative_cumulative_net_worth = ((Market.cumulative_net_worth - prevMarket.cumulative_net_worth) / prevMarket.cumulative_net_worth);
+    return {
+        relative_cumulative_market_capitalization,
+        relative_cumulative_net_worth,
+        market_index: Market.market_sentience_index,
+        market_index_change: Market.market_sentience_index - prevMarket.market_sentience_index,
+    };
+};
+
 export const getTimeline = async () => {
     return await MarketModel.find({}, { date: 1, cumulative_market_capitalization: 1, cumulative_net_worth: 1 }).sort({ date: 1 }).exec();
-};
-
-export const getRelativeCumulativeMarketCapitalization = async () => {
-    const [Market, prevMarket] = await MarketModel.find({}).sort({ date: -1 }).limit(2).exec();
-    if (!prevMarket) return 0;
-    return ((Market.cumulative_market_capitalization - prevMarket.cumulative_market_capitalization) / prevMarket.cumulative_market_capitalization);
-};
-
-export const getRelativeCumulativeNetWorth = async () => {
-    const [Market, prevMarket] = await MarketModel.find({}).sort({ date: -1 }).limit(2).exec();
-    if (!prevMarket) return 0;
-    return ((Market.cumulative_net_worth - prevMarket.cumulative_net_worth) / prevMarket.cumulative_net_worth);
 };
 
 export const getDate = async () => {
@@ -96,14 +104,14 @@ export const evaluateMarket = async (new_date?: number) => {
 };
 
 export const getTrendingStocks = async (count?: number) => {
-    const [Market] = await MarketModel.find({}, { trending_stocks: 1 }).sort({ date: -1 }).limit(1).exec();
+    const [Market]: MarketInterface[] = await MarketModel.find({}, { trending_stocks: 1 }).sort({ date: -1 }).limit(1).exec();
     if (!Market) return [];
     if (count) return Market.trending_stocks.slice(0, count);
     return Market.trending_stocks;
 };
 
 export const getPredictedStocks = async (count?: number) => {
-    const [Market] = await MarketModel.find({}, { predicted_stocks: 1 }).sort({ date: -1 }).limit(1).exec();
+    const [Market]: MarketInterface[] = await MarketModel.find({}, { predicted_stocks: 1 }).sort({ date: -1 }).limit(1).exec();
     if (!Market) return [];
     if (count) return Market.predicted_stocks.slice(0, count);
     return Market.predicted_stocks;

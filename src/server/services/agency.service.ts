@@ -4,7 +4,7 @@ import { AGENCY_PRICE_INCREMENT } from "@/server/global.config";
 
 import { addStockValuePoint, getStockById } from "@/server/services/stock.service";
 
-import { getRelativeCumulativeNetWorth } from "@/server/services/market.service";
+import { getMarketAnalytics } from "@/server/services/market.service";
 
 import { DIVIDEND_FACTOR } from "@/server/global.config";
 
@@ -29,7 +29,8 @@ export const evaluateAgencies = async (agency_id: string, date: number) => {
 
     const random_num = 2 * (Math.random() - 0.5);
 
-    const market_sentiment = await getRelativeCumulativeNetWorth();
+    const market = await getMarketAnalytics();
+    const market_sentiment = market.relative_cumulative_net_worth;
 
     let volume_change_ratio = 0;
     if (stock.timeline.length < 2) volume_change_ratio = 1;

@@ -1,7 +1,7 @@
 import { evaluateAgencies } from "@/server/services/agency.service";
 import { evaluateBot } from "@/server/services/bot.service";
 import { evaluatePortfolio } from "@/server/services/portfolio.service";
-import { evaluateMarket, getRelativeCumulativeMarketCapitalization, getRelativeCumulativeNetWorth } from "@/server/services/market.service";
+import { evaluateMarket, getMarketAnalytics, } from "@/server/services/market.service";
 import { evaluateStock } from "@/server/services/stock.service";
 
 export default async function MainRun(
@@ -42,7 +42,6 @@ export default async function MainRun(
 
     await evaluateMarket(date);
     console.log(`Day ${date + 1} - Market Evaluated`);
-    
-    console.log(`Relative Net Worth Change: ${(await getRelativeCumulativeNetWorth()) * 100} %`);
-    console.log(`Relative Market Cap Change: ${(await getRelativeCumulativeMarketCapitalization()) * 100} %`);
+    const analytics = await getMarketAnalytics();
+    console.log(`Day ${date + 1} - ${JSON.stringify(analytics)}`);
 }
