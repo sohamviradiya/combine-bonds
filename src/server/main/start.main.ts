@@ -1,8 +1,8 @@
 import { CronJob } from "cron";
 
 import MainRun from "@/server/main/run.main";
-import connectDb from "@/server/main/mongoose.main";
-import seedMain from "@/server/main/seed.main";
+import MainConnect from "@/server/main/mongoose.main";
+import MainSeed from "@/server/main/seed.main";
 
 import { getAllAgencies } from "@/server/services/agency.service";
 import { getAllBots } from "@/server/services/bot.service";
@@ -17,16 +17,13 @@ let agencies: string[] = [];
 let portfolios: string[] = [];
 let bots: string[] = [];
 let stocks: string[] = [];
-export let f = false;
 let date: number = 0;
 export default async function MainStart() {
-    if (f) return Promise.resolve({ message: "Cron job already started" });
-    await connectDb();
-    f = true;
+    await MainConnect();
     agencies = await getAllAgencies();
-    
+
     if (agencies.length === 0) {
-        await seedMain();
+        await MainSeed();
         date = 0;
         agencies = await getAllAgencies();
     }
