@@ -3,7 +3,7 @@ import { Container, Box } from '@mui/material';
 
 const POINTER_SIZE = 16;
 
-export default function MaskContext({ children }: { children: React.ReactNode }) {
+export default function MaskProvider({ children }: { children: React.ReactNode }) {
     const [pointerPosition, setPointerPosition] = useState({ x: 0, y: 0 });
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {

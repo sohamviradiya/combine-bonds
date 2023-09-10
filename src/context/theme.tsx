@@ -100,7 +100,7 @@ const theme = createTheme({
 });
 
 
-export default function ThemeContext({ children }: { children: React.ReactNode }) {
+export default function ThemeContextProvider({ children }: { children: React.ReactNode }) {
     // TODO: Add theme switcher
     return (
         <ThemeProvider theme={theme}>
