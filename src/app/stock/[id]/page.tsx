@@ -20,12 +20,15 @@ export default function StockPage({ params }: { params: { id: string } }) {
     if (isError) return <Typography variant="h2" color="error.main" gutterBottom> Error: Failed to load stock data </Typography>;
 
     return (
-        <Container maxWidth="xl" sx={{ display: 'flex', flexDirection: 'column', gap: '5rem' }}>
+        <Container maxWidth="xl" sx={{
+            display: 'flex', flexDirection: 'column', gap: '5rem',
+            position: 'relative', padding: '2rem'
+        }}>
             <Background src={background} />
             <Card>
                 <CardContent>
                     <Typography variant="h2">{data.symbol}</Typography>
-                    <DataTypography value={data.last_value_point.price } label="Price" unit="$" />
+                    <DataTypography value={data.last_value_point.price} label="Price" unit="$" />
                 </CardContent>
             </Card>
 
