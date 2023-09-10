@@ -42,7 +42,7 @@ const stockSchema = new Schema(
             name: {
                 type: Schema.Types.String,
                 required: true,
-                index: true,
+                text: true,
             },
             field: {
                 type: Schema.Types.String,
@@ -87,6 +87,7 @@ const stockSchema = new Schema(
     },
     { toJSON: { virtuals: true } }
 );
+
 
 stockSchema.virtual("market_valuation").get(function (this: StockInterfaceWithId) {
     if (this.timeline.length < 1) return 0;

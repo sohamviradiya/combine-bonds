@@ -56,8 +56,12 @@ export async function getStockBasicInfo(_id: string) {
     };
 };
 
-export async function getStocksByQuery(query: string, page: number) {
-    const data = await StockModel.find({ $text: { $search: query } }, { score: { $meta: "textScore" }, _id: 1 }).sort({ score: { $meta: "textScore" } }).skip((page - 1) * 6).limit(6).exec();
+export async function getStocksByQuery(query: string, page: number = 0, limit: number = 8) {
+    const data = await StockModel.find({
+        "company.name": {
+            $regex: `(.)*${query}(.)*`,
+        }
+    }, { _id: 1 }).skip((page) * limit).limit(limit).exec();
     return data.map((stock) => String(stock._id));
 };
 
