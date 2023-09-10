@@ -9,6 +9,11 @@ export type Investment = {
     quantity: number;
 };
 
+export type PopulatedInvestment = Investment & {
+    amount: number;
+    change: number;
+};
+
 export type Transaction = {
     type: keyof typeof TRANSACTION_TYPES;
     stock: string;
