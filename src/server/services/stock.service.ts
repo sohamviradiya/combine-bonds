@@ -43,6 +43,7 @@ export async function getStockDataById(_id: string) {
         rise_since_trough: data.rise_since_trough,
         timeline: timeline,
         last_value_point: timeline[timeline.length - 1],
+        traders: data.traders.map((trader) => String(trader)),
     }
 };
 

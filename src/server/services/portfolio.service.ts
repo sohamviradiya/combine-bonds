@@ -23,7 +23,7 @@ export const addPortfolio = async (user: User,): Promise<PortfolioInterfaceWithI
     } as PortfolioInterface).save();
 };
 
-export const verifyIDPassWord = async (name: string, password: string) => {
+export const verifyIDPassword = async (name: string, password: string) => {
     const portfolio: PortfolioInterfaceWithID = await PortfolioModel.findOne({ "user.name": name }, { user: true }).exec();
     if (!portfolio.user)
         return {
@@ -113,7 +113,7 @@ export const evaluatePortfolio = async (portfolio_id: string, date: number) => {
 
     portfolio.timeline = portfolio.timeline.filter((value) => value.date > date - DATE_LIMIT);
     portfolio.timeline.sort((a, b) => a.date - b.date);
-    
+
     portfolio.timeline.push({ value: portfolio.balance + gross_amount, date });
 
     portfolio.investments = portfolio.investments.filter((investment) => !dumped_stocks.includes(String(investment.stock)));
