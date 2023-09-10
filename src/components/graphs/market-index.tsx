@@ -16,7 +16,6 @@ export default function MarketIndexGraph({ data }: { data: { date: number, marke
     const max = Math.max(...values) + 100;
     return (
         <Container sx={{ position: 'relative', padding: '2rem' }} maxWidth="xl">
-            <Typography variant="h2" gutterBottom> Market Sentience Index Timeline </Typography>
             <ResponsiveContainer width="100%" height={700}>
                 <LineChart data={data} margin={{ top: 10, right: 30, left: 20, bottom: 5 }} style={{ background: 'black' }} >
                     <XAxis dataKey="date" tick={{ fill: 'white' }} />
