@@ -3,24 +3,36 @@ import PortfolioModel from "@/server/models/portfolio.schema";
 
 import { buyStock, sellStock, dividend } from "@/server/services/transaction.service";
 
-import { getStockAnalytics, pullTrader } from "@/server/services/stock.service";
+import { getStockAnalytics, getStockBasicInfo, pullTrader } from "@/server/services/stock.service";
 
 import { DATE_LIMIT, PORTFOLIO_STARTING_BALANCE, STOCK_DUMP_THRESHOLD } from "@/server/global.config";
 
 
-export const addPortfolio = async (user: User,): Promise<PortfolioInterfaceWithID> => {
-    return await new PortfolioModel({
-        user,
-        transactions: [],
-        balance: PORTFOLIO_STARTING_BALANCE,
-        timeline: [
-            {
-                value: PORTFOLIO_STARTING_BALANCE,
-                date: 0,
-            },
-        ],
-        investments: [],
-    } as PortfolioInterface).save();
+export const addPortfolio = async (user: User,): Promise<{ message: string, portfolio: PortfolioInterfaceWithID | null }> => {
+    try {
+        const portfolio = await new PortfolioModel({
+            user,
+            transactions: [],
+            balance: PORTFOLIO_STARTING_BALANCE,
+            timeline: [
+                {
+                    value: PORTFOLIO_STARTING_BALANCE,
+                    date: 0,
+                },
+            ],
+            investments: [],
+        } as PortfolioInterface).save();
+        return {
+            message: "Success",
+            portfolio,
+        };
+    }
+    catch (err: any) {
+        return {
+            message: err.message,
+            portfolio: null,
+        }
+    };
 };
 
 export const verifyIDPassword = async (name: string, password: string) => {
@@ -47,6 +59,34 @@ export const getAllPortfolios = async () => {
 
 export const getPortfolioById = async (portfolio_id: string): Promise<PortfolioInterfaceWithID> => {
     return await PortfolioModel.findById(portfolio_id).exec();
+};
+
+export const getPortfolioTransactions = async (portfolio_id: string, page: number) => {
+    const portfolio = await getPortfolioById(portfolio_id);
+    const transactions = portfolio.transactions;
+    const start = page * 8;
+    const end = start + 8;
+    transactions.sort((a, b) => b.date - a.date);
+    return transactions.slice(start, end);
+};
+
+export const getPortfolioInvestments = async (portfolio_id: string, page: number) => {
+    const portfolio = await getPortfolioById(portfolio_id);
+    const investments = portfolio.investments;
+    const start = page * 8;
+    const end = start + 8;
+    investments.sort((a, b) => a.quantity - b.quantity);
+    const paginated_investments = investments.slice(start, end);
+    return await Promise.all(
+        paginated_investments.map(async (investment) => {
+            const stock = await getStockBasicInfo(investment.stock);
+            return {
+                stock: stock._id,
+                quantity: investment.quantity,
+                amount: investment.quantity * stock.price,
+                change: stock.slope * stock.price * investment.quantity,
+            }
+        }));
 };
 
 export const performTransactions = async (id: string, transactions: Transaction[]): Promise<PortfolioInterfaceWithID> => {
