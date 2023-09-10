@@ -2,9 +2,9 @@
 import MarketInterface from "@/types/market.interface";
 import MarketModel from "@/server/models/market.schema";
 
-import { getAllStocks, getStockAnalytics, getStockDataById } from "./stock.service";
+import { getAllStocks, getStockAnalytics, getStockDataById } from "@/server/services/stock.service";
 
-import { getPortfolioTimelines } from "./portfolio.service";
+import { getPortfolioTimelines } from "@/server/services/portfolio.service";
 
 import { DATE_LIMIT, DEFAULT_MARKET_SENTIENCE_INDEX } from "@/server/global.config";
 import { StockValues } from "@/types/stock.interface";
@@ -47,7 +47,7 @@ const analyzeTrendingStocks = async () => {
     const stock_ids = await getAllStocks();
     const all_stocks = await Promise.all(stock_ids.map(async (stock_id) => {
         return await getStockDataById(stock_id);
-    })) as StockValues[];
+    }));
     const filtered_stocks = all_stocks.filter((stock) => stock.slope > 0);
     filtered_stocks.sort((a, b) => b.slope - a.slope);
     return filtered_stocks.map((stock) => stock._id);
@@ -57,7 +57,7 @@ const analyzePredictedStocks = async () => {
     const stock_ids = await getAllStocks();
     const all_stocks = await Promise.all(stock_ids.map(async (stock_id) => {
         return await getStockDataById(stock_id);
-    })) as StockValues[];
+    }));
     const filtered_stocks = all_stocks.filter((stock) => stock.slope > 0);
     filtered_stocks.sort((a, b) => b.double_slope - a.double_slope);
     return filtered_stocks.map((stock) => stock._id);

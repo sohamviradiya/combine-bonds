@@ -31,6 +31,7 @@ export async function getStockDataById(_id: string) {
         }
     });
     return {
+        _id: String(data._id),
         company: { ...data.company },
         symbol: data.symbol,
         issued: data.issued,
