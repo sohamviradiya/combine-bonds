@@ -3,11 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchStockData } from "@/app/stock/[id]/action";
 import { Skeleton, Typography, Card, Accordion, AccordionSummary, AccordionDetails, CardContent, Container } from "@mui/material";
 import CompanyDetails from "@/app/stock/[id]/company";
-import StockPriceGraph from "@/components/graphs/stock-price";
 import DataTypography from "@/components/data-typography";
 import background from "public/stock-background.svg";
 import Background from "@/components/background";
-import { ValuePoint } from "@/types/stock.interface";
+import Graph from "@/components/graph";
 
 export default function StockPage({ params }: { params: { id: string } }) {
     const { data, isLoading, isError } = useQuery({
@@ -61,10 +60,7 @@ export default function StockPage({ params }: { params: { id: string } }) {
                 </AccordionDetails>
             </Accordion>
 
-            <StockPriceGraph data={data.timeline.map((value_point: ValuePoint) => ({
-                date: value_point.date,
-                stock_price: value_point.price,
-            }))} />
+            <Graph data={data.timeline.map((entry) => ({date: entry.date, value: entry.price}))} title="Stock Price Timeline" tickFormatter={(value) => (`${(value).toFixed(2)} $`)} />
         </Container>
     );
 }

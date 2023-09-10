@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchMarketTimeline } from "@/app/analysis/action";
 import { Paper, Skeleton, Typography } from "@mui/material";
-import MarketCapitalizationGraph from "@/components/graphs/cumulative-market-cap";
-import NetWorthGraph from "@/components/graphs/cumulative-net-worth";
-import MarketIndexGraph from "@/components/graphs/market-index";
-
+import Graph from "@/components/graph";
 
 export default function MarketTimeline() {
     const { data, isLoading, isError } = useQuery({
@@ -21,17 +18,17 @@ export default function MarketTimeline() {
     return (<>
         <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
             <Typography variant="h2" gutterBottom> Gross Market Capitalization Timeline </Typography>
-            <MarketCapitalizationGraph data={data} />
+            <Graph data={data.map((entry) => ({ date: entry.date, value: entry.cumulative_market_capitalization/ 10 ** 9}))} title="Gross Market Capitalization Timeline" tickFormatter={(value) => (`${value.toFixed(2)} B`)} />
         </Paper>
 
         <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
             <Typography variant="h2" gutterBottom> Gross Net Worth Timeline </Typography>
-            <NetWorthGraph data={data} />
-        </Paper>
+            <Graph data={data.map((entry) => ({ date: entry.date, value: entry.cumulative_net_worth / 10 ** 6 }))} title="Gross Market Capitalization Timeline" tickFormatter={(value) => (`${value.toFixed(2)} M`)} />
+         </Paper>
 
         <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
             <Typography variant="h2" gutterBottom> Market Sentience Index Timeline </Typography>
-            <MarketIndexGraph data={data} />
-        </Paper>
+            <Graph data={data.map((entry) => ({ date: entry.date, value: entry.market_sentience_index }))} title="Gross Market Capitalization Timeline" tickFormatter={(value) => (`${value.toFixed(2)} P`)} />
+         </Paper>
     </>);
 }
