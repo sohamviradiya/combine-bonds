@@ -1,4 +1,4 @@
-import MainContext from '@/context/global';
+import MainContext from '@/context/main';
 import './globals.css'
 import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
