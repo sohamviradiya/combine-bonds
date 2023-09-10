@@ -5,41 +5,41 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#9458fa', // Persian Indigo 500
-            light: '#8636f1', // Persian Indigo 600
-            dark: '#531a98',  // Persian Indigo 900
+            main: '#9458faaa', // Persian Indigo 500
+            light: '#8636f1aa', // Persian Indigo 600
+            dark: '#531a98aa', // Persian Indigo 900
         },
         secondary: {
-            main: '#8f84ad', // Ship Gray 500
-            light: '#81729e', // Ship Gray 600
-            dark: '#453d51',  // Ship Gray 900
+            main: '#8f84adaa', // Ship Gray 500
+            light: '#81729eaa', // Ship Gray 600
+            dark: '#453d51aa', // Ship Gray 900
         },
         error: {
-            main: '#ff5757', // Persimmon 400
-            light: '#ffa0a0', // Persimmon 300
-            dark: '#841818',  // Persimmon 900
+            main: '#ff5757aa', // Persimmon 400
+            light: '#ffa0a0aa', // Persimmon 300
+            dark: '#841818aa', // Persimmon 900
         },
         warning: {
-            main: '#fc4d13', // Atomic Tangerine 500
-            light: '#fe7339', // Atomic Tangerine 400
-            dark: '#480707',  // Atomic Tangerine 950
+            main: '#fc4d13aa', // Atomic Tangerine 500
+            light: '#fe7339aa', // Atomic Tangerine 400
+            dark: '#480707aa', // Atomic Tangerine 950
         },
         info: {
-            main: '#7162f2', // Minsk 500
-            light: '#6245e6', // Minsk 600
-            dark: '#2c2b36',  // Minsk 900
+            main: '#7162f2aa', // Minsk 500
+            light: '#6245e6aa', // Minsk 600
+            dark: '#2c2b36aa', // Minsk 900
         },
         success: {
-            main: '#c5e600', // Golden Fizz 500
-            light: '#99b800', // Golden Fizz 600
-            dark: '#303140',  // Golden Fizz 800
+            main: '#c5e600aa', // Golden Fizz 500
+            light: '#99b800aa', // Golden Fizz 600
+            dark: '#303140aa', // Golden Fizz 800
         },
         background: {
-            default: '#f6f0f9', // Ship Gray 50
-            paper: '#303140',    // Golden Fizz 800
+            default: '#f6f0f9aa', // Ship Gray 50
+            paper: '#303140aa', // Golden Fizz 800
         },
         text: {
-            primary: '#f5f7fa',  // Smalt Blue 50
+            primary: '#f5f7fa', // Smalt Blue 50
             secondary: '#1f2732', // Smalt Blue 950
             disabled: '#476682', // Smalt Blue 600
         }
