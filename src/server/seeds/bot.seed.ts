@@ -1,7 +1,6 @@
 import BotInterface, { BOT_STRATEGIES } from "@/types/bot.interface";
 import { addBot } from "@/server/services/bot.service";
-
-import { getAllPortfolios } from "../services/portfolio.service";
+import { getAllPortfolios } from "@/server/services/portfolio.service";
 
 const BotGenerator = async () => {
     const portfolio_ids = await getAllPortfolios();

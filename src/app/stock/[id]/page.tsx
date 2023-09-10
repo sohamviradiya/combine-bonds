@@ -1,8 +1,8 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { fetchStockData } from "./action";
+import { fetchStockData } from "@/app/stock/[id]/action";
 import { Skeleton, Typography, Card, Accordion, AccordionSummary, AccordionDetails, CardContent, Container } from "@mui/material";
-import CompanyDetails from "./company";
+import CompanyDetails from "@/app/stock/[id]/company";
 import StockPriceGraph from "@/components/graphs/stock-price";
 import DataTypography from "@/components/data-typography";
 import background from "public/stock-background.svg";
@@ -28,6 +28,7 @@ export default function StockPage({ params }: { params: { id: string } }) {
             <Card>
                 <CardContent>
                     <Typography variant="h2">{data.symbol}</Typography>
+                    <Typography variant="h3">{data.company.name}</Typography>
                     <DataTypography value={data.last_value_point.price} label="Price" unit="$" />
                 </CardContent>
             </Card>

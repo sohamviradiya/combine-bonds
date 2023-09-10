@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker";
 import { User } from "@/types/portfolio.interface";
 
 import { addPortfolio } from "@/server/services/portfolio.service";
-import { NUM_OF_PORTFOLIOS } from "../global.config";
+import { NUM_OF_PORTFOLIOS } from "@/server/global.config";
 
 
 const PortfolioGenerator = async () => {

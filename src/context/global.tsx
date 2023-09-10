@@ -1,8 +1,8 @@
 "use client";
 
-import MaskContext from "./mask";
-import QueryContext from "./query";
-import ThemeContext from "./theme";
+import MaskContext from "@/context/mask";
+import QueryContext from "@/context/query";
+import ThemeContext from "@/context/theme";
 
 export default function MainContext({ children, }: { children: React.ReactNode }) {
     return (

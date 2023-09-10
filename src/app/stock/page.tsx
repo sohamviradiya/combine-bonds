@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { Container, TextField, Typography, Paper, Button, Skeleton } from "@mui/material";
-import { fetchStocksByQuery } from "./action";
+import { fetchStocksByQuery } from "@/app/stock/action";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Background from "@/components/background";
 import background from "/public/browser-background.svg";
-import StockList from "./stock-list";
+import StockList from "@/app/stock/stock-list";
 
 export default function StockBrowser() {
     const [query, setQuery] = useState(" ");

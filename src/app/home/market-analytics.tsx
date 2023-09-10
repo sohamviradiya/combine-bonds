@@ -1,7 +1,7 @@
 import { Grid, Paper, Skeleton, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import DataTypography from '@/components/data-typography';
-import { fetchMarketAnalytics } from './action';
+import { fetchMarketAnalytics } from '@/app/home/action';
 
 export default function MarketAnalyticsComponent() {
     const { data, isLoading, isError } = useQuery({

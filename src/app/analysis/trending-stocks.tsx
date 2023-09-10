@@ -1,7 +1,7 @@
 import { Grid, Skeleton, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { StockCard } from "../../components/stock/stock-card";
-import { fetchTrendingStocks } from "./action";
+import { StockCard } from "@/components/stock/stock-card";
+import { fetchTrendingStocks } from "@/app/analysis/action";
 
 export default function TrendingStocksList() {
     const { data, isLoading, isError } = useQuery({

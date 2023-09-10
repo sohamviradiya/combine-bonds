@@ -1,7 +1,7 @@
 import { Button, Card, CardActions, CardContent, Skeleton, Typography } from '@mui/material';
 import { useQuery } from "@tanstack/react-query";
-import DataTypography from '../data-typography';
-import { fetchStock } from './action';
+import DataTypography from '@/components/data-typography';
+import { fetchStock } from '@/components/stock/action';
 import Link from 'next/link';
 
 export function StockCard({ id }: { id: string }) {

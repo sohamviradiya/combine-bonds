@@ -1,9 +1,9 @@
 "use client";
-import { Card, CardContent, Container, Paper, Typography } from '@mui/material';
+import { Container, Paper, Typography } from '@mui/material';
 import Link from 'next/link';
 import background from '/public/main-background.svg';
 import Background from '@/components/background';
-import MarketAnalyticsComponent from './market-analytics';
+import MarketAnalyticsComponent from '@/app/home/market-analytics';
 
 export default function Home() {
     return (
@@ -14,7 +14,7 @@ export default function Home() {
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     position: 'relative',
-                    padding: '16px', // Add some padding to create space between papers
+                    padding: '16px',
                 }}
             >
                 <Background src={background} />
@@ -48,7 +48,7 @@ export default function Home() {
                         Explore our <HomeLink text="Analytics" link="/analysis" color="info.main" /> Page
                     </Typography>
                     <Typography variant="h4" gutterBottom>
-                        Explore our <HomeLink text="Stocks" link="/stocks" color="success.main" /> Page
+                        Explore our <HomeLink text="Stocks" link="/stock" color="success.main" /> Page
                     </Typography>
                 </Paper>
 

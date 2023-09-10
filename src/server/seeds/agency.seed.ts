@@ -1,6 +1,6 @@
 import AgencyInterface, { AGENCY_TYPES } from "@/types/agency.interface";
 import { addAgency } from "@/server/services/agency.service";
-import { getAllStocks } from "../services/stock.service";
+import { getAllStocks } from "@/server/services/stock.service";
 
 const AgencyGenerator = async () => {
     const stock_ids = await getAllStocks();

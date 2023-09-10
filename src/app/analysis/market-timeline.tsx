@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchMarketTimeline } from "./action";
+import { fetchMarketTimeline } from "@/app/analysis/action";
 import { Paper, Skeleton, Typography } from "@mui/material";
 import MarketCapitalizationGraph from "@/components/graphs/cumulative-market-cap";
 import NetWorthGraph from "@/components/graphs/cumulative-net-worth";

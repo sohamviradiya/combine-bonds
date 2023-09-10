@@ -5,7 +5,7 @@ import PredictedStocksList from '@/app/analysis/predicted-stocks';
 import TrendingStocksList from '@/app/analysis/trending-stocks';
 import { Typography, Container, Paper } from '@mui/material';
 import background from 'public/special-background.svg';
-import MarketTimeline from './market-timeline';
+import MarketTimeline from '@/app/analysis/market-timeline';
 
 export default function StockList() {
     return (<>

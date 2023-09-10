@@ -1,7 +1,7 @@
 import { Grid, Skeleton, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { StockCard } from "../../components/stock/stock-card";
-import { fetchPredictedStocks } from "./action";
+import { StockCard } from "@/components/stock/stock-card";
+import { fetchPredictedStocks } from "@/app/analysis/action";
 
 export default function PredictedStocksList() {
     const { data, isLoading, isError } = useQuery({
