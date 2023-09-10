@@ -1,92 +1,76 @@
-import { StockInterfaceWithId } from "@/types/stock.interface";
-import { Card, CardContent, Typography, Grid } from "@mui/material";
+"use client";
+import DataTypography from '@/components/data-typography';
+import { StockInterface } from '@/types/stock.interface';
+import { Typography, Card, CardContent, Paper, Grid } from '@mui/material';
 
-export default function CompanyData(company: StockInterfaceWithId['company']) {
+const CompanyInfoRow = ({ label, value }: { label: string, value: string }) => {
     return (
-        <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={4}>
-                <Card>
-                    <CardContent>
-                        <Typography variant="h3" gutterBottom>
-                            {company.name}
-                        </Typography>
-                    </CardContent>
-                </Card>
+        <Card elevation={3} style={{ padding: '16px', marginBottom: '16px' }}>
+            <CardContent>
+                <Typography variant="h5">
+                    {label ? `${label} : ` : ''} {value}
+                </Typography>
+            </CardContent>
+        </Card>
+    );
+};
+
+const CompanyDetails = ({ data }: { data: StockInterface['company'] }) => {
+    return (
+        <Grid container spacing={2} lg={24} md={24} sm={24} xs={24}>
+            <Grid item xs={24} sm={12} md={3}>
+                <CompanyInfoRow label="" value={data.name} />
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-                <Card>
-                    <CardContent>
-                        <Typography variant="h4">
-                            Field: {company.field}
-                        </Typography>
-                    </CardContent>
-                </Card>
+            <Grid item xs={24} sm={12} md={8}>
+                <CompanyInfoRow label="Field" value={data.field} />
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-                <Card>
-                    <CardContent>
-                        <Typography variant="h5">
-                            Form: {company.form}
-                        </Typography>
-                    </CardContent>
-                </Card>
+            <Grid item xs={24} sm={12} md={6}>
+                <CompanyInfoRow label="Form" value={data.form} />
             </Grid>
-            {company.established && (
-                <Grid item xs={12} sm={6} md={4}>
-                    <Card>
+            <Grid item xs={24} sm={12} md={5}>
+                {data.assets && (
+                    <CompanyInfoRow value={`${(data.assets / 10 ** 6).toFixed(0)} M $`} label="Assets" />
+                )}
+            </Grid>
+
+            <Grid item xs={24}>
+                {data.description && (
+                    <Paper elevation={3} style={{ padding: '16px', marginBottom: '16px' }}>
                         <CardContent>
                             <Typography variant="h5">
-                                Established: {company.established.toLocaleDateString()}
+                                Description: {data.description}
                             </Typography>
                         </CardContent>
-                    </Card>
+                    </Paper>
+                )}
+            </Grid>
+
+            <Grid item xs={24} sm={12} md={4}>
+                {data.established && (
+                    <CompanyInfoRow
+                        label="Established"
+                        value={data.established ? data.established.toLocaleDateString() : ''}
+                    />
+                )}
+            </Grid>
+            {data.employees && (
+                <Grid item xs={24} sm={12} md={3}>
+                    <CompanyInfoRow
+                        label="Employees"
+                        value={`${data.employees}`}
+                    />
                 </Grid>
             )}
-            {company.description && (
-                <Grid item xs={12} sm={6} md={4}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h6">
-                                Description: {company.description}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            )}
-            {company.assets && (
-                <Grid item xs={12} sm={6} md={4}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h5">
-                                Assets: {company.assets / 10 ** 6} M $
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            )}
-            {company.headquarters && (
-                <Grid item xs={12} sm={6} md={4}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h5">
-                                Headquarters: {company.headquarters}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            )}
-            {company.employees && (
-                <Grid item xs={12} sm={6} md={4}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h5">
-                                Employees: {company.employees}%
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            )}
+            <Grid item xs={24} sm={12} md={5}>
+                {data.headquarters && (
+                    <CompanyInfoRow
+                        label="Location"
+                        value={data.headquarters ? data.headquarters : ''}
+                    />
+                )}
+            </Grid>
         </Grid>
     );
-}
+};
 
+export default CompanyDetails;
