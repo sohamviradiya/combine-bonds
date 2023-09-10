@@ -14,9 +14,9 @@ export const DEFAULT_MARKET_SENTIENCE_INDEX = 1000;
 
 export const MARKET_BASE = 1000;
 export const DATE_LIMIT = 30;
-export const SLOT_DURATION = 1;
+export const SLOT_DURATION = 5;
 
-export const DIVIDEND_FACTOR = 8;
+export const DIVIDEND_FACTOR = 2.5;
 
 export const NUM_OF_STOCKS = 50;
 export const NUM_OF_PORTFOLIOS = 60;
