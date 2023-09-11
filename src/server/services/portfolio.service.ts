@@ -1,4 +1,4 @@
-import PortfolioInterface, { User, Transaction, PortfolioInterfaceWithID, NetWorth, } from "@/types/portfolio.interface";
+import PortfolioInterface, { User, Transaction, PortfolioInterfaceWithID, NetWorth, Investment, } from "@/types/portfolio.interface";
 import PortfolioModel from "@/server/models/portfolio.schema";
 
 import { buyStock, sellStock, dividend } from "@/server/services/transaction.service";
@@ -8,7 +8,7 @@ import { getStockAnalytics, getStockBasicInfo, pullTrader } from "@/server/servi
 import { DATE_LIMIT, PORTFOLIO_STARTING_BALANCE, STOCK_DUMP_THRESHOLD } from "@/server/global.config";
 
 
-export const addPortfolio = async (user: User,): Promise<{ message: string, portfolio: PortfolioInterfaceWithID | null }> => {
+export const addPortfolio = async (user: User): Promise<{ message: string, portfolio: PortfolioInterfaceWithID | null }> => {
     try {
         const portfolio = await new PortfolioModel({
             user,
@@ -85,6 +85,21 @@ export const verifyIDPassword = async (name: string, password: string) => {
 
 export const getAllPortfolios = async () => {
     return (await PortfolioModel.find({}, { _id: 1 }).exec()).map((portfolio) => portfolio._id) as string[];
+};
+
+export const getInvestment = async (stock_id: string, portfolio_id: string) => {
+
+    const stock = await getStockBasicInfo(stock_id);
+    const { investments }: { investments: Investment[] } = await PortfolioModel.findById(portfolio_id, { investments: 1 }).exec();
+
+    const investment = investments.find((investment) => String(investment.stock) === stock_id);
+    if (!investment) return null;
+    return {
+        stock: stock._id,
+        quantity: investment.quantity,
+        amount: investment.quantity * stock.price,
+        change: stock.slope * stock.price * investment.quantity,
+    }
 };
 
 export const getPortfolioById = async (portfolio_id: string): Promise<PortfolioInterfaceWithID> => {
@@ -218,6 +233,7 @@ export const dumpPortfolio = async (portfolio_id: string, date: number) => {
     );
     return await performTransactions(portfolio_id, transactions);
 };
+
 export async function getPortfolioTimelines(): Promise<{ timeline: NetWorth[]; }[]> {
     return await PortfolioModel.find({}, { timeline: 1 }).exec();
 }
