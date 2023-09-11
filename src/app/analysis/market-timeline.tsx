@@ -16,19 +16,16 @@ export default function MarketTimeline() {
     }
 
     return (<>
-        <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
-            <Typography variant="h2" gutterBottom> Gross Market Capitalization Timeline </Typography>
+        <Paper elevation={3} style={{ marginBottom: '20px' }}>
             <Graph data={data.map((entry) => ({ date: entry.date, value: entry.cumulative_market_capitalization/ 10 ** 9}))} title="Gross Market Capitalization Timeline" tickFormatter={(value) => (`${value.toFixed(2)} B`)} />
         </Paper>
 
-        <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
-            <Typography variant="h2" gutterBottom> Gross Net Worth Timeline </Typography>
-            <Graph data={data.map((entry) => ({ date: entry.date, value: entry.cumulative_net_worth / 10 ** 6 }))} title="Gross Market Capitalization Timeline" tickFormatter={(value) => (`${value.toFixed(2)} M`)} />
+        <Paper elevation={3} style={{ marginBottom: '20px' }}>
+            <Graph data={data.map((entry) => ({ date: entry.date, value: entry.cumulative_net_worth / 10 ** 6 }))} title="Gross Net Worth Timeline" tickFormatter={(value) => (`${value.toFixed(2)} M`)} />
          </Paper>
 
-        <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
-            <Typography variant="h2" gutterBottom> Market Sentience Index Timeline </Typography>
-            <Graph data={data.map((entry) => ({ date: entry.date, value: entry.market_sentience_index }))} title="Gross Market Capitalization Timeline" tickFormatter={(value) => (`${value.toFixed(2)} P`)} />
+        <Paper elevation={3} style={{ marginBottom: '20px' }}>
+            <Graph data={data.map((entry) => ({ date: entry.date, value: entry.market_sentience_index }))} title="Market Index Timeline" tickFormatter={(value) => (`${value.toFixed(2)} P`)} />
          </Paper>
     </>);
 }
