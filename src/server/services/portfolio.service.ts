@@ -96,6 +96,7 @@ export const getPosition = async (stock_id: string, portfolio_id: string) => {
     return {
         amount: investment.quantity * stock.price,
         balance,
+        price: stock.price,
     }
 };
 
