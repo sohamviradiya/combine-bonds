@@ -1,12 +1,14 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStockData } from "@/app/stock/[id]/action";
-import { Skeleton, Typography, Card, Accordion, AccordionSummary, AccordionDetails, CardContent, Container } from "@mui/material";
+import { Skeleton, Typography, Card, Accordion, AccordionSummary, AccordionDetails, CardContent, Container, CardActions, CardHeader, Button } from "@mui/material";
 import CompanyDetails from "@/app/stock/[id]/company";
 import DataTypography from "@/components/data-typography";
 import background from "public/stock-background.svg";
 import Background from "@/components/background";
 import Graph from "@/components/graph";
+import Link from "next/link";
+import { useAuth } from "@/context/session";
 
 export default function StockPage({ params }: { params: { id: string } }) {
     const { data, isLoading, isError } = useQuery({
@@ -14,6 +16,8 @@ export default function StockPage({ params }: { params: { id: string } }) {
         queryFn: () => fetchStockData({ id: params.id }),
         retry: false,
     });
+
+    const { session } = useAuth();
 
     if (isLoading) return <Skeleton variant="rectangular" width="100%" height={700} />;
     if (isError) return <Typography variant="h2" color="error.main" gutterBottom> Error: Failed to load stock data </Typography>;
@@ -25,10 +29,15 @@ export default function StockPage({ params }: { params: { id: string } }) {
         }}>
             <Background src={background} />
             <Card>
-                <CardContent>
+                <CardHeader>
                     <Typography variant="h2">{data.symbol}</Typography>
+                </CardHeader>
+                <CardContent>
                     <Typography variant="h3">{data.company.name}</Typography>
                     <DataTypography value={data.last_value_point.price} label="Price" unit="$" />
+                    <CardActions>
+                        {session.portfolio && <Link href={`/stock/${params.id}/transaction`} > <Button> Buy / Sell </Button> </Link>}
+                    </CardActions>
                 </CardContent>
             </Card>
 
@@ -60,7 +69,7 @@ export default function StockPage({ params }: { params: { id: string } }) {
                 </AccordionDetails>
             </Accordion>
 
-            <Graph data={data.timeline.map((entry) => ({date: entry.date, value: entry.price}))} title="Stock Price Timeline" tickFormatter={(value) => (`${(value).toFixed(2)} $`)} />
+            <Graph data={data.timeline.map((entry) => ({ date: entry.date, value: entry.price }))} title="Stock Price Timeline" tickFormatter={(value) => (`${(value).toFixed(2)} $`)} />
         </Container>
     );
 }
