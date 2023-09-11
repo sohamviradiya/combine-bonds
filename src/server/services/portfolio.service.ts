@@ -6,7 +6,7 @@ import { buyStock, sellStock, dividend } from "@/server/services/transaction.ser
 import { getStockAnalytics, getStockBasicInfo, pullTrader } from "@/server/services/stock.service";
 
 import { DATE_LIMIT, PORTFOLIO_STARTING_BALANCE, STOCK_DUMP_THRESHOLD } from "@/server/global.config";
-
+import { getDate } from "./market.service";
 
 export const addPortfolio = async (user: User): Promise<{ message: string, portfolio: PortfolioInterfaceWithID | null }> => {
     try {
@@ -132,6 +132,7 @@ export const getPortfolioInvestments = async (portfolio_id: string, page: number
 };
 
 export const performTransactions = async (id: string, transactions: Transaction[]): Promise<PortfolioInterfaceWithID> => {
+    const date = await getDate();
     let portfolio = await getPortfolioById(id);
     for (let transaction of transactions) {
         if (transaction.type === "STOCK_PURCHASE")
@@ -141,7 +142,10 @@ export const performTransactions = async (id: string, transactions: Transaction[
         else if (transaction.type === "STOCK_DIVIDEND")
             portfolio = await dividend(portfolio, transaction);
         else throw new Error("Invalid transaction class");
-        portfolio.transactions.push(transaction);
+        portfolio.transactions.push({
+            ...transaction,
+            date
+        });
     }
 
     return await PortfolioModel.findByIdAndUpdate(id,
