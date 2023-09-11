@@ -87,18 +87,15 @@ export const getAllPortfolios = async () => {
     return (await PortfolioModel.find({}, { _id: 1 }).exec()).map((portfolio) => portfolio._id) as string[];
 };
 
-export const getInvestment = async (stock_id: string, portfolio_id: string) => {
-
+export const getPosition = async (stock_id: string, portfolio_id: string) => {
     const stock = await getStockBasicInfo(stock_id);
-    const { investments }: { investments: Investment[] } = await PortfolioModel.findById(portfolio_id, { investments: 1 }).exec();
+    const { investments, balance }: { investments: Investment[], balance: number } = await PortfolioModel.findById(portfolio_id, { investments: 1, balance: 1 }).exec();
 
     const investment = investments.find((investment) => String(investment.stock) === stock_id);
     if (!investment) return null;
     return {
-        stock: stock._id,
-        quantity: investment.quantity,
         amount: investment.quantity * stock.price,
-        change: stock.slope * stock.price * investment.quantity,
+        balance,
     }
 };
 
