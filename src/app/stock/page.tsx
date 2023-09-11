@@ -47,7 +47,7 @@ export default function StockBrowser() {
                 />
             </Paper>
             <Paper elevation={3} style={{ padding: "16px", marginBottom: "16px" }}>
-                {isLoading && <Skeleton variant="rectangular" height={200} />}
+                {isLoading && <Skeleton variant="rectangular" height={600} />}
                 {isError && <Typography variant="h2" color="error"> Error: {(error as { message: string }).message}</Typography>}
                 {isFetching && <Typography variant="h2">Fetching...</Typography>}
                 {data && <StockList data={data} />}
