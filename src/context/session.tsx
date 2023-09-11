@@ -35,7 +35,6 @@ export function useAuth() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
 
-
     const login = async ({ name, password }: { name: string, password: string }) => {
         const { session, message } = await createSession({ name, password });
         setIsLoading(false);
@@ -45,6 +44,7 @@ export function useAuth() {
         } 
         else {
             setError(message);
+            setSession({} as SessionInterfaceWithId);
         }
         return {
             session,
