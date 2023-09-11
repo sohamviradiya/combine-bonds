@@ -3,14 +3,15 @@
 import { fetchPortfolio } from "./action";
 import { Skeleton, Typography } from "@mui/material";
 import { useAuth } from "@/context/session";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 export default function PortfolioPage() {
     const { session } = useAuth();
+    const router = useRouter();
 
-    if (!session?.portfolio) redirect("/login");
+    if (!session?.portfolio) router.push('/login');
 
     const { data, isLoading, isError, error } = useQuery({
         queryKey: ['stock', { id: session.portfolio }],
