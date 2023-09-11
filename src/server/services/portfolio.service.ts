@@ -37,12 +37,12 @@ export const addPortfolio = async (user: User,): Promise<{ message: string, port
 
 export const verifyIDPassword = async (name: string, password: string) => {
     const portfolio: PortfolioInterfaceWithID = await PortfolioModel.findOne({ "user.name": name }, { user: true }).exec();
-    if (!portfolio.user)
+    if (!portfolio?.user)
         return {
             message: "User not found",
         };
 
-    if (portfolio.user.password !== password)
+    if (portfolio?.user?.password !== password)
         return {
             message: "Incorrect password",
         };
