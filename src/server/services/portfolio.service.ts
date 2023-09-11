@@ -24,16 +24,46 @@ export const addPortfolio = async (user: User,): Promise<{ message: string, port
         } as PortfolioInterface).save();
         return {
             message: "Success",
-            portfolio,
+            portfolio: castPortfolio(portfolio),
         };
     }
     catch (err: any) {
-        return {
-            message: err.message,
+        if (err.code === 11000) return {
+            message: "User already exists",
             portfolio: null,
         }
+        else
+            return {
+                message: err.message,
+                portfolio: null,
+            }
     };
 };
+
+function castPortfolio(portfolio: any): PortfolioInterfaceWithID {
+    return {
+        _id: String(portfolio._id),
+        timeline: portfolio.timeline.map((point: any) => ({
+            date: point.date,
+            value: point.value,
+        })),
+        transactions: portfolio.transactions.map((transaction: any) => ({
+            type: transaction.type,
+            stock: String(transaction.stock),
+            amount: transaction.amount,
+            date: transaction.date,
+        })),
+        investments: portfolio.investments.map((investment: any) => ({
+            stock: String(investment.stock),
+            quantity: investment.quantity,
+        })),
+        balance: portfolio.balance,
+        user: {
+            name: portfolio.user.name,
+            password: portfolio.user.password,
+        },
+    }
+}
 
 export const verifyIDPassword = async (name: string, password: string) => {
     const portfolio: PortfolioInterfaceWithID = await PortfolioModel.findOne({ "user.name": name }, { user: true }).exec();
@@ -58,7 +88,7 @@ export const getAllPortfolios = async () => {
 };
 
 export const getPortfolioById = async (portfolio_id: string): Promise<PortfolioInterfaceWithID> => {
-    return await PortfolioModel.findById(portfolio_id).exec();
+    return castPortfolio(await PortfolioModel.findById(portfolio_id).exec());
 };
 
 export const getPortfolioTransactions = async (portfolio_id: string, page: number) => {
