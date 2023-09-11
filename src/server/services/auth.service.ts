@@ -12,19 +12,19 @@ const decipher = crypto.createDecipheriv(algorithm, key, initVector);
 
 const SECRET_KEY = process.env.SESSION_SECRET_KEY || "khandar-estrada-khandos-indactu";
 
-function encrypt(text: string) {
+const encrypt = (text: string) => {
     let encrypted = cipher.update(text, 'utf-8', 'hex');
     encrypted += cipher.final('hex');
     return encrypted;
 }
 
-function decrypt(text: string) {
+const decrypt = (text: string) => {
     let decrypted = decipher.update(text, 'hex', 'utf-8');
     decrypted += decipher.final('utf-8');
     return decrypted;
 }
 
-export async function addSession(name: string, password: string) {
+export const addSession = async (name: string, password: string) => {
     const { portfolio, message } = await verifyIDPassword(name, password);
     if (!portfolio) { return { session: null, message }; }
     const expiration = new Date();
@@ -59,7 +59,7 @@ export async function addSession(name: string, password: string) {
     }
 };
 
-export async function getSessionById(encryptedSessionID: string) {
+export const getSessionById = async (encryptedSessionID: string) => {
     const session_id = decrypt(encryptedSessionID);
     const session = await SessionModel.findById(session_id).exec() as SessionInterfaceWithId;
     session._id = String(session._id);
@@ -74,7 +74,7 @@ export async function getSessionById(encryptedSessionID: string) {
     };
 };
 
-export async function deleteSessionById(encryptedSessionID: string) {
+export const deleteSessionById = async (encryptedSessionID: string) => {
     const session_id = decrypt(encryptedSessionID);
     return await SessionModel.findByIdAndDelete(session_id).exec() as SessionInterface;
 };

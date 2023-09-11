@@ -6,7 +6,7 @@ import { getPortfolioById } from "@/server/services/portfolio.service";
 
 import { DATE_LIMIT } from "@/server/global.config";
 
-export async function addStock(stock: createStockDto) {
+export const addStock = async (stock: createStockDto) => {
     const newStockDoc = await new StockModel({
         ...stock,
         issued: new Date(),
@@ -15,12 +15,12 @@ export async function addStock(stock: createStockDto) {
     return newStockDoc;
 };
 
-export async function getAllStocks() {
+export const getAllStocks = async () => {
     const data = await StockModel.find({}, { _id: 1 }).exec();
     return data.map((stock) => String(stock._id));
 };
 
-export async function getStockDataById(_id: string) {
+export const getStockDataById = async (_id: string) => {
     const data = await StockModel.findById(_id).exec() as StockInterfaceWithId & StockValues;
     const timeline = data.timeline.map((point) => {
         return {
@@ -47,7 +47,7 @@ export async function getStockDataById(_id: string) {
     }
 };
 
-export async function getStockBasicInfo(_id: string) {
+export const getStockBasicInfo = async (_id: string) => {
     const data = await StockModel.findById(_id).exec() as StockInterfaceWithId & StockValues;
     return {
         _id: String(data._id),
@@ -58,7 +58,7 @@ export async function getStockBasicInfo(_id: string) {
     };
 };
 
-export async function getStocksByQuery(query: string, page: number = 0, limit: number = 8) {
+export const getStocksByQuery = async (query: string, page: number = 0, limit: number = 8) => {
     const data = await StockModel.find({
         "company.name": {
             $regex: `(.)*${query}(.)*`,
@@ -68,7 +68,7 @@ export async function getStocksByQuery(query: string, page: number = 0, limit: n
 };
 
 
-export async function getStockAnalytics(_id: string) {
+export const getStockAnalytics = async (_id: string) => {
     const data = await StockModel.findById(_id).exec() as StockValues;
     return {
         dividend: data.timeline[data.timeline.length - 1].dividend,
@@ -81,23 +81,23 @@ export async function getStockAnalytics(_id: string) {
     };
 };
 
-export async function addStockValuePoint(_id: string, valuePoint: ValuePoint) {
+export const addStockValuePoint = async (_id: string, valuePoint: ValuePoint) => {
     return await StockModel.findByIdAndUpdate(_id, { $push: { timeline: { ...valuePoint } } }, { new: true }).exec();
 };
 
-export async function getRandomStocks(count: number) {
+export const getRandomStocks = async (count: number) => {
     const stocks = await getAllStocks();
     const random_stocks = [] as string[];
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < count; i++)  {
         var random_stock = stocks[Math.floor(Math.random() * stocks.length)];
-        while (random_stocks.includes(random_stock)) {
+        while (random_stocks.includes(random_stock))  {
             random_stock = stocks[Math.floor(Math.random() * stocks.length)];
         }
     }
     return random_stocks;
 };
 
-export async function evaluateStock(_id: string, date: number) {
+export const evaluateStock = async (_id: string, date: number) => {
     const { traders, timeline } = await StockModel.findById(_id, { traders: 1, timeline: 1 }).exec() as StockInterfaceWithId;
     var volume = 0;
     const new_traders = [] as string[];
@@ -120,19 +120,19 @@ export async function evaluateStock(_id: string, date: number) {
 
 };
 
-export async function pullTrader(_id: string, portfolio_id: string) {
+export const pullTrader = async (_id: string, portfolio_id: string) => {
     await StockModel.findByIdAndUpdate(_id, {
         $pull: { traders: String(portfolio_id) },
     }).exec();
 };
 
-export async function pushTrader(_id: string, portfolio_id: string) {
+export const pushTrader = async (_id: string, portfolio_id: string) => {
     await StockModel.findByIdAndUpdate(_id, {
         $push: { traders: String(portfolio_id) },
     }).exec();
 };
 
-export async function getStockTimelines(): Promise<{ timeline: ValuePoint[]; }[]> {
+export const getStockTimelines = async (): Promise<{ timeline: ValuePoint[]; }[]> => {
     return await StockModel.find({}, { timeline: 1 }).exec();
 }
 
