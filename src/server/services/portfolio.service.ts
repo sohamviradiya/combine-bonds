@@ -41,6 +41,7 @@ export const addPortfolio = async (user: User): Promise<{ message: string, portf
 };
 
 function castPortfolio(portfolio: any): PortfolioInterfaceWithID {
+    console.log(portfolio);
     return {
         _id: String(portfolio._id),
         timeline: portfolio.timeline.map((point: any) => ({

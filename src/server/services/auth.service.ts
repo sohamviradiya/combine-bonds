@@ -30,6 +30,7 @@ export const addSession = async (name: string, password: string) => {
     const expiration = new Date();
     expiration.setDate(expiration.getDate() + 1);
     try {
+        await SessionModel.findOneAndDelete({ portfolio }).exec();
         const newSession = new SessionModel({
             portfolio,
             expiration,
@@ -40,7 +41,6 @@ export const addSession = async (name: string, password: string) => {
             portfolio: String(session_document.portfolio),
             expiration: session_document.expiration,
         };
-        console.log(session);
         const encryptedSessionID = encrypt(session._id);
         return {
             message, session: {
@@ -50,12 +50,7 @@ export const addSession = async (name: string, password: string) => {
         }
     }
     catch (err: any) {
-        if (err.code == 11000) {
-            return { session: null, message: "Session already exists" };
-        }
-        else {
-            return { session: null, message: err.message };
-        }
+        return { session: null, message: err.message };
     }
 };
 
