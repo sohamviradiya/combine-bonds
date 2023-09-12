@@ -12,20 +12,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
     children,
-    header,
-    footer,
 }: {
     children: React.ReactNode,
-    header: React.ReactNode,
-    footer: React.ReactNode,
 }) {
     return (
         <html lang="en">
             <body className={inter.className}>
                 <MainContext>
-                    {/* {header} */}
                     {children}
-                    {/* {footer} */}
                 </MainContext>
             </body>
         </html>
