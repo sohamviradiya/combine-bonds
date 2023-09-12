@@ -18,6 +18,6 @@ export const SLOT_DURATION = 5;
 
 export const DIVIDEND_FACTOR = 2.5;
 
-export const NUM_OF_STOCKS = 50;
-export const NUM_OF_PORTFOLIOS = 60;
+export const NUM_OF_STOCKS = 80;
+export const NUM_OF_PORTFOLIOS = 100;
 
