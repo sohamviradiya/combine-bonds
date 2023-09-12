@@ -25,6 +25,7 @@ export default function InvestmentListPage() {
 
     return (
         <>
+            <Typography variant="h2" color="primary.main">Investments</Typography>
             <InvestmentList data={data} />
             <Paper elevation={3} style={{ padding: "16px", marginBottom: "16px", display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <Button
@@ -51,25 +52,27 @@ function InvestmentList({ data }: { data: InfiniteData<PopulatedInvestment[]> })
     if (list.length === 0) return (<Typography variant="h2" color="warning.main">No results found</Typography>);
 
     return (
-        <List style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', overflow: 'scroll' }}>
-            {list.map((investment, index) => (
-                <ListItem key={index}>
-                    <Card>
-                        <CardContent>
-                            <Grid container spacing={2}>
-                                <Grid item xs={5}>
-                                    <StockCard id={investment.stock} />
+        <>
+            <List style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', overflow: 'scroll' }}>
+                {list.map((investment, index) => (
+                    <ListItem key={index}>
+                        <Card>
+                            <CardContent>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={5}>
+                                        <StockCard id={investment.stock} />
+                                    </Grid>
+                                    <Grid item xs={7}>
+                                        <DataTypography value={investment.quantity} label="Quantity" unit="shares" />
+                                        <DataTypography value={investment.amount} label="Amount" unit="$" />
+                                        <DataTypography value={investment.change} label="Return" unit="$" sign />
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={7}>
-                                    <DataTypography value={investment.quantity} label="Quantity" unit="shares" />
-                                    <DataTypography value={investment.amount} label="Amount" unit="$" />
-                                    <DataTypography value={investment.change} label="Return" unit="$" sign />
-                                </Grid>
-                            </Grid>
-                        </CardContent>
-                    </Card>
-                </ListItem>
-            ))}
-        </List>
+                            </CardContent>
+                        </Card>
+                    </ListItem>
+                ))}
+            </List>
+        </>
     );
 };
