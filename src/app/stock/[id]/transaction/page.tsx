@@ -2,7 +2,7 @@ import Background from "@/components/background";
 import { StockCard } from "@/components/stock/stock-card";
 import { useAuth } from "@/context/session";
 import { Button, Container, FormControl, Paper, Skeleton, Slide, Slider, Typography } from "@mui/material";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import background from "public/transaction-background.svg";
 import { fetchPosition, postTransaction } from "./action";
@@ -11,6 +11,7 @@ import { useEffect, useMemo, useState } from "react";
 export default function TransactionPage({ params }: { params: { id: string } }) {
     const router = useRouter();
     const [info, setInfo] = useState('Invest carefully!');
+    const queryClient = useQueryClient();
     const [transactionAmount, setTransactionAmount] = useState(0);
     const { session } = useAuth();
 
@@ -30,7 +31,13 @@ export default function TransactionPage({ params }: { params: { id: string } }) 
         mutationKey: ['transaction', { stock: params.id, session_id: session._id, amount: transactionAmount }],
         mutationFn: () => postTransaction({ stock: params.id, session_id: session._id, amount: transactionAmount }),
         onSuccess: () => {
-            router.back();
+            queryClient.invalidateQueries(['transaction', {
+                stock: params.id,
+                portfolio: session.portfolio
+            }]);
+            queryClient.invalidateQueries(['portfolio', {
+                id: session.portfolio
+            }]);
         }
     });
 
@@ -54,29 +61,23 @@ export default function TransactionPage({ params }: { params: { id: string } }) 
         const amount = position.amount;
         const balance = position.balance;
         const marks = [] as { value: number, label: string }[];
-        if (amount > 0) {
-            for (let i = 4; i > 0; i--) {
-                const value = Math.floor(amount * i * 0.25);
-                marks.push({
-                    value: - value,
-                    label: `${Math.floor((value / balance) * 100)}%`,
-                });
-            }
+        const amount_divisions = amount / position.price;
+        const balance_divisions = Math.min(10, balance / 100);
+
+        for (let i = -amount_divisions; i < 0; i++) {
+            marks.push({
+                value: i * amount / amount_divisions,
+                label: `${(-i * 100) / amount_divisions}%`,
+            });
         }
-        if (balance > 0) {
-            for (let i = 1; i < 5; i++) {
-                const value = Math.floor(balance * i * 0.25);
-                marks.push({
-                    value,
-                    label: `${Math.floor((value / balance) * 100)}%`,
-                });
-            }
+        for (let i = 1; i <= balance_divisions; i++) {
+            marks.push({
+                value: i * balance / balance_divisions,
+                label: `${(i * 100) / balance_divisions}%`,
+            });
         }
         return marks;
     }, [position]);
-
-
-
 
     return (
         <Container maxWidth="xl" sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', position: 'relative', padding: '2rem', minHeight: "100vh", textAlign: "center" }}>
