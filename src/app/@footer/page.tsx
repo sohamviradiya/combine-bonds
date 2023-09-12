@@ -1,4 +1,3 @@
-
 "use client";
 
 import { BottomNavigation, BottomNavigationAction, Container, Typography } from "@mui/material";
