@@ -24,6 +24,7 @@ export default function TransactionsListPage() {
 
     return (
         <>
+            <Typography variant="h2" color="primary.main">Transactions</Typography>
             <TransactionList data={data} />
             <Paper elevation={3} style={{ padding: "16px", marginBottom: "16px", display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <Button
