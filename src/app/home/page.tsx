@@ -11,8 +11,6 @@ export default function Home() {
             <Container
                 maxWidth="xl"
                 sx={{
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
                     position: 'relative',
                     padding: '16px',
                 }}
