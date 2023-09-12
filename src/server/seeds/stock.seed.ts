@@ -1,4 +1,4 @@
-import { ChemicalElement, faker } from "@faker-js/faker";
+import {  faker } from "@faker-js/faker";
 
 import { addStock } from "@/server/services/stock.service";
 import { createStockDto, StockInterface, COMPANY_FORMS, COMPANY_FIELDS } from "@/types/stock.interface";
@@ -15,11 +15,11 @@ const StockGenerator = async () => {
 
 
 const createRandomStock = async (): Promise<createStockDto> => {
-    const element = getElement();
+    const name = getName();
     const gross_volume = Math.floor((0.1 + Math.random()) * Math.pow(10, 5 + 3 * Math.random()));
     const price = (0.1 + Math.random()) * 100;
     return {
-        symbol: "$" + element.name.toLocaleUpperCase().slice(0, 3),
+        symbol: "$" + name.toLocaleUpperCase().slice(0, 3),
         gross_volume,
         timeline: [
             {
@@ -29,24 +29,24 @@ const createRandomStock = async (): Promise<createStockDto> => {
                 dividend: 0,
             },
         ],
-        company: generateCompany(element),
+        company: generateCompany(name),
     } as createStockDto;
 };
 
-const company_names = [] as ChemicalElement[];
+const company_names = new Set<string>();
 
-const getElement = () => {
-    let element = faker.science.chemicalElement();
-    while (company_names.includes(element))
-        element = faker.science.chemicalElement();
-    return {
-        name: element.name,
-        symbol: element.symbol,
+company_names.add("");
+
+const getName = () => {
+    let name = "";
+    while (company_names.has(name.substr(0, 3))) {
+        name = faker.person.lastName() + " " + faker.commerce.department() + " " + faker.company.companySuffix();
     }
+    company_names.add(name.substr(0, 3));
+    return name;
 };
 
-
-const generateCompany = (element: { symbol: string, name: string }) => {
+const generateCompany = (name: string) => {
     const field = Object.values(COMPANY_FIELDS)[Math.floor(Math.random() * 14)];
     const form = Object.values(COMPANY_FORMS)[Math.floor(Math.random() * 7)];
     const established = faker.date.past();
@@ -54,12 +54,11 @@ const generateCompany = (element: { symbol: string, name: string }) => {
     const headquarters = faker.location.street() + ", " + faker.location.city();
     const assets = Math.floor((0.1 + Math.random()) * 100000000);
     return {
-        symbol: element.symbol,
-        name: element.name,
+        name: name,
         field,
         form,
         established,
-        description: `${element.name} is a renowned company in the ${field} industry, established in ${established}. With a reputation for excellence and innovation, it has become a leading player in its sector. As a ${form} company, it has demonstrated resilience and adaptability, continuously evolving to meet the changing demands of the market.`,
+        description: `${name} is a renowned company in the ${field} industry, established in ${established}. As a ${faker.company.buzzVerb()} ${form} company, it focuses on ${faker.company.buzzPhrase()}. It's main target is ${faker.company.catchPhrase()}. It has ${employees} employees and its headquarters are located in ${headquarters}. It has assets worth ${assets} dollars.`,
         assets,
         headquarters,
         employees,
