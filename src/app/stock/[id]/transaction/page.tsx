@@ -1,3 +1,4 @@
+"use client";
 import Background from "@/components/background";
 import { StockCard } from "@/components/stock/stock-card";
 import { useAuth } from "@/context/session";
