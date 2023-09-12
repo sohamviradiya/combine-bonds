@@ -12,7 +12,6 @@ import { getAllStocks } from "@/server/services/stock.service";
 
 import { SLOT_DURATION } from "@/server/global.config";
 
-
 let agencies: string[] = [];
 let portfolios: string[] = [];
 let bots: string[] = [];
@@ -24,11 +23,9 @@ export default async function MainStart() {
 
     if (agencies.length === 0) {
         await MainSeed();
-        date = 0;
         agencies = await getAllAgencies();
     }
-    else
-        date = await getDate() + 1;
+    date = await getDate() + 1;
     portfolios = await getAllPortfolios();
     bots = await getAllBots();
     stocks = await getAllStocks();
