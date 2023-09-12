@@ -17,17 +17,17 @@ const CompanyInfoRow = ({ label, value }: { label: string, value: string }) => {
 
 const CompanyDetails = ({ data }: { data: StockInterface['company'] }) => {
     return (
-        <Grid container spacing={2} lg={24} md={24} sm={24} xs={24}>
-            <Grid item xs={24} sm={12} md={3}>
+        <Grid container spacing={2}>
+            <Grid item xs={24} sm={12} md={6}>
                 <CompanyInfoRow label="" value={data.name} />
             </Grid>
-            <Grid item xs={24} sm={12} md={8}>
+            <Grid item xs={24} sm={12} md={6}>
                 <CompanyInfoRow label="Field" value={data.field} />
             </Grid>
-            <Grid item xs={24} sm={12} md={6}>
+            <Grid item xs={24} sm={12} md={8}>
                 <CompanyInfoRow label="Form" value={data.form} />
             </Grid>
-            <Grid item xs={24} sm={12} md={5}>
+            <Grid item xs={24} sm={12} md={4}>
                 {data.assets && (
                     <CompanyInfoRow value={`${(data.assets / 10 ** 6).toFixed(0)} M $`} label="Assets" />
                 )}
