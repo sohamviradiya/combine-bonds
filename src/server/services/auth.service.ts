@@ -40,17 +40,16 @@ export const addSession = async (name: string, password: string) => {
         });
         const session_document = await newSession.save() as SessionInterfaceWithId;
         const session = {
-            _id: String(session_document._id),
-            portfolio: String(session_document.portfolio),
-            expiration: session_document.expiration,
+            
         };
-        const encryptedSessionID = encrypt(session._id);
         return {
-            message, session: {
-                ...session,
-                _id: encryptedSessionID,
+            message,
+            session: {
+                _id: encrypt(String(session_document._id)),
+                portfolio: String(session_document.portfolio),
+                expiration: session_document.expiration,
             }
-        }
+        };
     }
     catch (err: any) {
         return { session: null, message: err.message };
