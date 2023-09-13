@@ -48,7 +48,7 @@ export default function TransactionsListPage() {
 
 function TransactionList({ data }: { data: InfiniteData<Transaction[]> }) {
     const list = data.pages.reduce((acc, val) => acc.concat(val), []);
-    if (list.length === 0) return (<Typography variant="h4" color="warning.main">No Transctions</Typography>);
+    if (list.length === 0) return (<Typography variant="h4" color="warning.main">No Transactions</Typography>);
     return (
         <List style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', maxHeight: '100vh', overflow: 'scroll' }}>
             {list.map((transaction, index) => (
