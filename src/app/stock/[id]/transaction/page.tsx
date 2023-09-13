@@ -43,6 +43,7 @@ export default function TransactionPage({ params }: { params: { id: string } }) 
             queryClient.invalidateQueries(['portfolio', {
                 id: session.portfolio
             }]);
+            setTransactionAmount(0);
         },
     });
 
