@@ -66,7 +66,7 @@ function InvestmentList({ data }: { data: InfiniteData<PopulatedInvestment[]> })
                             </CardContent>
                             <CardActions>
                                 <Button variant="contained" color="primary">
-                                    <Link href={`/stock/${investment.stock}`}>Sell</Link>
+                                    <Link href={`/stock/${investment.stock}/transaction`}>Sell</Link>
                                 </Button>
                             </CardActions>
                         </Card>
