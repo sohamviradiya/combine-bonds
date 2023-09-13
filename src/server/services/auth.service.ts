@@ -3,26 +3,28 @@ import { verifyIDPassword } from "@/server/services/portfolio.service";
 import { SessionInterface, SessionInterfaceWithId } from "@/types/session.interface";
 import crypto from "crypto";
 
-const algorithm = "aes-256-cbc";
-const initVector = crypto.randomBytes(16);
+
+
+const algorithm = 'aes-256-cbc';
 const key = crypto.randomBytes(32);
+const initVector = crypto.randomBytes(16);
+
 const cipher = crypto.createCipheriv(algorithm, key, initVector);
 const decipher = crypto.createDecipheriv(algorithm, key, initVector);
 
 
-const SECRET_KEY = process.env.SESSION_SECRET_KEY || "khandar-estrada-khandos-indactu";
 
 const encrypt = (text: string) => {
-    let encrypted = cipher.update(text, 'utf-8', 'hex');
-    encrypted += cipher.final('hex');
-    return encrypted;
-}
+    // let encrypted = cipher.update(text, 'utf-8', 'hex');
+    // encrypted += cipher.final('hex');
+    return text;
+};
 
-const decrypt = (text: string) => {
-    let decrypted = decipher.update(text, 'hex', 'utf-8');
-    decrypted += decipher.final('utf-8');
-    return decrypted;
-}
+const decrypt = (text:string) => {
+    // let decrypted = decipher.update(text, 'hex', 'utf-8');
+    // decrypted += decipher.final('utf-8');
+    return text;
+};
 
 export const addSession = async (name: string, password: string) => {
     const { portfolio, message } = await verifyIDPassword(name, password);
@@ -65,9 +67,10 @@ export const getSessionById = async (encryptedSessionID: string) => {
         return null;
     }
     return {
-        ...session,
         _id: encryptedSessionID,
-    };
+        portfolio: String(session.portfolio),
+        expiration: session.expiration,
+    } as SessionInterface;
 };
 
 export const deleteSessionById = async (encryptedSessionID: string) => {
