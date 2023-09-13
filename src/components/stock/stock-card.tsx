@@ -19,7 +19,7 @@ export function StockCard({ id }: { id: string }) {
     }
 
     return (
-        <Card>
+        <Card sx={{ minWidth: 400, alignSelf: "center" }}>
             <CardContent>
                 <Typography variant="h5" component="div">
                     {data.symbol}
