@@ -89,7 +89,7 @@ export const getAllPortfolios = async () => {
 };
 
 export const getPosition = async (stock_id: string, portfolio_id: string) => {
-    if(!stock_id || !portfolio_id) return null;
+    if (!stock_id || !portfolio_id) return null;
     const stock = await getStockBasicInfo(stock_id);
     const { investments, balance }: { investments: Investment[], balance: number } = await PortfolioModel.findById(portfolio_id, { investments: 1, balance: 1 }).exec();
 
@@ -110,23 +110,22 @@ export const getPortfolioById = async (portfolio_id: string): Promise<PortfolioI
     return castPortfolio(await PortfolioModel.findById(portfolio_id).exec());
 };
 
-export const getPortfolioTransactions = async (portfolio_id: string, page: number) => {
+export const getPortfolioTransactions = async (portfolio_id: string, page: number = 0) => {
     const portfolio = await getPortfolioById(portfolio_id);
     const transactions = portfolio.transactions;
-    const start = page * 8;
-    const end = start + 8;
-    transactions.sort((a, b) => b.date - a.date);
+    const start = page * 4;
+    const end = start + 4;
+    transactions.sort((a, b) => b.date == a.date ? b.amount - a.amount : b.date - a.date);
     return transactions.slice(start, end);
 };
 
-export const getPortfolioInvestments = async (portfolio_id: string, page: number) => {
+export const getPortfolioInvestments = async (portfolio_id: string, page: number = 0) => {
     const portfolio = await getPortfolioById(portfolio_id);
     const investments = portfolio.investments;
-    const start = page * 8;
-    const end = start + 8;
-    investments.sort((a, b) => a.quantity - b.quantity);
+    const start = page * 4;
+    const end = start + 4;
     const paginated_investments = investments.slice(start, end);
-    return await Promise.all(
+    const populated_investments = await Promise.all(
         paginated_investments.map(async (investment) => {
             const stock = await getStockBasicInfo(investment.stock);
             return {
@@ -136,6 +135,7 @@ export const getPortfolioInvestments = async (portfolio_id: string, page: number
                 change: stock.slope * stock.price * investment.quantity,
             }
         }));
+    return populated_investments.sort((a, b) => b.amount - a.amount);
 };
 
 export const performTransactions = async (id: string, transactions: Transaction[]): Promise<PortfolioInterfaceWithID> => {
