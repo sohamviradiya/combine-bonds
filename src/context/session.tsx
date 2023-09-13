@@ -1,4 +1,4 @@
-
+"use client";
 import { SessionInterfaceWithId } from "@/types/session.interface";
 import { createContext, useContext, useEffect, useState } from "react";
 import { createSession, deleteSession } from "./auth";
@@ -59,7 +59,7 @@ export function useAuth() {
 
 
     return {
-        session, 
+        session,
         login,
         logout,
         isLoading,
