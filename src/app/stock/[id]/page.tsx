@@ -35,8 +35,8 @@ export default function StockPage({ params }: { params: { id: string } }) {
                 <CardContent>
                     <Typography variant="h3">{data.company.name}</Typography>
                     <DataTypography value={data.last_value_point.price} label="Price" unit="$" />
-                    <CardActions>
-                        {session.portfolio && <Link href={`/stock/${params.id}/transaction`} > <Button> Buy / Sell </Button> </Link>}
+                    <CardActions sx={{ position: "sticky" }}>
+                        {session.portfolio && <Link href={`/stock/${params.id}/transaction`} > <Button variant="contained"> Buy / Sell </Button> </Link>}
                     </CardActions>
                 </CardContent>
             </Card>
