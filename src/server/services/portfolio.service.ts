@@ -115,8 +115,12 @@ export const getPortfolioTransactions = async (portfolio_id: string, page: numbe
     const transactions = portfolio.transactions;
     const start = page * 4;
     const end = start + 4;
+    const date = await getDate();
     transactions.sort((a, b) => b.date == a.date ? b.amount - a.amount : b.date - a.date);
-    return transactions.slice(start, end);
+    return transactions.slice(start, end).map((transaction) => ({
+        ...transaction,
+        date: date - transaction.date,
+    }));
 };
 
 export const getPortfolioInvestments = async (portfolio_id: string, page: number = 0) => {
