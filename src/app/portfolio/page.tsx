@@ -4,7 +4,6 @@ import { fetchPortfolio } from "./action";
 import { Card, CardContent, CardHeader, Skeleton, Typography } from "@mui/material";
 import { useAuth } from "@/context/session";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Graph from "@/components/graph";
 import DataTypography from "@/components/data-typography";
@@ -19,6 +18,7 @@ export default function PortfolioPage() {
         queryKey: ['portfolio', { id: session.portfolio }],
         queryFn: () => fetchPortfolio({ id: session.portfolio }),
         retry: false,
+        enabled: !!session?.portfolio,
     });
 
 
@@ -30,24 +30,22 @@ export default function PortfolioPage() {
     return (
         <>
             <Card>
-                <CardHeader>
-                    <Typography variant="h2">{data.user?.name}</Typography>
-                </CardHeader>
                 <CardContent>
-                    <Typography variant="h4">{data.user?.bio}</Typography>
+                    <Typography variant="h2">{data.user?.name}</Typography>
+                    <Typography variant="h4">{data.user?.bio || " "}</Typography>
                     <DataTypography value={data.balance} label="Balance" unit="$" />
                 </CardContent>
             </Card>
 
             <Card>
                 <CardContent>
-                    <DataTypography value={net_worth} label="Net Worth" unit="$" sign />
+                    <DataTypography value={net_worth} label="Net Worth" unit="$"  />
                     <DataTypography value={net_worth - data.balance} label="Total Investment" unit="M $" />
-                    <DataTypography value={data.timeline.length > 1 ? (net_worth - data.timeline[data.timeline.length - 2].value) : 0} label="Last Change" unit="$" />
+                    <DataTypography value={data.timeline.length > 1 ? (net_worth - data.timeline[data.timeline.length - 2].value) : 0} label="Last Change" unit="$" sign />
                 </CardContent>
             </Card>
-            
-        <Graph data={data.timeline.map((entry) => ({ date: entry.date, value: entry.value }))} title="Portfolio Net Worth Timeline" tickFormatter={(value) => (`${(value).toFixed(2)} $`)} />
+
+            <Graph data={data.timeline.map((entry) => ({ date: entry.date, value: entry.value }))} title="Portfolio Net Worth Timeline" tickFormatter={(value) => (`${(value).toFixed(2)} $`)} />
         </>
     )
 };

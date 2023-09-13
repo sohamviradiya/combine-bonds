@@ -17,7 +17,8 @@ export default function InvestmentListPage() {
         queryFn: ({ pageParam }) => fetchInvestments({ id: session?.portfolio, page: pageParam }),
         getNextPageParam: (lastPage, pages) => {
             return lastPage.length === 8 ? pages.length : false;
-        }
+        },
+        enabled: !!session?.portfolio,
     });
     if (!session) return <Typography variant="h2" color="warning.main">Please login to view your investments</Typography>;
     if (isLoading) return <Skeleton variant="rectangular" width="100%" height="100%" />;
@@ -25,7 +26,7 @@ export default function InvestmentListPage() {
 
     return (
         <>
-            <Typography variant="h2" color="primary.main">Investments</Typography>
+            <Typography variant="h3" color="primary.main">Investments</Typography>
             <InvestmentList data={data} />
             <Paper elevation={3} style={{ padding: "16px", marginBottom: "16px", display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <Button
@@ -49,7 +50,7 @@ export default function InvestmentListPage() {
 
 function InvestmentList({ data }: { data: InfiniteData<PopulatedInvestment[]> }) {
     const list = data.pages.reduce((acc, val) => acc.concat(val), []);
-    if (list.length === 0) return (<Typography variant="h2" color="warning.main">No results found</Typography>);
+    if (list.length === 0) return (<Typography variant="h4" color="warning.main">No Investments</Typography>);
 
     return (
         <>

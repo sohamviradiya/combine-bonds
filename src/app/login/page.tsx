@@ -46,7 +46,6 @@ export default function LoginPage() {
                         setInfo('Logging in...');
                         e.preventDefault();
                         login(user).then(({ session, message }) => {
-                            console.log({ session, message });
                             if (session)
                                 router.push('/portfolio');
                             else {
