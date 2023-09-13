@@ -23,15 +23,7 @@ export default function StockBrowser() {
     });
 
     return (
-        <Container
-            maxWidth="xl"
-            sx={{
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                position: 'relative',
-                padding: '16px',
-            }}
-        >
+        <>
             <Background src={background} />
             <Paper elevation={3} style={{ padding: "16px", marginBottom: "16px" }}>
                 <TextField
@@ -67,6 +59,6 @@ export default function StockBrowser() {
                     }
                 </Button>
             </Paper>
-        </Container >
+        </>
     );
 }

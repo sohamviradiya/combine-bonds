@@ -9,9 +9,6 @@ import MarketTimeline from '@/app/analysis/market-timeline';
 
 export default function StockList() {
     return (<>
-        <Container sx={{
-            position: 'relative', padding: '2rem'
-        }} maxWidth="xl">
             <Background src={background} />
             <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
                 <Typography variant="h2" gutterBottom>
@@ -33,7 +30,6 @@ export default function StockList() {
                 </Typography>
                 <MarketTimeline />
             </Paper>
-        </Container>
     </>
     );
 };

@@ -25,7 +25,7 @@ export default function LoginPage() {
     }, [user.password, confirm]);
 
     return (
-        <Container maxWidth="xl" sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', position: 'relative', padding: '2rem', minHeight: "100vh", textAlign: "center" }}>
+        <>
             <Background src={background} />
             <Typography variant="h1">Register </Typography>
             <Paper sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignSelf: 'center', width: "60%", padding: "2rem" }} elevation={3}>
@@ -58,6 +58,6 @@ export default function LoginPage() {
                 <Typography variant="h3" color="error.main">{error} </Typography>
                 <Typography variant="h3" color="info.main"> {info} </Typography>
             </Paper>
-        </Container >
+        </>
     );
 }

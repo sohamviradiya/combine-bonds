@@ -13,7 +13,7 @@ export default function LoginPage() {
     const [info, setInfo] = useState('Remember your credentials!');
     const router = useRouter();
     return (
-        <Container maxWidth="xl" sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', position: 'relative', padding: '2rem', minHeight: "100vh", textAlign: "center" }}>
+        <>
             <Background src={background} />
             <Typography variant="h1">Login</Typography>
             <Paper sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignSelf: 'center', width: "60%", padding: "2rem" }} elevation={3}>
@@ -62,6 +62,6 @@ export default function LoginPage() {
                     {info}
                 </Typography>
             </Paper>
-        </Container >
+        </>
     );
 }

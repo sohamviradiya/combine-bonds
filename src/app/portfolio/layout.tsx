@@ -10,19 +10,19 @@ export default function PortfolioLayout({ children, investments, transactions, }
     children: React.ReactNode, investments: React.ReactNode, transactions: React.ReactNode,
 }) {
     return (
-        <Container maxWidth="xl" sx={{ position: "relative" }}>
+        <>
             <Background src={background} />
-        <Grid container spacing={2}>
-            <Grid item xs={8}>
-                {children}
-                <Box marginTop={2}>{investments}</Box>
-            </Grid>
+            <Grid container spacing={2}>
+                <Grid item xs={8}>
+                    {children}
+                    <Box marginTop={2}>{investments}</Box>
+                </Grid>
 
-            <Grid item xs={4}>
-                {transactions}
+                <Grid item xs={4}>
+                    {transactions}
+                </Grid>
             </Grid>
-            </Grid>
-        </Container>
+        </>
     );
 }
 
