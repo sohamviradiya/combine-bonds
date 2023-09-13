@@ -41,7 +41,7 @@ export function useAuth() {
         if (session) {
             setError("");
             setSession(session);
-        } 
+        }
         else {
             setError(message);
             setSession({} as SessionInterfaceWithId);
@@ -52,14 +52,14 @@ export function useAuth() {
         };
     }
 
-    const logout = async () => { 
+    const logout = async () => {
         await deleteSession({ id: session._id });
         setSession({} as SessionInterfaceWithId);
     };
 
 
     return {
-        session,
+        session, 
         login,
         logout,
         isLoading,

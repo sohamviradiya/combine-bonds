@@ -10,6 +10,7 @@ import { getDate } from "./market.service";
 
 export const addPortfolio = async (user: User): Promise<{ message: string, portfolio: PortfolioInterfaceWithID | null }> => {
     try {
+        const date = await getDate();
         const portfolio = await new PortfolioModel({
             user,
             transactions: [],
@@ -17,7 +18,7 @@ export const addPortfolio = async (user: User): Promise<{ message: string, portf
             timeline: [
                 {
                     value: PORTFOLIO_STARTING_BALANCE,
-                    date: 0,
+                    date,
                 },
             ],
             investments: [],
@@ -41,7 +42,6 @@ export const addPortfolio = async (user: User): Promise<{ message: string, portf
 };
 
 function castPortfolio(portfolio: any): PortfolioInterfaceWithID {
-    console.log(portfolio);
     return {
         _id: String(portfolio._id),
         timeline: portfolio.timeline.map((point: any) => ({
@@ -89,11 +89,16 @@ export const getAllPortfolios = async () => {
 };
 
 export const getPosition = async (stock_id: string, portfolio_id: string) => {
+    if(!stock_id || !portfolio_id) return null;
     const stock = await getStockBasicInfo(stock_id);
     const { investments, balance }: { investments: Investment[], balance: number } = await PortfolioModel.findById(portfolio_id, { investments: 1, balance: 1 }).exec();
 
     const investment = investments.find((investment) => String(investment.stock) === stock_id);
-    if (!investment) return null;
+    if (!investment) return {
+        amount: 0,
+        balance,
+        price: stock.price,
+    };
     return {
         amount: investment.quantity * stock.price,
         balance,

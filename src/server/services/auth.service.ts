@@ -31,6 +31,7 @@ export const addSession = async (name: string, password: string) => {
     expiration.setDate(expiration.getDate() + 1);
     try {
         await SessionModel.findOneAndDelete({ portfolio }).exec();
+        
         const newSession = new SessionModel({
             portfolio,
             expiration,
