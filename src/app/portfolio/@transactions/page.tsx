@@ -15,7 +15,7 @@ export default function TransactionsListPage() {
         queryKey: ['transactions', { portfolio: session?.portfolio }],
         queryFn: ({ pageParam }) => fetchTransactions({ id: session?.portfolio, page: pageParam }),
         getNextPageParam: (lastPage, pages) => {
-            return lastPage.length === 8 ? pages.length : false;
+            return lastPage.length === 4 ? pages.length : false;
         },
         enabled: !!session?.portfolio,
     });
@@ -48,26 +48,17 @@ export default function TransactionsListPage() {
 
 function TransactionList({ data }: { data: InfiniteData<Transaction[]> }) {
     const list = data.pages.reduce((acc, val) => acc.concat(val), []);
-    if (list.length === 0) return (<Typography variant="h4" color="warning.main">No Tranactions</Typography>);
-    console.log(data);
+    if (list.length === 0) return (<Typography variant="h4" color="warning.main">No Transctions</Typography>);
     return (
         <List style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {list.map((transaction, index) => (
                 <ListItem key={index}>
                     <Card>
-                        <CardHeader>
-                            <Typography variant="h6">{transaction.type}</Typography>
-                        </CardHeader>
                         <CardContent>
-                            <Grid container spacing={2}>
-                                <Grid item xs={4}>
-                                    <StockCard id={transaction.stock} />
-                                </Grid>
-                                <Grid item xs={8}>
-                                    <DataTypography value={transaction.amount} label="Amount" unit="$" />
-                                    <DataTypography value={transaction.date} label="Time" unit=" cycles ago ( 1 cycle ~ 15 mins)" />
-                                </Grid>
-                            </Grid>
+                            <Typography variant="h5">{transaction.type}</Typography>
+                            <DataTypography value={transaction.amount} label="Amount" unit="$" />
+                            <DataTypography value={transaction.date} label="Time" unit=" cycles ago" precision={0} />
+                            <StockCard id={transaction.stock} />
                         </CardContent>
                     </Card>
                 </ListItem>

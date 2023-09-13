@@ -13,12 +13,12 @@ export default function PortfolioLayout({ children, investments, transactions, }
         <Container maxWidth="xl" sx={{ position: "relative" }}>
             <Background src={background} />
         <Grid container spacing={2}>
-            <Grid item xs={9}>
+            <Grid item xs={8}>
                 {children}
                 <Box marginTop={2}>{investments}</Box>
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={4}>
                 {transactions}
             </Grid>
             </Grid>

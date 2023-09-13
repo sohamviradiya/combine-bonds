@@ -4,9 +4,10 @@ import DataTypography from "@/components/data-typography";
 import { StockCard } from "@/components/stock/stock-card";
 import { useAuth } from "@/context/session";
 import { PopulatedInvestment } from "@/types/portfolio.interface";
-import { Typography, List, ListItem, Card, CardContent, Grid, Skeleton, Paper, Button } from "@mui/material";
+import { Typography, List, ListItem, Card, CardContent, Grid, Skeleton, Paper, Button, CardActions } from "@mui/material";
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { fetchInvestments } from "./action";
+import Link from "next/link";
 
 
 export default function InvestmentListPage() {
@@ -16,7 +17,7 @@ export default function InvestmentListPage() {
         queryKey: ['investments', { portfolio: session?.portfolio }],
         queryFn: ({ pageParam }) => fetchInvestments({ id: session?.portfolio, page: pageParam }),
         getNextPageParam: (lastPage, pages) => {
-            return lastPage.length === 8 ? pages.length : false;
+            return lastPage.length === 4 ? pages.length : false;
         },
         enabled: !!session?.portfolio,
     });
@@ -55,20 +56,19 @@ function InvestmentList({ data }: { data: InfiniteData<PopulatedInvestment[]> })
         <>
             <List style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', overflow: 'scroll' }}>
                 {list.map((investment, index) => (
-                    <ListItem key={index} sx={{width: 500}}>
+                    <ListItem key={index} sx={{ width: 500 }}>
                         <Card>
                             <CardContent>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={5}>
-                                        <StockCard id={investment.stock} />
-                                    </Grid>
-                                    <Grid item xs={7}>
-                                        <DataTypography value={investment.quantity} label="Quantity" unit="shares" />
-                                        <DataTypography value={investment.amount} label="Amount" unit="$" />
-                                        <DataTypography value={investment.change} label="Return" unit="$" sign />
-                                    </Grid>
-                                </Grid>
+                                <StockCard id={investment.stock} />
+                                <DataTypography value={investment.quantity} label="Quantity" unit="shares" />
+                                <DataTypography value={investment.amount} label="Amount" unit="$" />
+                                <DataTypography value={investment.change} label="Return" unit="$" sign />
                             </CardContent>
+                            <CardActions>
+                                <Button variant="contained" color="primary">
+                                    <Link href={`/stock/${investment.stock}`}>Sell</Link>
+                                </Button>
+                            </CardActions>
                         </Card>
                     </ListItem>
                 ))}
