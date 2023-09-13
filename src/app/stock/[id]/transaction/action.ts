@@ -2,7 +2,6 @@
 
 import { getSessionById } from "@/server/services/auth.service";
 import { getPosition, performTransactions } from "@/server/services/portfolio.service";
-import { getStockBasicInfo } from "@/server/services/stock.service";
 import { TRANSACTION_TYPES } from "@/types/portfolio.interface";
 
 export async function fetchPosition({ stock, portfolio }: { stock: string, portfolio: string }) {
@@ -16,6 +15,7 @@ export async function postTransaction({ stock, session_id, amount }: { stock: st
         amount = -amount;
     }
     const session = await getSessionById(session_id);
+    console.log(session);
     if (!session) return {
         message: "Session not found",
     };

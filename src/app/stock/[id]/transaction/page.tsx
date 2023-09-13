@@ -2,7 +2,7 @@
 import Background from "@/components/background";
 import { StockCard } from "@/components/stock/stock-card";
 import { useAuth } from "@/context/session";
-import { Button, Container, FormControl, Input, Paper, Skeleton, Slide, Slider, TextField, Typography } from "@mui/material";
+import { Button, Container, FormControl, Paper, Skeleton, Slider, TextField, Typography } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import background from "public/transaction-background.svg";
@@ -18,8 +18,10 @@ export default function TransactionPage({ params }: { params: { id: string } }) 
     const { session } = useAuth();
     const [valueError, setValueError] = useState('');
 
-    if (!session)
-        router.push('/login');
+    useEffect(() => {
+        if (!session)
+            router.push('/login');
+    }, [session, router]);
 
     const { error: fetchError, isLoading: isFetching, data: position, isError } = useQuery({
         queryKey: ['transaction', {
@@ -69,7 +71,7 @@ export default function TransactionPage({ params }: { params: { id: string } }) 
         setValueError('');
     }, [transactionAmount, position]);
 
-
+    console.log(position);
     const marks = useMemo(() => {
         if (!position) return [{
             value: 0,
@@ -78,8 +80,8 @@ export default function TransactionPage({ params }: { params: { id: string } }) 
         const amount = position.amount;
         const balance = position.balance;
         const marks = [] as { value: number, label: string }[];
-        const amount_divisions = amount / position.price;
         const balance_divisions = Math.min(10, balance / 100);
+        const amount_divisions = Math.min(11 - balance_divisions, amount / position.price);
 
         for (let i = -amount_divisions; i < 0; i++) {
             marks.push({
@@ -87,12 +89,17 @@ export default function TransactionPage({ params }: { params: { id: string } }) 
                 label: `${(-i * 100) / amount_divisions}%`,
             });
         }
+        marks.push({
+            value: 0,
+            label: `0%`,
+        });
         for (let i = 1; i <= balance_divisions; i++) {
             marks.push({
                 value: i * balance / balance_divisions,
                 label: `${(i * 100) / balance_divisions}%`,
             });
         }
+        console.log(marks);
         return marks;
     }, [position]);
 
@@ -109,7 +116,7 @@ export default function TransactionPage({ params }: { params: { id: string } }) 
                             <Slider
                                 defaultValue={0}
                                 getAriaValueText={(value) => `${value}`}
-                                step={position.price / 10}
+                                step={1}
                                 marks={marks}
                                 min={-position.amount}
                                 max={position.balance - 1}
@@ -118,14 +125,15 @@ export default function TransactionPage({ params }: { params: { id: string } }) 
                                 value={transactionAmount}
                                 onChange={(e, value) => setTransactionAmount(Number(value))}
                             />
-                        <TextField inputProps={{ inputMode: 'numeric', min: -position.amount, max: position.balance , step: 0.1}} onChange={(e) => setTransactionAmount(Number(e.target.value))} value={transactionAmount} />
-                            <Button variant="contained" onClick={() => mutate()} disabled={!valueError.length}> Transact </Button >
+                            <TextField inputProps={{ inputMode: 'numeric', min: -position.amount, max: position.balance, step: 0.1 }} onChange={(e) => setTransactionAmount(Number(e.target.value))} value={transactionAmount} />
+                            <Button variant="contained" onClick={() => mutate()} disabled={!!valueError.length}> Transact </Button >
                         </>
                     }
 
                 </FormControl>
                 <DataTypography value={transactionAmount} unit="$" />
-                <Typography variant="h3" color="error.main">{isError && (fetchError as { message: string}) .message}</Typography>
+                <DataTypography value={(position?.price && transactionAmount / position?.price) || 0} unit="Shares" sign />
+                <Typography variant="h3" color="error.main">{isError && (fetchError as { message: string }).message}</Typography>
                 <Typography variant="h3" color="error.main">{valueError}</Typography>
                 <Typography variant="h3" color="error.main">{isMutateError && (mutateError as { message: string }).message}</Typography>
                 <Typography variant="h3" color="info.main"> {info} </Typography>
