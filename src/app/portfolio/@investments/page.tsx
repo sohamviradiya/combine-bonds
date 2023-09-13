@@ -6,7 +6,7 @@ import { useAuth } from "@/context/session";
 import { PopulatedInvestment } from "@/types/portfolio.interface";
 import { Typography, List, ListItem, Card, CardContent, Grid, Skeleton, Paper, Button, CardActions } from "@mui/material";
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
-import { fetchInvestments } from "./action";
+import { fetchInvestments } from "@/app/portfolio/@investments/action";
 import Link from "next/link";
 
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Container, Box } from '@mui/material';
+import {  Box } from '@mui/material';
 
 const POINTER_SIZE = 16;
 

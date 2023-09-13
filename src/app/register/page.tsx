@@ -3,8 +3,7 @@ import Background from "@/components/background";
 import { Container, Typography, TextField, Button, FormControl, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
 import background from "public/register-background.svg";
-import { redirect } from "next/navigation";
-import { registerPortfolio } from "./action";
+import { registerPortfolio } from "@/app/register/action";
 import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {

@@ -6,7 +6,7 @@ import { buyStock, sellStock, dividend } from "@/server/services/transaction.ser
 import { getStockAnalytics, getStockBasicInfo, pullTrader } from "@/server/services/stock.service";
 
 import { DATE_LIMIT, PORTFOLIO_STARTING_BALANCE, STOCK_DUMP_THRESHOLD } from "@/server/global.config";
-import { getDate } from "./market.service";
+import { getDate } from "@/server/services/market.service";
 
 export const addPortfolio = async (user: User): Promise<{ message: string, portfolio: PortfolioInterfaceWithID | null }> => {
     try {

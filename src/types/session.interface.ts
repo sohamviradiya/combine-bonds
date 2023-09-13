@@ -1,6 +1,4 @@
-import { User } from "./portfolio.interface"
-
-
+import { User } from "@/types/portfolio.interface";
 
 export type SessionInterface = {
     portfolio: string,

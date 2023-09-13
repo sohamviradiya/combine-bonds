@@ -6,7 +6,7 @@ import { Button, Container, FormControl, Paper, Skeleton, Slider, TextField, Typ
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import background from "public/transaction-background.svg";
-import { fetchPosition, postTransaction } from "./action";
+import { fetchPosition, postTransaction } from "@/app/stock/[id]/transaction/action";
 import { useEffect, useMemo, useState } from "react";
 import DataTypography from "@/components/data-typography";
 

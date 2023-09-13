@@ -4,9 +4,9 @@ import DataTypography from "@/components/data-typography";
 import { StockCard } from "@/components/stock/stock-card";
 import { useAuth } from "@/context/session";
 import { Transaction } from "@/types/portfolio.interface";
-import { Typography, List, ListItem, Card, CardHeader, CardContent, Grid, Skeleton, Paper, Button } from "@mui/material";
+import { Typography, List, ListItem, Card, CardContent, Skeleton, Paper, Button } from "@mui/material";
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
-import { fetchTransactions } from "./action";
+import { fetchTransactions } from "@/app/portfolio/@transactions/action";
 
 export default function TransactionsListPage() {
     const { session } = useAuth();

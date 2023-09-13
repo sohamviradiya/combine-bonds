@@ -1,7 +1,7 @@
 "use client";
 import { SessionInterfaceWithId } from "@/types/session.interface";
 import { createContext, useContext, useEffect, useState } from "react";
-import { createSession, deleteSession } from "./auth";
+import { createSession, deleteSession } from "@/context/action";
 
 const SessionContext = createContext({
     session: {} as SessionInterfaceWithId,

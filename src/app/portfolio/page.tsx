@@ -1,6 +1,6 @@
 "use client";
 
-import { fetchPortfolio } from "./action";
+import { fetchPortfolio } from "@/app/portfolio/action";
 import { Card, CardContent, CardHeader, Skeleton, Typography } from "@mui/material";
 import { useAuth } from "@/context/session";
 import { useRouter } from "next/navigation";
