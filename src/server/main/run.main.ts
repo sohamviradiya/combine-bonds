@@ -1,17 +1,17 @@
 import { evaluateAgencies } from "@/server/services/agency.service";
 import { evaluateBot } from "@/server/services/bot.service";
-import { evaluatePortfolio } from "@/server/services/portfolio.service";
+import { evaluatePortfolio, getAllPortfolios } from "@/server/services/portfolio.service";
 import { evaluateMarket, getMarketAnalytics, } from "@/server/services/market.service";
 import { evaluateStock } from "@/server/services/stock.service";
 
-export default async function MainRun({ agencies, portfolios, bots, stocks, date }: {
+export default async function MainRun({ agencies, bots, stocks, date }: {
     agencies: string[],
-    portfolios: string[],
     bots: string[],
     stocks: string[],
     date: number
 }
 ) {
+    const portfolios = await getAllPortfolios();
     console.log(`Day ${date + 1}`);
     await Promise.all(
         agencies.map(async (agency) => {
