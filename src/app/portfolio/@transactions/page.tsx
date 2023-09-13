@@ -20,7 +20,7 @@ export default function TransactionsListPage() {
         enabled: !!session?.portfolio,
     });
     if (!session) return <Typography variant="h2" color="warning.main">Please login to view your transactions</Typography>;
-    if (isLoading) return <Skeleton variant="rectangular" width="100%" height="100%" />;
+    if (isLoading || isFetching) return <Skeleton variant="rectangular" width="100%" height="100%" />;
     if (isError) return <Typography variant="h2" color="error.main">{JSON.stringify(error)}</Typography>;
 
     return (
@@ -49,7 +49,7 @@ export default function TransactionsListPage() {
 function TransactionList({ data }: { data: InfiniteData<Transaction[]> }) {
     const list = data.pages.reduce((acc, val) => acc.concat(val), []);
     if (list.length === 0) return (<Typography variant="h4" color="warning.main">No Tranactions</Typography>);
-
+    console.log(data);
     return (
         <List style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {list.map((transaction, index) => (
@@ -60,10 +60,10 @@ function TransactionList({ data }: { data: InfiniteData<Transaction[]> }) {
                         </CardHeader>
                         <CardContent>
                             <Grid container spacing={2}>
-                                <Grid item xs={5}>
+                                <Grid item xs={4}>
                                     <StockCard id={transaction.stock} />
                                 </Grid>
-                                <Grid item xs={7}>
+                                <Grid item xs={8}>
                                     <DataTypography value={transaction.amount} label="Amount" unit="$" />
                                     <DataTypography value={transaction.date} label="Time" unit=" cycles ago ( 1 cycle ~ 15 mins)" />
                                 </Grid>

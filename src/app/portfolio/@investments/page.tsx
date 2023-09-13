@@ -13,7 +13,7 @@ export default function InvestmentListPage() {
     const { session } = useAuth();
 
     const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, isLoading, isError, } = useInfiniteQuery({
-        queryKey: ['transactions', { portfolio: session?.portfolio }],
+        queryKey: ['investments', { portfolio: session?.portfolio }],
         queryFn: ({ pageParam }) => fetchInvestments({ id: session?.portfolio, page: pageParam }),
         getNextPageParam: (lastPage, pages) => {
             return lastPage.length === 8 ? pages.length : false;
@@ -21,9 +21,8 @@ export default function InvestmentListPage() {
         enabled: !!session?.portfolio,
     });
     if (!session) return <Typography variant="h2" color="warning.main">Please login to view your investments</Typography>;
-    if (isLoading) return <Skeleton variant="rectangular" width="100%" height="100%" />;
+    if (isLoading || isFetching) return <Skeleton variant="rectangular" width="100%" height="100%" />;
     if (isError) return <Typography variant="h2" color="error.main">{JSON.stringify(error)}</Typography>;
-
     return (
         <>
             <Typography variant="h3" color="primary.main">Investments</Typography>
@@ -56,7 +55,7 @@ function InvestmentList({ data }: { data: InfiniteData<PopulatedInvestment[]> })
         <>
             <List style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', overflow: 'scroll' }}>
                 {list.map((investment, index) => (
-                    <ListItem key={index}>
+                    <ListItem key={index} sx={{width: 500}}>
                         <Card>
                             <CardContent>
                                 <Grid container spacing={2}>
