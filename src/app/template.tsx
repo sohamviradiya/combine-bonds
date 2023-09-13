@@ -22,7 +22,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
 
                     {session?.portfolio ? (
                         <>
-                            <Button><Link href="/profile"><Typography variant="h5" color="info.main">Profile</Typography></Link></Button>
+                            <Button><Link href="/portfolio"><Typography variant="h5" color="info.main">Profile</Typography></Link></Button>
                             <Button onClick={() => logout().then(() => router.push('/'))}><Typography variant="h5" color="info.main">Logout</Typography></Button>
                         </>
                     ) : (
