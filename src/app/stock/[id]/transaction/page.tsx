@@ -72,7 +72,6 @@ export default function TransactionPage({ params }: { params: { id: string } }) 
         setValueError('');
     }, [transactionAmount, position]);
 
-    console.log(position);
     const marks = useMemo(() => {
         if (!position) return [{
             value: 0,
@@ -100,7 +99,6 @@ export default function TransactionPage({ params }: { params: { id: string } }) 
                 label: `${(i * 100) / balance_divisions}%`,
             });
         }
-        console.log(marks);
         return marks;
     }, [position]);
 
