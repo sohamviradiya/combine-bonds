@@ -14,7 +14,7 @@ export const DEFAULT_MARKET_SENTIENCE_INDEX = 1000;
 
 export const MARKET_BASE = 1000;
 export const DATE_LIMIT = 30;
-export const SLOT_DURATION = 2;
+export const SLOT_DURATION = 15;
 
 export const DIVIDEND_FACTOR = 2.5;
 
