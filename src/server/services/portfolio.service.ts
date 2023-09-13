@@ -92,16 +92,16 @@ export const getPosition = async (stock_id: string, portfolio_id: string) => {
     if (!stock_id || !portfolio_id) return null;
     const stock = await getStockBasicInfo(stock_id);
     const { investments, balance }: { investments: Investment[], balance: number } = await PortfolioModel.findById(portfolio_id, { investments: 1, balance: 1 }).exec();
-
+    const spending_limit = Math.max(balance / 10, Math.min(100, balance));
     const investment = investments.find((investment) => String(investment.stock) === stock_id);
     if (!investment) return {
         amount: 0,
-        balance,
+        balance: spending_limit,
         price: stock.price,
     };
     return {
         amount: investment.quantity * stock.price,
-        balance,
+        balance: spending_limit,
         price: stock.price,
     }
 };
