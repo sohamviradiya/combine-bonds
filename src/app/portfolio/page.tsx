@@ -45,7 +45,7 @@ export default function PortfolioPage() {
                 </CardContent>
             </Card>
 
-            <Graph data={data.timeline.map((entry) => ({ date: entry.date, value: entry.value }))} title="Portfolio Net Worth Timeline" tickFormatter={(value) => (`${(value).toFixed(2)} $`)} />
+            <Graph data={data.timeline.map((entry) => ({ date: entry.date, value: entry.value }))} title="Portfolio Net Worth Timeline" tickFormatter={(value) => (`${(value/1000).toFixed(2)} K $`)} />
         </>
     )
 };
