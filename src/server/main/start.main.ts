@@ -13,10 +13,8 @@ import { getAllStocks } from "@/server/services/stock.service";
 import { SLOT_DURATION } from "@/server/global.config";
 
 let agencies: string[] = [];
-let portfolios: string[] = [];
 let bots: string[] = [];
 let stocks: string[] = [];
-let date: number = 0;
 export default async function MainStart() {
     await MainConnect();
     agencies = await getAllAgencies();
@@ -25,16 +23,14 @@ export default async function MainStart() {
         await MainSeed();
         agencies = await getAllAgencies();
     }
-    date = await getDate() + 1;
     bots = await getAllBots();
     stocks = await getAllStocks();
-    const job = new CronJob(`*/${SLOT_DURATION} * * * *`, async () => {
-        console.log("Running cron job", date);
-        await MainRun({ agencies, bots, stocks, date });
-        date++;
+    const job = new CronJob(`0 */${SLOT_DURATION} * * * *`, async () => {
+        await MainRun({ agencies, bots, stocks });
     }, null, true, "America/New_York");
-    job.start();
+    
     console.log("Starting cron job");
+    job.start();
     return {
         message: "Started cron job",
     };
