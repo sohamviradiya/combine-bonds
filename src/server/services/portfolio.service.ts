@@ -169,9 +169,12 @@ export const performTransactions = async (id: string, transactions: Transaction[
     ).exec();
 };
 
-export const evaluatePortfolio = async (portfolio_id: string, date: number) => {
+export const evaluatePortfolio = async (portfolio_id: string) => {
     const portfolio = await getPortfolioById(portfolio_id);
     const investments = portfolio.investments;
+    const timeline = portfolio.timeline;
+    timeline.sort((a, b) => a.date - b.date);
+    const date = timeline[timeline.length - 1].date + 1;
     let gross_amount = 0;
     const dumped_stocks: string[] = [];
     const transactions: Transaction[] = [];
@@ -209,8 +212,7 @@ export const evaluatePortfolio = async (portfolio_id: string, date: number) => {
     portfolio.transactions = portfolio.transactions.filter((transaction) => transaction.date > date - DATE_LIMIT);
 
     portfolio.timeline = portfolio.timeline.filter((value) => value.date > date - DATE_LIMIT);
-    portfolio.timeline.sort((a, b) => a.date - b.date);
-
+    
     portfolio.timeline.push({ value: portfolio.balance + gross_amount, date });
 
     portfolio.investments = portfolio.investments.filter((investment) => !dumped_stocks.includes(String(investment.stock)));

@@ -22,7 +22,7 @@ export const getAgencyById = async (agency_id: string) => {
     return await AgencyModel.findById(agency_id).exec() as AgencyInterfaceWithId;
 };
 
-export const evaluateAgencies = async (agency_id: string, date: number) => {
+export const evaluateAgencies = async (agency_id: string) => {
     const agency: AgencyInterfaceWithId = await getAgencyById(agency_id);
     const parameters = agency.parameters;
     const stock = await getStockDataById(agency.stock);
@@ -59,7 +59,6 @@ export const evaluateAgencies = async (agency_id: string, date: number) => {
     }
 
     await addStockValuePoint(agency.stock, {
-        date,
         price,
         volume,
         dividend,

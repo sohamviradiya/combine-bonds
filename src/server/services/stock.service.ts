@@ -81,8 +81,15 @@ export const getStockAnalytics = async (_id: string) => {
     };
 };
 
-export const addStockValuePoint = async (_id: string, valuePoint: ValuePoint) => {
-    return await StockModel.findByIdAndUpdate(_id, { $push: { timeline: { ...valuePoint } } }, { new: true }).exec();
+export const addStockValuePoint = async (_id: string, valuePoint: Omit<ValuePoint, "date">) => {
+    const stock = await StockModel.findById(_id).exec() as StockInterfaceWithId;
+    const timeline = stock.timeline;
+    timeline.sort((a, b) => a.date - b.date);
+    const date = timeline[timeline.length - 1].date + 1;
+    timeline.push({
+        ...valuePoint,
+        date,
+    });
 };
 
 export const getRandomStocks = async (count: number) => {
@@ -97,9 +104,11 @@ export const getRandomStocks = async (count: number) => {
     return random_stocks;
 };
 
-export const evaluateStock = async (_id: string, date: number) => {
+export const evaluateStock = async (_id: string) => {
     const { traders, timeline } = await StockModel.findById(_id, { traders: 1, timeline: 1 }).exec() as StockInterfaceWithId;
     var volume = 0;
+    timeline.sort((a, b) => a.date - b.date);
+    const date = timeline[timeline.length - 1].date + 1;
     const new_traders = [] as string[];
     await Promise.all(
         traders.map(async (trader) => {

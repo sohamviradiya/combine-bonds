@@ -63,8 +63,8 @@ const analyzePredictedStocks = async () => {
     return filtered_stocks.map((stock) => stock._id);
 }
 
-export const evaluateMarket = async (new_date?: number) => {
-    if (!new_date) new_date = 0;
+export const evaluateMarket = async () => {
+    const new_date = await getDate() + 1;
     const stocks = await getAllStocks();
     const market_caps = await Promise.all(stocks.map(async (stock_id) => {
         const stock = await getStockAnalytics(stock_id);

@@ -99,10 +99,13 @@ const expandBundle = async (parameter: BotInterface["parameters"]["bundle"], bud
     return transactions;
 };
 
-export const evaluateBot = async (bot_id: string, date: number) => {
+export const evaluateBot = async (bot_id: string) => {
     const { portfolio: portfolio_id, parameters, }: { portfolio: string; parameters: BotInterface["parameters"] } = await BotModel.findById(bot_id, { portfolio: 1, parameters: 1 }).exec();
 
     const portfolio = await getPortfolioById(portfolio_id);
+
+    portfolio.timeline.sort((a, b) => a.date - b.date);
+    const date = portfolio.timeline[portfolio.timeline.length - 1].date + 1;
 
     if (portfolio.balance < PORTFOLIO_MINIMUM_BALANCE) {
         await dumpPortfolio(portfolio_id, date);
