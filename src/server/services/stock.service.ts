@@ -90,6 +90,7 @@ export const addStockValuePoint = async (_id: string, valuePoint: Omit<ValuePoin
         ...valuePoint,
         date,
     });
+    await StockModel.findByIdAndUpdate(_id, { timeline }, { new: true }).exec();
 };
 
 export const getRandomStocks = async (count: number) => {

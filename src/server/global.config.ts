@@ -1,5 +1,5 @@
 
-export const AGENCY_PRICE_INCREMENT = 0.025;
+export const AGENCY_PRICE_INCREMENT = 0.03;
 
 export const BOT_MIN_INVESTMENT = 0.02;
 export const BOT_INVESTMENT_MULTIPLIER = 4;
