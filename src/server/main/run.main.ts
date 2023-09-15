@@ -45,4 +45,5 @@ export default async function MainRun({ agencies, bots, stocks }: {
     console.log(`Day ${date + 1} - Market Evaluated`);
     const analytics = await getMarketAnalytics();
     console.log(`Day ${date + 1} - ${JSON.stringify(analytics)}`);
+    return { analytics };
 }
