@@ -212,7 +212,7 @@ export const evaluatePortfolio = async (portfolio_id: string) => {
     portfolio.transactions = portfolio.transactions.filter((transaction) => transaction.date > date - DATE_LIMIT);
 
     portfolio.timeline = portfolio.timeline.filter((value) => value.date > date - DATE_LIMIT);
-    
+
     portfolio.timeline.push({ value: portfolio.balance + gross_amount, date });
 
     portfolio.investments = portfolio.investments.filter((investment) => !dumped_stocks.includes(String(investment.stock)));

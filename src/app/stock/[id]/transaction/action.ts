@@ -15,7 +15,7 @@ export async function postTransaction({ stock, session_id, amount }: { stock: st
         amount = -amount;
     }
     const session = await getSessionById(session_id);
-    if (!session) return {
+    if (!session?.portfolio) return {
         message: "Session not found",
     };
     const portfolio = session.portfolio;

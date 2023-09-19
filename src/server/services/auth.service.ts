@@ -1,6 +1,7 @@
 import SessionModel from "@/server/models/session.schema";
 import { verifyIDPassword } from "@/server/services/portfolio.service";
 import { SessionInterface, SessionInterfaceWithId } from "@/types/session.interface";
+import exp from "constants";
 import crypto from "crypto";
 
 
@@ -61,10 +62,11 @@ export const getSessionById = async (encryptedSessionID: string) => {
     const session = await SessionModel.findById(session_id).exec() as SessionInterfaceWithId;
     session._id = String(session._id);
     session.portfolio = String(session.portfolio);
-    if (session.expiration < new Date()) {
+    if (new Date(session.expiration) < new Date()) {
         await deleteSessionById(encryptedSessionID);
         return null;
     }
+    
     return {
         _id: encryptedSessionID,
         portfolio: String(session.portfolio),
