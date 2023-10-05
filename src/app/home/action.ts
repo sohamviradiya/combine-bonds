@@ -1,7 +1,12 @@
 "use server";
 
-import { getMarketAnalytics } from '@/server/services/market.service';
+import { hostname } from '@/global.config';
+import MainRun from '@/server/main/run.main';
 
 export async function fetchMarketAnalytics() {
-    return await getMarketAnalytics();
+    const response = await fetch(`${hostname}/api/admin/`, {
+        method: "GET",
+    });
+    const data = await (response.json() as ReturnType<typeof MainRun>);
+    return data.analytics;
 };

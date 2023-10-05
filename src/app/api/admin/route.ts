@@ -2,9 +2,7 @@ import { hostname } from "@/global.config";
 import MainRun from "@/server/main/run.main";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
-    const { key } = await request.json();
-    if (key != process.env.ADMIN_KEY) return NextResponse.json({ message: "Incorrect key" }, { status: 403 });
+export async function GET(request: NextRequest) {
 
     const data_response = await fetch(`${hostname}/api/data`, {
         method: "GET",

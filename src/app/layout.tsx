@@ -12,14 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children, }: { children: React.ReactNode, }) {
-    const response = await fetch(`${hostname}/api/admin`, {
-        method: 'POST',
-        body: JSON.stringify({ key: process.env.ADMIN_KEY }),
-        next: {
-            revalidate: 900
-        }
-    });
-    console.log(await response.json());
     return (
         <html lang="en">
             <body className={inter.className}>
