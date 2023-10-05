@@ -4,7 +4,7 @@ import StockModel from "@/server/models/stock.schema";
 
 import { getPortfolioById } from "@/server/services/portfolio.service";
 
-import { DATE_LIMIT } from "@/server/global.config";
+import { DATE_LIMIT } from "@/global.config";
 
 export const addStock = async (stock: createStockDto) => {
     const newStockDoc = await new StockModel({
@@ -96,9 +96,9 @@ export const addStockValuePoint = async (_id: string, valuePoint: Omit<ValuePoin
 export const getRandomStocks = async (count: number) => {
     const stocks = await getAllStocks();
     const random_stocks = [] as string[];
-    for (let i = 0; i < count; i++)  {
+    for (let i = 0; i < count; i++) {
         var random_stock = stocks[Math.floor(Math.random() * stocks.length)];
-        while (random_stocks.includes(random_stock))  {
+        while (random_stocks.includes(random_stock)) {
             random_stock = stocks[Math.floor(Math.random() * stocks.length)];
         }
     }

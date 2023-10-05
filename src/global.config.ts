@@ -20,4 +20,5 @@ export const DIVIDEND_FACTOR = 2.5;
 
 export const NUM_OF_STOCKS = 80;
 export const NUM_OF_PORTFOLIOS = 100;
+export const hostname = process.env.NODE_ENV === 'production' ? 'https://combinebonds.vercel.app' : 'http://localhost:3000';
 

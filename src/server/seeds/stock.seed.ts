@@ -1,8 +1,8 @@
-import {  faker } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 
 import { addStock } from "@/server/services/stock.service";
 import { createStockDto, StockInterface, COMPANY_FORMS, COMPANY_FIELDS } from "@/types/stock.interface";
-import { NUM_OF_STOCKS } from "@/server/global.config";
+import { NUM_OF_STOCKS } from "@/global.config";
 
 const StockGenerator = async () => {
     const stockPromises = [];

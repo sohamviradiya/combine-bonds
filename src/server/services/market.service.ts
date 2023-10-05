@@ -6,7 +6,7 @@ import { getAllStocks, getStockAnalytics, getStockDataById } from "@/server/serv
 
 import { getPortfolioTimelines } from "@/server/services/portfolio.service";
 
-import { DATE_LIMIT, DEFAULT_MARKET_SENTIENCE_INDEX } from "@/server/global.config";
+import { DATE_LIMIT, DEFAULT_MARKET_SENTIENCE_INDEX } from "@/global.config";
 import { StockValues } from "@/types/stock.interface";
 
 

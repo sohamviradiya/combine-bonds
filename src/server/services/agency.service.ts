@@ -1,12 +1,12 @@
 import AgencyInterface, { AgencyInterfaceWithId, } from "@/types/agency.interface";
 import AgencyModel from "@/server/models/agency.schema";
-import { AGENCY_PRICE_INCREMENT } from "@/server/global.config";
+import { AGENCY_PRICE_INCREMENT } from "@/global.config";
 
 import { addStockValuePoint, getStockDataById } from "@/server/services/stock.service";
 
 import { getMarketAnalytics } from "@/server/services/market.service";
 
-import { DIVIDEND_FACTOR } from "@/server/global.config";
+import { DIVIDEND_FACTOR } from "@/global.config";
 
 
 export const addAgency = async (agency: AgencyInterface) => {

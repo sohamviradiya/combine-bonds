@@ -8,7 +8,7 @@ import { getTrendingStocks, getPredictedStocks, getMarketAnalytics } from "@/ser
 
 import { getStockAnalytics, getRandomStocks } from "@/server/services/stock.service";
 
-import { PORTFOLIO_MINIMUM_BALANCE, BOT_INVESTMENT_MULTIPLIER, BOT_LOSS_AVERSION, BOT_STOCK_CLEARANCE, BOT_MIN_INVESTMENT } from "@/server/global.config";
+import { PORTFOLIO_MINIMUM_BALANCE, BOT_INVESTMENT_MULTIPLIER, BOT_LOSS_AVERSION, BOT_STOCK_CLEARANCE, BOT_MIN_INVESTMENT } from "@/global.config";
 
 
 export const addBot = async (bot: BotInterface) => {
