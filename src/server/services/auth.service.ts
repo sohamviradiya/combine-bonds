@@ -1,23 +1,17 @@
 import SessionModel from "@/server/models/session.schema";
 import { verifyIDPassword } from "@/server/services/portfolio.service";
 import { SessionInterface, SessionInterfaceWithId } from "@/types/session.interface";
-import exp from "constants";
-import crypto from "crypto";
 
+// const algorithm = 'aes-256-cbc';
+// const key = crypto.randomBytes(32);
+// const initVector = crypto.randomBytes(16);
 
-
-const algorithm = 'aes-256-cbc';
-const key = crypto.randomBytes(32);
-const initVector = crypto.randomBytes(16);
-
-const cipher = crypto.createCipheriv(algorithm, key, initVector);
-const decipher = crypto.createDecipheriv(algorithm, key, initVector);
+// const cipher = crypto.createCipheriv(algorithm, key, initVector);
+// const decipher = crypto.createDecipheriv(algorithm, key, initVector);
 
 
 
 const encrypt = (text: string) => {
-    // let encrypted = cipher.update(text, 'utf-8', 'hex');
-    // encrypted += cipher.final('hex');
     return text;
 };
 
@@ -40,9 +34,6 @@ export const addSession = async (name: string, password: string) => {
             expiration,
         });
         const session_document = await newSession.save() as SessionInterfaceWithId;
-        const session = {
-            
-        };
         return {
             message,
             session: {
