@@ -1,4 +1,3 @@
-import MainStart from "@/server/main/start.main";
 import MongooseConnect from "@/server/main/mongoose.main";
 
 export async function register() {
