@@ -4,6 +4,7 @@ const nextConfig = {
         instrumentationHook: true,
         serverActions: true,
     },
+    staticPageGenerationTimeout: 1000,
 };
 
 module.exports = nextConfig
