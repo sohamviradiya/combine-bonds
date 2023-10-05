@@ -35,7 +35,15 @@ export const getMarketAnalytics = async () => {
 };
 
 export const getMarketTimeline = async () => {
-    return await MarketModel.find({}, { date: 1, cumulative_market_capitalization: 1, cumulative_net_worth: 1, market_sentience_index: 1 }).sort({ date: 1 }).exec() as MarketInterface[];
+    const market_timeline = await MarketModel.find({}, { date: 1, cumulative_market_capitalization: 1, cumulative_net_worth: 1, market_sentience_index: 1 }).sort({ date: 1 }).exec();
+    return market_timeline.map((market) => {
+        return {
+            date: market.date,
+            cumulative_market_capitalization: market.cumulative_market_capitalization,
+            cumulative_net_worth: market.cumulative_net_worth,
+            market_sentience_index: market.market_sentience_index,
+        }
+    });
 };
 
 export const getDate = async () => {
@@ -50,7 +58,7 @@ const analyzeTrendingStocks = async () => {
     }));
     const filtered_stocks = all_stocks.filter((stock) => stock.slope > 0);
     filtered_stocks.sort((a, b) => b.slope - a.slope);
-    return filtered_stocks.map((stock) => stock._id);
+    return filtered_stocks.map((stock) => String(stock._id));
 };
 
 const analyzePredictedStocks = async () => {
@@ -60,7 +68,7 @@ const analyzePredictedStocks = async () => {
     }));
     const filtered_stocks = all_stocks.filter((stock) => stock.slope > 0);
     filtered_stocks.sort((a, b) => b.double_slope - a.double_slope);
-    return filtered_stocks.map((stock) => stock._id);
+    return filtered_stocks.map((stock) => String(stock._id));
 }
 
 export const evaluateMarket = async () => {
@@ -107,13 +115,13 @@ export const getTrendingStocks = async (count?: number) => {
     const [Market]: MarketInterface[] = await MarketModel.find({}, { trending_stocks: 1 }).sort({ date: -1 }).limit(1).exec();
     if (!Market) return [];
     if (count) return Market.trending_stocks.slice(0, count);
-    return Market.trending_stocks;
+    return Market.trending_stocks.map((stock_id) => stock_id.toString());
 };
 
 export const getPredictedStocks = async (count?: number) => {
     const [Market]: MarketInterface[] = await MarketModel.find({}, { predicted_stocks: 1 }).sort({ date: -1 }).limit(1).exec();
     if (!Market) return [];
     if (count) return Market.predicted_stocks.slice(0, count);
-    return Market.predicted_stocks;
+    return Market.predicted_stocks.map((stock_id) => stock_id.toString());
 };
 
