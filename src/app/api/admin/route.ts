@@ -1,11 +1,12 @@
+import { hostname } from "@/global.config";
 import MainRun from "@/server/main/run.main";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
     const { key } = await request.json();
-    if (key !== process.env.ADMIN_KEY) return NextResponse.json({ message: "Incorrect key" }, { status: 403 });
+    if (key != process.env.ADMIN_KEY) return NextResponse.json({ message: "Incorrect key" }, { status: 403 });
 
-    const data_response = await fetch(`/api/data`, {
+    const data_response = await fetch(`${hostname}/api/data`, {
         method: "GET",
     });
 
@@ -14,3 +15,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(await MainRun({ agencies, bots, stocks }));
 };
 
+
+export const revalidate = 900;
