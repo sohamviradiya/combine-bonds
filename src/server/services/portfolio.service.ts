@@ -67,7 +67,7 @@ function castPortfolio(portfolio: any): PortfolioInterfaceWithID {
 }
 
 export const verifyIDPassword = async (name: string, password: string) => {
-    const portfolio: PortfolioInterfaceWithID = await PortfolioModel.findOne({ "user.name": name }, { user: true }).exec();
+    const portfolio = await PortfolioModel.findOne({ "user.name": name }, { user: true }).exec();
     if (!portfolio?.user)
         return {
             message: "User not found",
@@ -85,13 +85,17 @@ export const verifyIDPassword = async (name: string, password: string) => {
 };
 
 export const getAllPortfolios = async () => {
-    return (await PortfolioModel.find({}, { _id: 1 }).exec()).map((portfolio) => portfolio._id) as string[];
+    return (await PortfolioModel.find({}, { _id: 1 }).exec()).map((portfolio) => portfolio._id);
 };
 
 export const getPosition = async (stock_id: string, portfolio_id: string) => {
     if (!stock_id || !portfolio_id) return null;
     const stock = await getStockBasicInfo(stock_id);
-    const { investments, balance }: { investments: Investment[], balance: number } = await PortfolioModel.findById(portfolio_id, { investments: 1, balance: 1 }).exec();
+    const portfolio = await PortfolioModel.findById(portfolio_id, { investments: 1, balance: 1 }).exec();
+    if (!portfolio) return null;
+    const investments = portfolio.investments;
+    const balance = portfolio.balance;
+
     const spending_limit = Math.max(balance / 10, Math.min(100, balance));
     const investment = investments.find((investment) => String(investment.stock) === stock_id);
     if (!investment) return {
@@ -142,7 +146,7 @@ export const getPortfolioInvestments = async (portfolio_id: string, page: number
     return populated_investments.sort((a, b) => b.amount - a.amount);
 };
 
-export const performTransactions = async (id: string, transactions: Transaction[]): Promise<PortfolioInterfaceWithID> => {
+export const performTransactions = async (id: string, transactions: Transaction[]) => {
     const date = await getDate();
     let portfolio = await getPortfolioById(id);
     for (let transaction of transactions) {
@@ -182,6 +186,7 @@ export const evaluatePortfolio = async (portfolio_id: string) => {
     await Promise.all(
         investments.map(async (investment) => {
             const stock = await getStockAnalytics(investment.stock);
+            if (!stock) return;
 
             const amount = investment.quantity * stock.price;
             gross_amount += amount;
@@ -236,7 +241,8 @@ export const dumpPortfolio = async (portfolio_id: string, date: number) => {
     const transactions: Transaction[] = [];
     await Promise.all(
         investments.map(async (investment) => {
-            const stock_price = (await getStockAnalytics(investment.stock)).price;
+            const stock_price = (await getStockAnalytics(investment.stock))?.price;
+            if (!stock_price) return;
             transactions.push({
                 type: "STOCK_SALE",
                 stock: investment.stock,

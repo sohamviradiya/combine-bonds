@@ -15,18 +15,19 @@ export const addAgency = async (agency: AgencyInterface) => {
 };
 
 export const getAllAgencies = async () => {
-    return (await AgencyModel.find({}, { _id: 1 }).exec()).map((agency: AgencyInterfaceWithId) => String(agency._id));
+    return (await AgencyModel.find({}, { _id: 1 }).exec()).map((agency) => agency._id.toString());
 };
 
 export const getAgencyById = async (agency_id: string) => {
-    return await AgencyModel.findById(agency_id).exec() as AgencyInterfaceWithId;
+    return await AgencyModel.findById(agency_id).exec();
 };
 
 export const evaluateAgencies = async (agency_id: string) => {
-    const agency: AgencyInterfaceWithId = await getAgencyById(agency_id);
+    const agency = await getAgencyById(agency_id);
+    if (!agency) return;
     const parameters = agency.parameters;
-    const stock = await getStockDataById(agency.stock);
-
+    const stock = await getStockDataById(agency.stock.toString());
+    if (!stock) return;
     const random_num = 2 * (Math.random() - 0.5);
 
     const market = await getMarketAnalytics();
@@ -58,7 +59,7 @@ export const evaluateAgencies = async (agency_id: string) => {
         dividend = Math.max(change_in_price, 0) * parameters.dividend * DIVIDEND_FACTOR;
     }
 
-    await addStockValuePoint(agency.stock, {
+    await addStockValuePoint(stock._id, {
         price,
         volume,
         dividend,

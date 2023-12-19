@@ -21,7 +21,8 @@ export const getAllStocks = async () => {
 };
 
 export const getStockDataById = async (_id: string) => {
-    const data = await StockModel.findById(_id).exec() as StockInterfaceWithId & StockValues;
+    const data = await StockModel.findById(_id).exec() as unknown as StockInterfaceWithId & StockValues;
+    if (!data) return null;
     const timeline = data.timeline.map((point) => {
         return {
             date: point.date,
@@ -48,7 +49,7 @@ export const getStockDataById = async (_id: string) => {
 };
 
 export const getStockBasicInfo = async (_id: string) => {
-    const data = await StockModel.findById(_id).exec() as StockInterfaceWithId & StockValues;
+    const data = await StockModel.findById(_id).exec() as unknown as StockInterfaceWithId & StockValues;
     return {
         _id: String(data._id),
         price: data.timeline[data.timeline.length - 1].price,
@@ -69,7 +70,8 @@ export const getStocksByQuery = async (query: string, page: number = 0, limit: n
 
 
 export const getStockAnalytics = async (_id: string) => {
-    const data = await StockModel.findById(_id).exec() as StockValues;
+    const data = await StockModel.findById(_id).exec() as unknown as StockInterfaceWithId & StockValues;
+    if (!data) return null;
     return {
         dividend: data.timeline[data.timeline.length - 1].dividend,
         price: data.timeline[data.timeline.length - 1].price,
@@ -82,7 +84,8 @@ export const getStockAnalytics = async (_id: string) => {
 };
 
 export const addStockValuePoint = async (_id: string, valuePoint: Omit<ValuePoint, "date">) => {
-    const stock = await StockModel.findById(_id).exec() as StockInterfaceWithId;
+    const stock = await StockModel.findById(_id).exec();
+    if (!stock) return;
     const timeline = stock.timeline;
     timeline.sort((a, b) => a.date - b.date);
     const date = timeline[timeline.length - 1].date + 1;
@@ -106,7 +109,10 @@ export const getRandomStocks = async (count: number) => {
 };
 
 export const evaluateStock = async (_id: string) => {
-    const { traders, timeline } = await StockModel.findById(_id, { traders: 1, timeline: 1 }).exec() as StockInterfaceWithId;
+    const stock = await StockModel.findById(_id, { traders: 1, timeline: 1 }).exec();
+    if (!stock) return;
+    const timeline = stock.timeline;
+    const traders = stock.traders;
     var volume = 0;
     timeline.sort((a, b) => a.date - b.date);
     const date = timeline[timeline.length - 1].date + 1;

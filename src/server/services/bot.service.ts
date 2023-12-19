@@ -2,7 +2,7 @@ import { Investment, Transaction, } from "@/types/portfolio.interface";
 import { dumpPortfolio, performTransactions, getPortfolioById } from "@/server/services/portfolio.service";
 
 import BotModel from "@/server/models/bot.schema";
-import BotInterface, { BotInterfaceWithID } from "@/types/bot.interface";
+import BotInterface from "@/types/bot.interface";
 
 import { getTrendingStocks, getPredictedStocks, getMarketAnalytics } from "@/server/services/market.service";
 
@@ -17,18 +17,23 @@ export const addBot = async (bot: BotInterface) => {
 };
 
 export const getAllBots = async () => {
-    return (await BotModel.find({}, { _id: 1 }).exec()).map((bot: { _id: string }) => bot._id);
+    return (await BotModel.find({}, { _id: 1 }).exec()).map(bot => bot._id);
 };
 
 export const getBotById = async (bot_id: string) => {
-    return await BotModel.findById(bot_id).exec() as BotInterfaceWithID;
+    return await BotModel.findById(bot_id).exec();
 };
 
 const updateBundle = async (bundle: Investment[], loss_aversion: number, stock_clearance: number, date: number): Promise<Transaction[]> => {
     const transactions: Transaction[] = [];
     for (let investment of bundle) {
-        const { fall_since_peak, price, rise_since_trough } = await getStockAnalytics(investment.stock);
-
+        const stock = await getStockAnalytics(investment.stock);
+        if (!stock) continue;
+        const {
+            fall_since_peak,
+            rise_since_trough,
+            price,
+        } = stock;
 
         if (fall_since_peak >= loss_aversion * BOT_LOSS_AVERSION || rise_since_trough >= stock_clearance * BOT_STOCK_CLEARANCE) {
             transactions.push({
@@ -64,7 +69,7 @@ const investTrending = async (budget: number, weights: BotInterface["parameters"
     const stocks = await getTrendingStocks(n);
     for (let i = 0; i < Math.min(stocks.length, n); i++) {
         transactions.push({
-            stock: stocks[i],
+            stock: stocks[i].toString(),
             amount: budget * weights[i],
             type: "STOCK_PURCHASE", date,
         });
@@ -79,7 +84,7 @@ const investPredicted = async (budget: number, weights: BotInterface["parameters
     const stocks = await getPredictedStocks(n);
     for (let i = 0; i < Math.min(stocks.length, n); i++) {
         transactions.push({
-            stock: stocks[i],
+            stock: stocks[i].toString(),
             amount: budget * weights[i],
             type: "STOCK_PURCHASE", date,
         });
@@ -100,8 +105,10 @@ const expandBundle = async (parameter: BotInterface["parameters"]["bundle"], bud
 };
 
 export const evaluateBot = async (bot_id: string) => {
-    const { portfolio: portfolio_id, parameters, }: { portfolio: string; parameters: BotInterface["parameters"] } = await BotModel.findById(bot_id, { portfolio: 1, parameters: 1 }).exec();
-
+    const bot = await BotModel.findById(bot_id, { portfolio: 1, parameters: 1 }).exec();
+    if (!bot) return;
+    const parameters = bot.parameters;
+    const portfolio_id = bot.portfolio.toString();
     const portfolio = await getPortfolioById(portfolio_id);
 
     portfolio.timeline.sort((a, b) => a.date - b.date);

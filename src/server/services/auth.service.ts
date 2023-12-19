@@ -15,7 +15,7 @@ const encrypt = (text: string) => {
     return text;
 };
 
-const decrypt = (text:string) => {
+const decrypt = (text: string) => {
     // let decrypted = decipher.update(text, 'hex', 'utf-8');
     // decrypted += decipher.final('utf-8');
     return text;
@@ -28,12 +28,12 @@ export const addSession = async (name: string, password: string) => {
     expiration.setDate(expiration.getDate() + 1);
     try {
         await SessionModel.findOneAndDelete({ portfolio }).exec();
-        
+
         const newSession = new SessionModel({
             portfolio,
             expiration,
         });
-        const session_document = await newSession.save() as SessionInterfaceWithId;
+        const session_document = await newSession.save();
         return {
             message,
             session: {
@@ -50,14 +50,13 @@ export const addSession = async (name: string, password: string) => {
 
 export const getSessionById = async (encryptedSessionID: string) => {
     const session_id = decrypt(encryptedSessionID);
-    const session = await SessionModel.findById(session_id).exec() as SessionInterfaceWithId;
-    session._id = String(session._id);
-    session.portfolio = String(session.portfolio);
+    const session = await SessionModel.findById(session_id).exec();
+    if (!session) return null;
     if (new Date(session.expiration) < new Date()) {
         await deleteSessionById(encryptedSessionID);
         return null;
     }
-    
+
     return {
         _id: encryptedSessionID,
         portfolio: String(session.portfolio),

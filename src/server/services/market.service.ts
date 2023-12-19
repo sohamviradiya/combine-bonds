@@ -7,7 +7,7 @@ import { getAllStocks, getStockAnalytics, getStockDataById } from "@/server/serv
 import { getPortfolioTimelines } from "@/server/services/portfolio.service";
 
 import { DATE_LIMIT, DEFAULT_MARKET_SENTIENCE_INDEX } from "@/global.config";
-import { StockValues } from "@/types/stock.interface";
+import { StockInterface, StockValues } from "@/types/stock.interface";
 
 
 export const getMarket = async () => {
@@ -56,7 +56,7 @@ const analyzeTrendingStocks = async () => {
     const all_stocks = await Promise.all(stock_ids.map(async (stock_id) => {
         return await getStockDataById(stock_id);
     }));
-    const filtered_stocks = all_stocks.filter((stock) => stock.slope > 0);
+    const filtered_stocks = all_stocks.filter((stock) => stock && stock.slope > 0) as StockValues[];
     filtered_stocks.sort((a, b) => b.slope - a.slope);
     return filtered_stocks.map((stock) => String(stock._id));
 };
@@ -66,7 +66,7 @@ const analyzePredictedStocks = async () => {
     const all_stocks = await Promise.all(stock_ids.map(async (stock_id) => {
         return await getStockDataById(stock_id);
     }));
-    const filtered_stocks = all_stocks.filter((stock) => stock.slope > 0);
+    const filtered_stocks = all_stocks.filter((stock) => stock && stock.double_slope > 0) as StockValues[];
     filtered_stocks.sort((a, b) => b.double_slope - a.double_slope);
     return filtered_stocks.map((stock) => String(stock._id));
 }
@@ -76,6 +76,7 @@ export const evaluateMarket = async () => {
     const stocks = await getAllStocks();
     const market_caps = await Promise.all(stocks.map(async (stock_id) => {
         const stock = await getStockAnalytics(stock_id);
+        if (!stock) return 0;
         return stock.market_valuation;
     }));
 

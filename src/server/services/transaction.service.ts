@@ -7,6 +7,7 @@ export const buyStock = async (portfolio: PortfolioInterfaceWithID, transaction:
         return portfolio;
 
     const stock = await getStockDataById(transaction.stock);
+    if (!stock) return portfolio;
     const price = stock.timeline[stock.timeline.length - 1].price;
 
     const stock_quantity = transaction.amount / price;
@@ -33,6 +34,7 @@ export const sellStock = async (portfolio: PortfolioInterfaceWithID, transaction
     if (transaction.type != "STOCK_SALE")
         return portfolio;
     const stock = await getStockDataById(transaction.stock);
+    if (!stock) return portfolio;
     const price = stock.timeline[stock.timeline.length - 1].price;
 
     const stockIndex = portfolio.investments.findIndex((investment) => String(investment.stock) == String(transaction.stock));
