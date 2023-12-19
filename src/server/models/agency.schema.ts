@@ -1,9 +1,9 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 
-import { AGENCY_TYPES } from "@/types/agency.interface";
+import AgencyInterface, { AGENCY_TYPES } from "@/types/agency.interface";
 
 
-const AgencySchema = new Schema({
+const AgencySchema = new Schema<AgencyInterface>({
     type: {
         type: Schema.Types.String,
         required: true,
@@ -37,5 +37,5 @@ const AgencySchema = new Schema({
         },
     },
 });
-const AgencyModel = mongoose.models["Agency"] ?? mongoose.model("Agency", AgencySchema);
+const AgencyModel = mongoose.models["Agency"] as Model<AgencyInterface> ?? mongoose.model<AgencyInterface>("Agency", AgencySchema);
 export default AgencyModel;

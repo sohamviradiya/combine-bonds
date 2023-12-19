@@ -1,6 +1,7 @@
+import MarketInterface from "@/types/market.interface";
 import mongoose, { Schema } from "mongoose";
 
-const MarketSchema = new Schema({
+const MarketSchema = new Schema<MarketInterface>({
     date: {
         type: Schema.Types.Number,
         required: true,
@@ -35,7 +36,7 @@ const MarketSchema = new Schema({
     },
 }, { toJSON: { virtuals: true } });
 
-const MarketModel = mongoose.models["Market"] ?? mongoose.model("Market", MarketSchema);
+const MarketModel = mongoose.models["Market"] as mongoose.Model<MarketInterface> ?? mongoose.model<MarketInterface>("Market", MarketSchema);
 
 export default MarketModel;
 

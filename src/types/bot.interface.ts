@@ -1,3 +1,5 @@
+import { ObjectId } from "mongoose";
+
 export enum BOT_STRATEGIES {
     "Safe" = "Safe",
     "Aggressive" = "Aggressive",
@@ -11,7 +13,7 @@ export type BOT_STRATEGY = keyof typeof BOT_STRATEGIES;
 interface BotInterface {
     strategy: BOT_STRATEGY;
     trade_period: number;
-    portfolio: string;
+    portfolio: string | ObjectId;
     parameters: {
         investment_amount_per_slot: {
             balance: number;

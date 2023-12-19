@@ -1,7 +1,7 @@
-import mongoose, { Schema } from "mongoose";
-import { TRANSACTION_TYPES } from "@/types/portfolio.interface";
+import mongoose, { Model, Schema } from "mongoose";
+import PortfolioInterface, { TRANSACTION_TYPES } from "@/types/portfolio.interface";
 
-const PortfolioSchema = new Schema({
+const PortfolioSchema = new Schema<PortfolioInterface>({
     user: {
         type: {
             name: {
@@ -20,30 +20,28 @@ const PortfolioSchema = new Schema({
         },
         required: false,
     },
-    transactions: {
-        type: [
-            {
-                type: {
-                    type: Schema.Types.String,
-                    required: true,
-                    enum: Object.values(TRANSACTION_TYPES),
-                },
-                stock: {
-                    type: Schema.Types.ObjectId,
-                    ref: "Stock",
-                    required: false,
-                },
-                amount: {
-                    type: Schema.Types.Number,
-                    required: true,
-                },
-                date: {
-                    type: Schema.Types.Number,
-                    required: true,
-                },
+    transactions: [
+        {
+            type: {
+                type: Schema.Types.String,
+                required: true,
+                enum: Object.values(TRANSACTION_TYPES),
             },
-        ],
-    },
+            stock: {
+                type: Schema.Types.ObjectId,
+                ref: "Stock",
+                required: false,
+            },
+            amount: {
+                type: Schema.Types.Number,
+                required: true,
+            },
+            date: {
+                type: Schema.Types.Number,
+                required: true,
+            },
+        },
+    ],
     balance: {
         type: Schema.Types.Number,
         required: true,
@@ -78,6 +76,6 @@ const PortfolioSchema = new Schema({
 });
 
 const PortfolioModel =
-    mongoose.models["Portfolio"] ?? mongoose.model("Portfolio", PortfolioSchema);
+    mongoose.models["Portfolio"] as Model<PortfolioInterface> ?? mongoose.model<PortfolioInterface>("Portfolio", PortfolioSchema);
 
 export default PortfolioModel;

@@ -1,8 +1,8 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 
-import { COMPANY_FIELDS, COMPANY_FORMS, StockInterfaceWithId, ValuePoint, } from "@/types/stock.interface";
+import { COMPANY_FIELDS, COMPANY_FORMS, StockInterface, StockInterfaceWithId, ValuePoint, } from "@/types/stock.interface";
 
-const stockSchema = new Schema(
+const stockSchema = new Schema<StockInterface>(
     {
         symbol: {
             type: Schema.Types.String,
@@ -75,15 +75,13 @@ const stockSchema = new Schema(
                 required: false,
             }
         },
-        traders: {
-            type: [
-                {
-                    type: Schema.Types.ObjectId,
-                    ref: "Portfolio",
-                    required: true,
-                },
-            ],
-        },
+        traders: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Portfolio",
+                required: true,
+            },
+        ],
     },
     { toJSON: { virtuals: true } }
 );
@@ -136,7 +134,7 @@ stockSchema.virtual("rise_since_trough").get(function (this: StockInterfaceWithI
     return diff / trough_price;
 });
 
-const StockModel = mongoose.models["Stock"] ?? mongoose.model("Stock", stockSchema);
+const StockModel = mongoose.models["Stock"] as Model<StockInterface> ?? mongoose.model<StockInterface>("Stock", stockSchema);
 
 
 

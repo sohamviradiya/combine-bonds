@@ -1,7 +1,8 @@
 import { User } from "@/types/portfolio.interface";
+import { ObjectId } from "mongoose";
 
 export type SessionInterface = {
-    portfolio: string,
+    portfolio: string | ObjectId,
     expiration: Date,
 }
 

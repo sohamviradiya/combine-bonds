@@ -1,7 +1,8 @@
-import mongoose, { Schema } from "mongoose";
+import { SessionInterface } from "@/types/session.interface";
+import mongoose, { Model, Schema } from "mongoose";
 
 
-const SessionSchema = new Schema(
+const SessionSchema = new Schema<SessionInterface>(
     {
         portfolio: {
             type: Schema.Types.ObjectId,
@@ -17,6 +18,6 @@ const SessionSchema = new Schema(
 
 
 const SessionModel =
-    mongoose.models["Session"] ?? mongoose.model("Session", SessionSchema);
+    mongoose.models["Session"] as Model<SessionInterface> ?? mongoose.model<SessionInterface>("Session", SessionSchema);
 
 export default SessionModel;

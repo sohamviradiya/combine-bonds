@@ -1,3 +1,5 @@
+import { ObjectId } from "mongoose";
+
 export enum AGENCY_TYPES {
     "Steady" = "Steady",
     "Trendy" = "Trendy",
@@ -9,7 +11,7 @@ export type AGENCY_TYPE = keyof typeof AGENCY_TYPES;
 
 interface AgencyInterface {
     type: AGENCY_TYPE;
-    stock: string;
+    stock: string | ObjectId;
     parameters: {
         steady_increase: number;
         random_fluctuation: number;

@@ -1,9 +1,9 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 
-import { BOT_STRATEGIES } from "@/types/bot.interface";
+import BotInterface, { BOT_STRATEGIES } from "@/types/bot.interface";
 
 
-const BotSchema = new Schema({
+const BotSchema = new Schema<BotInterface>({
     strategy: {
         type: Schema.Types.String,
         required: true,
@@ -88,6 +88,6 @@ const BotSchema = new Schema({
     },
 });
 
-const BotModel = mongoose.models["Bot"] ?? mongoose.model("Bot", BotSchema);
+const BotModel = mongoose.models["Bot"] as Model<BotInterface> ?? mongoose.model<BotInterface>("Bot", BotSchema);
 
 export default BotModel;
