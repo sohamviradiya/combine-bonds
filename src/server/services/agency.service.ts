@@ -22,7 +22,7 @@ export const getAgencyById = async (agency_id: string) => {
     return await AgencyModel.findById(agency_id).exec();
 };
 
-export const evaluateAgencies = async (agency_id: string) => {
+export const evaluateAgency = async (agency_id: string) => {
     const agency = await getAgencyById(agency_id);
     if (!agency) return;
     const parameters = agency.parameters;

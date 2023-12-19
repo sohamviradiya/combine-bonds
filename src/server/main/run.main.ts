@@ -1,4 +1,4 @@
-import { evaluateAgencies } from "@/server/services/agency.service";
+import { evaluateAgency } from "@/server/services/agency.service";
 import { evaluateBot } from "@/server/services/bot.service";
 import { evaluatePortfolio, getAllPortfolios } from "@/server/services/portfolio.service";
 import { evaluateMarket, getMarketAnalytics, getDate } from "@/server/services/market.service";
@@ -15,7 +15,7 @@ export default async function MainRun({ agencies, bots, stocks }: {
     console.log(`Day ${date + 1}`);
     await Promise.all(
         agencies.map(async (agency) => {
-            await evaluateAgencies(agency);
+            await evaluateAgency(agency);
         })
     );
     console.log(`Day ${date + 1} - Agencies Evaluated`);
@@ -29,7 +29,7 @@ export default async function MainRun({ agencies, bots, stocks }: {
 
     await Promise.all(
         portfolios.map(async (portfolio) => {
-            await evaluatePortfolio(portfolio);
+            await evaluatePortfolio(portfolio.toString());
         })
     );
     console.log(`Day ${date + 1} - Portfolios Evaluated`);
