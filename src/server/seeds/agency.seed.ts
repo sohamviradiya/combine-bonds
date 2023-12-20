@@ -13,7 +13,7 @@ const AgencyGenerator = async () => {
     );
 };
 
-const generateAgency = async (stock_id: string): Promise<AgencyInterface> => {
+export const generateAgency = async (stock_id: string): Promise<AgencyInterface> => {
     const agency_type = Object.values(AGENCY_TYPES)[Math.floor(Math.random() * 4)];
     let steady_increase = 0;
     let random_fluctuation = 0;

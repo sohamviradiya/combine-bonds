@@ -5,8 +5,8 @@ import { getAllPortfolios } from "@/server/services/portfolio.service";
 const BotGenerator = async () => {
     const portfolio_ids = await getAllPortfolios();
 
-    await Promise.all(portfolio_ids.map(async (portfolio_id) => {
-        const bot = generateBot(portfolio_id, 1);
+    await Promise.all(portfolio_ids.map(async (portfolio_id): Promise<void> => {
+        const bot = generateBot(portfolio_id.toString(), 1);
         await addBot(bot);
     })
     );

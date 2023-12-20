@@ -1,3 +1,5 @@
+import { ObjectId } from "mongoose";
+
 export type ValuePoint = {
     date: number;
     price: number;
@@ -54,7 +56,7 @@ export interface StockInterface {
 
 export type StockInterfaceWithId = StockInterface &
 {
-    _id: string;
+    _id: string | ObjectId;
 };
 
 export type StockValues = {

@@ -14,7 +14,7 @@ const StockGenerator = async () => {
 };
 
 
-const createRandomStock = async (): Promise<createStockDto> => {
+export const createRandomStock = async (): Promise<createStockDto> => {
     const name = getName();
     const gross_volume = Math.floor((0.1 + Math.random()) * Math.pow(10, 5 + 3 * Math.random()));
     const price = (0.1 + Math.random()) * 100;
@@ -39,10 +39,10 @@ company_names.add("");
 
 const getName = () => {
     let name = "";
-    while (company_names.has(name.substr(0, 3))) {
-        name = faker.person.lastName() + " " + faker.commerce.department() + " " + faker.company.companySuffix();
+    while (company_names.has(name.substring(0, 3))) {
+        name = faker.person.lastName() + " " + faker.commerce.department() + " " + faker.company.name();
     }
-    company_names.add(name.substr(0, 3));
+    company_names.add(name.substring(0, 3));
     return name;
 };
 
