@@ -137,7 +137,7 @@ export const getPortfolioInvestments = async (portfolio_id: string, page: number
         paginated_investments.map(async (investment) => {
             const stock = await getStockBasicInfo(investment.stock);
             return {
-                stock: stock._id,
+                stock: stock._id.toString(),
                 quantity: investment.quantity,
                 amount: investment.quantity * stock.price,
                 change: stock.slope * stock.price * investment.quantity,

@@ -1,15 +1,15 @@
 "use client";
-import { SessionInterfaceWithId } from "@/types/session.interface";
+import { SessionInterfaceWithId, SessionLocalStorage } from "@/types/session.interface";
 import { createContext, useContext, useEffect, useState } from "react";
 import { createSession, deleteSession } from "@/context/action";
 
 const SessionContext = createContext({
-    session: {} as SessionInterfaceWithId,
-    setSession: (session: SessionInterfaceWithId) => { },
+    session: {} as SessionLocalStorage,
+    setSession: (session: SessionLocalStorage) => { },
 });
 
 export default function SessionProvider({ children }: { children: React.ReactNode }) {
-    const [session, setSession] = useState<SessionInterfaceWithId>({} as SessionInterfaceWithId);
+    const [session, setSession] = useState<SessionLocalStorage>({} as SessionLocalStorage);
     useEffect(() => {
         const session = localStorage.getItem("session");
         if (session) {
@@ -44,7 +44,7 @@ export function useAuth() {
         }
         else {
             setError(message);
-            setSession({} as SessionInterfaceWithId);
+            setSession({} as SessionLocalStorage);
         }
         return {
             session,
@@ -54,7 +54,7 @@ export function useAuth() {
 
     const logout = async () => {
         await deleteSession({ id: session._id });
-        setSession({} as SessionInterfaceWithId);
+        setSession({} as SessionLocalStorage);
     };
 
 

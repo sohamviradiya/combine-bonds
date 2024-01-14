@@ -17,7 +17,7 @@ export const addBot = async (bot: BotInterface) => {
 };
 
 export const getAllBots = async () => {
-    return (await BotModel.find({}, { _id: 1 }).exec()).map(bot => bot._id);
+    return (await BotModel.find({}, { _id: 1 }).exec()).map(bot => bot._id.toString());
 };
 
 export const getBotById = async (bot_id: string) => {

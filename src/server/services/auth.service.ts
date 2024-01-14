@@ -1,6 +1,6 @@
 import SessionModel from "@/server/models/session.schema";
 import { verifyIDPassword } from "@/server/services/portfolio.service";
-import { SessionInterface, SessionInterfaceWithId } from "@/types/session.interface";
+import { SessionInterface, SessionInterfaceWithId, SessionLocalStorage } from "@/types/session.interface";
 
 // const algorithm = 'aes-256-cbc';
 // const key = crypto.randomBytes(32);
@@ -38,9 +38,9 @@ export const addSession = async (name: string, password: string) => {
             message,
             session: {
                 _id: encrypt(String(session_document._id)),
-                portfolio: String(session_document.portfolio),
+                portfolio: session_document.portfolio.toString(),
                 expiration: session_document.expiration,
-            }
+            } as SessionLocalStorage,
         };
     }
     catch (err: any) {
@@ -59,9 +59,9 @@ export const getSessionById = async (encryptedSessionID: string) => {
 
     return {
         _id: encryptedSessionID,
-        portfolio: String(session.portfolio),
+        portfolio: session.portfolio.toString(),
         expiration: session.expiration,
-    } as SessionInterface;
+    };
 };
 
 export const deleteSessionById = async (encryptedSessionID: string) => {

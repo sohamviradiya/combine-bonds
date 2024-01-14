@@ -115,14 +115,14 @@ export const evaluateMarket = async () => {
 export const getTrendingStocks = async (count?: number) => {
     const [Market]: MarketInterface[] = await MarketModel.find({}, { trending_stocks: 1 }).sort({ date: -1 }).limit(1).exec();
     if (!Market) return [];
-    if (count) return Market.trending_stocks.slice(0, count);
+    if (count) return Market.trending_stocks.slice(0, count).map((stock_id) => stock_id.toString());
     return Market.trending_stocks.map((stock_id) => stock_id.toString());
 };
 
 export const getPredictedStocks = async (count?: number) => {
     const [Market]: MarketInterface[] = await MarketModel.find({}, { predicted_stocks: 1 }).sort({ date: -1 }).limit(1).exec();
-    if (!Market) return [];
-    if (count) return Market.predicted_stocks.slice(0, count);
+    if (!Market) return [] as string[];
+    if (count) return Market.predicted_stocks.slice(0, count).map((stock_id) => stock_id.toString());
     return Market.predicted_stocks.map((stock_id) => stock_id.toString());
 };
 

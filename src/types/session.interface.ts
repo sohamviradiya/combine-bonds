@@ -10,6 +10,12 @@ export type SessionInterfaceWithId = SessionInterface & {
     _id: string,
 }
 
+export type SessionLocalStorage = {
+    portfolio: string,
+    expiration: Date,
+    _id: string,
+}
+
 export type SessionValues = {
     portfolio: {
         user: User

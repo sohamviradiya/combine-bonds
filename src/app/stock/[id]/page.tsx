@@ -20,7 +20,7 @@ export default function StockPage({ params }: { params: { id: string } }) {
     const { session } = useAuth();
 
     if (isLoading) return <Skeleton variant="rectangular" width="100%" height={700} />;
-    if (isError) return <Typography variant="h2" color="error.main" gutterBottom> Error: Failed to load stock data </Typography>;
+    if (isError || !data) return <Typography variant="h2" color="error.main" gutterBottom> Error: Failed to load stock data </Typography>;
 
     return (
         <Container maxWidth="xl" sx={{
